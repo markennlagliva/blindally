@@ -1,11 +1,138 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlindAlly</title>
+
+    <meta property="og:description" content="Blind Ally: An assistive web application Technology for visually impaired people.">
+    <meta property="og:title" content="BlindAlly">
+    <!-- <meta property="og:image" content="{% static 'assets' %}">  -->
+ 
+
+    <title>BlindAlly {% block title %} {% endblock %}</title>
+
+    <link rel="shortcut icon" href="{% static 'assets/icon.jpg' %}" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="{% static 'assets/icon.jpg' %}" />
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+
+    
 </head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap');
+    * {
+        font-family: 'Poppins', sans-serif;
+        color: white;
+    }
+</style>
+{% block style %}
+<style>
+
+    #home {
+        background-image: url("{% static 'assets/home.png' %}"); 
+        background-repeat: no-repeat;
+        background-size: cover; 
+        background-position: center center; 
+    }
+</style>
+{% endblock style %}
 <body>
-    <h1>Hello</h1>
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-gradient">
+        <div class="container-lg">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'assets/logo-transparent.png' %}"  width="150" alt="logo">
+            </a>
+    
+
+            <button class="navbar-toggler text-white border" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                 <i class="bi bi-list-stars"></i> Menu
+            </button>
+
+          <div class="collapse navbar-collapse text-center text-white" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-lg-3 gap-1">
+                    <li class="nav-item ">
+                        <a class="nav-link text-white-50" aria-current="page" href="{% url 'index' %}"><i class="bi bi-house"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50" href="{% url 'newsfeed' %}"><i class="bi bi-pc-display-horizontal"></i> NewsFeed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50" href="{% url 'current_time_date' %}"><i class="bi bi-patch-check-fill"></i> Date and Time</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link text-white-50" href="#projects"><i class="bi bi-server"></i> Projects</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link text-white-50" href="#contact"><i class="bi bi-person-lines-fill"></i> Contact </a>
+                    </li> -->
+                </ul>
+          </div>
+          
+        </div>
+      </nav>
+
+    <main>
+      
+        <section id="home">
+            {% block content %}
+            <div class="container-lg" >
+                <div class="row min-vh-100 text-center align-items-center">
+                    <div class="col">
+                        <h1>Home</h1>
+                    </div>
+                </div>
+            </div>
+            {% endblock content %}
+        </section>
+       
+    </main>
+   
+    <footer>
+
+    </footer>
 </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <script>
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.interimResults = true;
+        // recognition.lang = 'en-US';
+        recognition.addEventListener('result', (e) => {
+            const text = Array.from(e.results)
+            .map(result => result[0])
+            .map(result => result.transcript)
+            .join('');
+
+            console.log(text);
+    
+            if(e.results[0].isFinal) {
+                if (text.includes('news feed', 'newsfeed')){
+                    window.location.href = "{% url 'newsfeed' %}"
+                }
+                else if (text.includes('home')){
+                    window.location.href = "{% url 'index' %}"
+                }
+                else if (text.includes('current time')) {
+                    window.location.href = "{% url 'current_time_date' %}"
+                }
+                else {
+                   console.log('Not Working!');
+                }
+            }
+        });
+
+
+        recognition.addEventListener('end', (e) => {
+           recognition.start(); 
+        });
+
+        recognition.start();
+    </script>
 </html>

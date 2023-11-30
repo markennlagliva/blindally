@@ -11,119 +11,142 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# django-configurations
+from configurations import Configuration, values
 
+class Dev(Configuration):
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--^7u63yqhmew5%va&*@suhq*2s@lm%i@bx=68&5v05e5_xt32r'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Application definition
+    # Quick-start development settings - unsuitable for production
+    # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'livereload',
-    'django.contrib.staticfiles',
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = 'django-insecure--^7u63yqhmew5%va&*@suhq*2s@lm%i@bx=68&5v05e5_xt32r'
 
-    'AssistApp',
-    'rest_framework',
-]
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = values.BooleanValue(True)
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    ALLOWED_HOSTS = []
 
-    'livereload.middleware.LiveReloadScript',
-]
 
-ROOT_URLCONF = 'BlindAlly.urls'
+    # Application definition
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+    INSTALLED_APPS = [
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'livereload',
+        'django.contrib.staticfiles',
+
+        'AssistApp',
+        'rest_framework',
+        'speech_recognition',
+        'pyttsx3',
+    ]
+
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+        'livereload.middleware.LiveReloadScript',
+    ]
+
+    ROOT_URLCONF = 'BlindAlly.urls'
+
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [BASE_DIR / 'templates'],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
         },
-    },
-]
+    ]
 
-WSGI_APPLICATION = 'BlindAlly.wsgi.application'
+    WSGI_APPLICATION = 'BlindAlly.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+    # Database
+    # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+    # Password validation
+    # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
+    AUTH_PASSWORD_VALIDATORS = [
+        {
+            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        },
+    ]
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+    # Internationalization
+    # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-STATIC_URL = 'static/'
+    LANGUAGE_CODE = values.Value('en-us')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+    TIME_ZONE = values.Value('UTC')
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+    USE_I18N = values.BooleanValue(True)
+
+    USE_TZ = values.BooleanValue(True)
+
+
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+    STATIC_URL = 'static/'
+
+
+    STATIC_URL = '/static/'
+    # MEDIA_URL = 'media/'
+
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "static")
+    ]
+
+
+    # Default primary key field type
+    # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
+    DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+class Prod(Dev):
+
+    DEBUG = False
+    ALLOWED_HOSTS = values.ListValue(['.vercel.app'])
