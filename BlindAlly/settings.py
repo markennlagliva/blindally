@@ -81,7 +81,7 @@ class Dev(Configuration):
         },
     ]
 
-    WSGI_APPLICATION = 'BlindAlly.wsgi.application'
+    # WSGI_APPLICATION = 'BlindAlly.wsgi.application'
 
 
     # Database
