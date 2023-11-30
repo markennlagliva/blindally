@@ -53,6 +53,7 @@ class Dev(Configuration):
 
     MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',
+        'whitenoise.middleware.WhiteNoiseMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,7 +82,7 @@ class Dev(Configuration):
         },
     ]
 
-    # WSGI_APPLICATION = 'BlindAlly.wsgi.application'
+    WSGI_APPLICATION = 'BlindAlly.wsgi.application'
 
 
     # Database
