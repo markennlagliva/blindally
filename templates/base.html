@@ -106,7 +106,32 @@
        
 
         // recognition.lang = 'en-US';
-        recognition.addEventListener('result', (e) => {
+        function speak(text) {
+            const msg = new SpeechSynthesisUtterance(text);
+
+            msg.rate = 1;
+            msg.volume = 1;
+            msg.pitch = 1;
+
+            window.speechSynthesis.speak(msg);
+        }
+
+        // function wishMe(){
+        //     var day = new Date();
+        //     var hour = day.getHours();
+
+        //     if (hour>=0 && hour<12){speak('Blessed Morning!')};
+        //     if (hour>=12 && hour<18){speak('Blessed Evening!')};
+        //     if (hour>=18 && hour<24){speak('Blessed Night!')};
+        // };
+        document.onclick = function () {
+            speak('Hello, I am Blind Ally. How May I help you?')
+        };
+
+        window.addEventListener('load', () => {
+            // wishMe();
+
+            recognition.addEventListener('result', (e) => {
             const text = Array.from(e.results)
             .map(result => result[0])
             .map(result => result.transcript)
@@ -115,19 +140,29 @@
             console.log(text);
 
             if(e.results[0].isFinal) {
-                if (text.includes('balita', 'news feed', 'newsfeed', 'news')){
-                    window.location.href = "{% url 'newsfeed' %}"
-                }
-                else if (text.includes('home')){
+                if (text.includes('activate')) {
                     window.location.href = "{% url 'index' %}"
-                }
-                else if (text.includes('current time')) {
-                    window.location.href = "{% url 'current_time_date' %}"
-                }
-                else {
-                    alert('Hello! I am Blind Ally, currently on development!, Available commands ("Home", "Balita", "current time")')
-                    
+                    speak('Hello This is Blind Ally!');
+                    while(true) {
+                        if (text.includes('balita', 'news feed', 'newsfeed', 'news')){
+                            speak('Going to Balita')
+                            window.location.href = "{% url 'newsfeed' %}"
+                        }
+                        else if (text.includes('home')){
+                            window.location.href = "{% url 'index' %}"
+                            speak('Going back to Home Page')
+                        }
+                        else if (text.includes('current time')) {
+                            window.location.href = "{% url 'current_time_date' %}"
+                            speak('Goind to Date and Time Page')
+                        }
+                        else {
+                            speak('This is Blind Ally, command does not exist.');
+                            
+                        };
+                    }
                 };
+
             };
         });
 
@@ -137,5 +172,9 @@
         });
 
         recognition.start();
+        });
+
+
+        
     </script>
 </html>
