@@ -138,31 +138,24 @@
             .join('');
 
             console.log(text);
-
+                
             if(e.results[0].isFinal) {
-                if (text.includes('activate')) {
+                if (text.includes('balita', 'news feed', 'newsfeed', 'news')){
+                    speak('Going to Balita')
+                    window.location.href = "{% url 'newsfeed' %}"
+                }
+                else if (text.includes('home')){
                     window.location.href = "{% url 'index' %}"
-                    speak('Hello This is Blind Ally!');
-                    while(true) {
-                        if (text.includes('balita', 'news feed', 'newsfeed', 'news')){
-                            speak('Going to Balita')
-                            window.location.href = "{% url 'newsfeed' %}"
-                        }
-                        else if (text.includes('home')){
-                            window.location.href = "{% url 'index' %}"
-                            speak('Going back to Home Page')
-                        }
-                        else if (text.includes('current time')) {
-                            window.location.href = "{% url 'current_time_date' %}"
-                            speak('Goind to Date and Time Page')
-                        }
-                        else {
-                            speak('This is Blind Ally, command does not exist.');
-                            
-                        };
-                    }
+                    speak('Going back to Home Page')
+                }
+                else if (text.includes('current time')) {
+                    window.location.href = "{% url 'current_time_date' %}"
+                    speak('Goind to Date and Time Page')
+                }
+                else {
+                    speak('This is Blind Ally, command does not exist.');
+                    
                 };
-
             };
         });
 
