@@ -15,3 +15,9 @@ def current_time_date(request):
 
     context = {}
     return render(request, 'partial/_datetime.html', context)
+
+
+def location(request):
+
+    context = {}
+    return render(request, 'partial/_location.html', context)

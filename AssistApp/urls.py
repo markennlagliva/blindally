@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('newsfeed', views.newsfeed,  name='newsfeed'),
     path('current-time-date', views.current_time_date,  name='current_time_date'),
+    path('location', views.location,  name='location'),
 ]
