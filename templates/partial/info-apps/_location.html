@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    : Current Location
+{% endblock title %}
+
+{% block script %}
+<script>
+    navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+
+        map.innerHTML = '<iframe class="embed-responsive-item" src="https://maps.google.com/maps?q-'+latitude+','+longitude+'&amp;z=15&amp;outpud=embed"></iframe>';
+    });
+</script>
+{% endblock script %}
+
+{% block content %}
+<div class="container-lg py-lg-0 pt-sm-5 mt-sm-0 mt-5">
+    <div class="row min-vh-100 d-flex justify-content-center align-items-center gap-lg-0 gap-3">
+        <div class="p-lg-5 border rounded-5 " style="backdrop-filter: blur(5000px);">
+            <div class="row">
+                <div class="col-lg-6 align-self-lg-center align-self-end py-5" data-aos="fade-right">
+                    <h1 class="fw-bolder text-center" style="color: #CD86C9">Your Location</h1>
+                    <div class="border border-light text-white-50 rounded-5 text-center">
+                        <h4 class="py-3">Massachussets Ave, Ambridge MA USA 02144</h4>
+                    </div>
+                </div>
+                <div class="col-lg-6 align-self-lg-center align-self-start py-md-0 py-5" data-aos="fade-right">
+                   <img class="img-fluid rounded-5" width="400" src="{% static 'assets/gps.jpg' %}" alt="GPS of the user" >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
