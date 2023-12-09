@@ -1,2 +1,2 @@
-# BlindAlly Web Application
+# BlindAlly
 An assistive technology for visually impaired people.
