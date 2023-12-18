@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils import timezone
 
 # Home Page
 def index(request):
@@ -11,6 +12,12 @@ def newsfeed(request):
     return render(request, 'partial/info-apps/_news.html', context)
 
 def current_time_date(request):
+    
+    current_datetime = timezone.now()
+    print("Current date:", current_datetime.date())
+    print("Current time:", current_datetime.time())
+    formatted_time_12_hour = current_datetime.strftime("%I:%M %p")
+    print(f'This is formatted time: {formatted_time_12_hour}')
     context = {}
     return render(request, 'partial/info-apps/_datetime.html', context)
 

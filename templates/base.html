@@ -152,11 +152,23 @@
 
     </footer>
 </body>
-    {% block script %}
-    {% endblock script %}
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
+        let mainElement = document.querySelector('main');
+
+       
+        
+        mainElement.onclick = function () {
+            speak('Hello I am Blind Ally, currently I am under development')
+
+            {% block script %}
+        
+            {% endblock script %}
+        }
+
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         // const recognition = new SpeechRecognition();
         recognition.interimResults = true;
@@ -181,9 +193,7 @@
         //     if (hour>=12 && hour<18){speak('Blessed Evening!')};
         //     if (hour>=18 && hour<24){speak('Blessed Night!')};
         // };
-        document.onclick = function () {
-            speak('Hello, I am Blind Ally. How May I help you?')
-        };
+
 
         window.addEventListener('load', () => {
             // wishMe();
