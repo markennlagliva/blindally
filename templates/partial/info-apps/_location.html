@@ -6,7 +6,6 @@
 {% endblock title %}
 
 {% block script %}
-<script>
     navigator.geolocation.getCurrentPosition(position => {
         const { latitude, longitude } = position.coords;
 
@@ -28,7 +27,8 @@
     }
 
     fetchData();
-</script>
+
+    
 {% endblock script %}
 
 {% block content %}
