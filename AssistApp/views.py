@@ -1,8 +1,22 @@
 from django.shortcuts import render
 from django.utils import timezone
 
+
+# TTS module using elevenlabs
+import elevenlabs
+import os
+
+
 # Home Page
 def index(request):
+    elevenlabs.set_api_key("e0c96d185e2e75e056f2b3d21e4f2652")
+    audio = elevenlabs.generate(
+        text="Hello this is blindally, and currently you are in home page.",
+        voice="Thomas",
+        # model="eleven_multilingual_v1",
+    )
+    elevenlabs.play(audio)
+
     context = {}
     return render(request, 'base.html', context)
 
@@ -12,7 +26,7 @@ def newsfeed(request):
     return render(request, 'partial/info-apps/_news.html', context)
 
 def current_time_date(request):
-    
+        
     current_datetime = timezone.now()
     print("Current date:", current_datetime.date())
     print("Current time:", current_datetime.time())

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+
 # django-configurations
 from configurations import Configuration, values
 
@@ -31,7 +32,7 @@ class Dev(Configuration):
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = values.BooleanValue(True)
 
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*']
 
 
     # Application definition
@@ -49,6 +50,8 @@ class Dev(Configuration):
         'rest_framework',
         'speech_recognition',
         'pyttsx3',
+        'elevenlabs',
+
     ]
 
     MIDDLEWARE = [

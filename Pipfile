@@ -11,6 +11,10 @@ django-configurations = "*"
 pyttsx3 = "*"
 speechrecognition = "*"
 whitenoise = "*"
+elevenlabs = "*"
+python-decouple = "*"
+python-ffmpeg = "*"
+ffmpeg = "*"
 
 [dev-packages]
 
