@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-
+from dotenv import load_dotenv
 
 # django-configurations
 from configurations import Configuration, values
@@ -27,7 +27,7 @@ class Dev(Configuration):
     # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = 'django-insecure--^7u63yqhmew5%va&*@suhq*2s@lm%i@bx=68&5v05e5_xt32r'
+    SECRET_KEY = os.getenv('SECRET_KEY')
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = values.BooleanValue(True)
@@ -54,7 +54,7 @@ class Dev(Configuration):
         'pyttsx3',
         'elevenlabs',
 
-        
+
         'gtts',
         'playsound',
 

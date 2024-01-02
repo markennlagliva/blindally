@@ -25,3 +25,10 @@
 # audio = gTTS(text)
 # audio.save('audio/ex.mp3')
 # playsound('audio/ex.mp3')
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+print(os.getenv('SECRET_KEY'))
+
+

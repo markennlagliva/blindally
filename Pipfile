@@ -17,6 +17,7 @@ python-ffmpeg = "*"
 ffmpeg = "*"
 gtts = "*"
 playsound = "==1.2.2"
+python-dotenv = "*"
 
 [dev-packages]
 
