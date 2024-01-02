@@ -48,9 +48,15 @@ class Dev(Configuration):
 
         'AssistApp',
         'rest_framework',
+
+
         'speech_recognition',
         'pyttsx3',
         'elevenlabs',
+
+        
+        'gtts',
+        'playsound',
 
     ]
 
