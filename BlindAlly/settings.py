@@ -14,6 +14,10 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
+secret_key =  os.getenv('SECRET_KEY')
+
+
 # django-configurations
 from configurations import Configuration, values
 
@@ -27,7 +31,7 @@ class Dev(Configuration):
     # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = os.getenv('SECRET_KEY')
+    SECRET_KEY = secret_key
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = values.BooleanValue(True)
@@ -51,8 +55,8 @@ class Dev(Configuration):
 
 
         'speech_recognition',
-        'pyttsx3',
-        'elevenlabs',
+        # 'pyttsx3',
+        # 'elevenlabs',
 
 
         'gtts',
