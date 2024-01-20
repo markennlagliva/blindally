@@ -18,6 +18,7 @@ ffmpeg = "*"
 gtts = "*"
 playsound = "==1.2.2"
 python-dotenv = "*"
+openai = "*"
 
 [dev-packages]
 
