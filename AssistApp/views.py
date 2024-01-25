@@ -5,7 +5,6 @@ from django.utils import timezone
 # TTS module using elevenlabs
 # import elevenlabs
 import os
-import time
 from gtts import gTTS
 from playsound import playsound
 
@@ -18,7 +17,6 @@ def index(request):
     #     # model="eleven_multilingual_v1",
     # )
     # elevenlabs.play(audio)
-    time.sleep(5)
     try:
         text = 'This is blind ally'
         audio = gTTS(text)

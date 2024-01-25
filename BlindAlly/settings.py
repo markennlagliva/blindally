@@ -51,14 +51,10 @@ class Dev(Configuration):
         'django.contrib.staticfiles',
 
         'AssistApp',
-        'rest_framework',
 
-
-        'speech_recognition',
+        # 'speech_recognition', 
         # 'pyttsx3',
         # 'elevenlabs',
-
-
         'gtts',
         'playsound',
 
