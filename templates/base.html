@@ -188,7 +188,7 @@
                         'X-CSRFToken': csrfToken,
                     },
                     body: JSON.stringify({
-                        key: 'value',
+                        key: 'tap-detail-home',
                     }),
                 })
                 .then(response => response.json())
@@ -207,7 +207,8 @@
         };
 
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        // const recognition = new SpeechRecognition();
+        // eligible speech
+        const recognition = new SpeechRecognition();
         recognition.interimResults = true;
         
 
@@ -237,11 +238,27 @@
             if(e.results[0].isFinal) {
                 if (text.includes('balita')){
                     window.location.href = "{% url 'newsfeed' %}"
-                    speak('Going to Balita')
+                    
                 }
                 else if (text.includes('home')){
                     window.location.href = "{% url 'index' %}"
-                    speak('Going back to Home Page')
+                    fetch("{% url 'index' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            key: 'home',
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 else if (text.includes('current time')) {
                     window.location.href = "{% url 'current_time_date' %}"
