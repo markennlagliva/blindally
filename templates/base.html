@@ -161,8 +161,6 @@
 
         var csrfToken = getCookie('csrftoken');
         console.log(csrfToken);
-        console.log('This is the csrf-token Django:', "{% url 'index' %}")
-
 
         function getCookie(name) {
                 var cookieValue = null;
@@ -180,6 +178,14 @@
             }
         mainElement.onclick = function () {
            
+            const Pdetails = document.querySelectorAll('p');
+            let allPdetails = [];
+
+            Pdetails.forEach(function(paragraph, index) {
+                var paragraphContent = paragraph.textContent;
+                allPdetails.push(paragraphContent);
+            });
+            
             {% block script %}
                 fetch("{% url 'index' %}", {
                     method: 'POST',
@@ -189,6 +195,7 @@
                     },
                     body: JSON.stringify({
                         key: 'tap-detail-home',
+                        details: allPdetails,
                     }),
                 })
                 .then(response => response.json())

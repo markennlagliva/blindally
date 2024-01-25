@@ -3,7 +3,6 @@
 # elevenlabs.set_api_key("e0c96d185e2e75e056f2b3d21e4f2652")
 
 
-
 # voice = elevenlabs.Voice(
 #     voice_id="EXAVITQu4vr4xnSDxMaL",
 #     settings = elevenlabs.VoiceSettings(
@@ -19,6 +18,7 @@
 # elevenlabs.play(audio)
 
 # from playsound import playsound
+"""
 import gtts
 from gtts import gTTS
 from playsound import playsound
@@ -26,7 +26,7 @@ text = 'Kamusta kayo lahat? Ako nga pala si blind ally ang inyong tagapaglingkod
 audio = gTTS(text, lang='tl') # 1. com.mx, 2. pt
 audio.save('audio/ex.mp3')
 playsound('audio/ex.mp3')
-
+"""
 # import os
 # from dotenv import load_dotenv
 
@@ -35,11 +35,11 @@ playsound('audio/ex.mp3')
 
 # print(help(gtts.lang))
 
-from gtts.lang import tts_langs
+"""from gtts.lang import tts_langs
 # print(tts_langs())
 
 for k, v in tts_langs().items():
-    print(k, v)
+    print(k, v)"""
 
 '''
     >>> from gtts import gTTS
