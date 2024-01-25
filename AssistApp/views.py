@@ -1,29 +1,31 @@
 from django.shortcuts import render
 from django.utils import timezone
-
+from django.http import JsonResponse
 
 # TTS module using elevenlabs
 # import elevenlabs
 import os
+import json
 from gtts import gTTS
 from playsound import playsound
 
 # Home Page
 def index(request):
-    # elevenlabs.set_api_key("e0c96d185e2e75e056f2b3d21e4f2652")
-    # audio = elevenlabs.generate(
-    #     text="Hello this is blindally, and currently you are in home page.",
-    #     voice="Thomas",
-    #     # model="eleven_multilingual_v1",
-    # )
-    # elevenlabs.play(audio)
-    try:
-        text = 'This is blind ally'
-        audio = gTTS(text)
-        audio.save('audio/ex.mp3')
-        playsound('audio/ex.mp3')
-    except:
-        playsound('audio/ex.mp3')
+
+    if request.method == 'POST':
+        try:
+            text = 'This is blind ally'
+            audio = gTTS(text)
+            audio.save('audio/ex.mp3')
+            playsound('audio/ex.mp3')
+
+            response = json.loads(request.body)
+            print(response)
+
+            response_data = {'result': 'success'}
+            return JsonResponse(response_data)
+        except:
+            playsound('audio/ex.mp3')
 
     context = {}
     return render(request, 'base.html', context)
@@ -72,3 +74,4 @@ def technologies(request):
 # About page
 def guidelines(request):
     return render(request, 'partial/_guidelines.html')
+

@@ -159,15 +159,52 @@
     <script>
         let mainElement = document.querySelector('main');
 
-       
-        
-        mainElement.onclick = function () {
-            speak('Hello I am Blind Ally, currently I am under development')
+        var csrfToken = getCookie('csrftoken');
+        console.log(csrfToken);
+        console.log('This is the csrf-token Django:', "{% url 'index' %}")
 
+
+        function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        mainElement.onclick = function () {
+           
             {% block script %}
-        
+                fetch("{% url 'index' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        key: 'value',
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success', data);
+                })
+                .catch((error) => {
+                    console.error('Error', error);
+                });
+
+
+            
             {% endblock script %}
-        }
+
+           
+        };
 
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         // const recognition = new SpeechRecognition();
@@ -175,15 +212,15 @@
         
 
         // recognition.lang = 'en-US';
-        function speak(text) {
-            const msg = new SpeechSynthesisUtterance(text);
+        // function speak(text) {
+        //     const msg = new SpeechSynthesisUtterance(text);
 
-            msg.rate = 1;
-            msg.volume = 1;
-            msg.pitch = 1;
+        //     msg.rate = 1;
+        //     msg.volume = 1;
+        //     msg.pitch = 1;
 
-            window.speechSynthesis.speak(msg);
-        }
+        //     window.speechSynthesis.speak(msg);
+        // }
 
 
         window.addEventListener('load', () => {
