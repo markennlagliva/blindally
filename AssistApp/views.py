@@ -52,12 +52,20 @@ def audio_music(request):
 
 # More pages
 def motivation(request):
-
+    if request.method == 'POST':
+        response = json.loads(request.body)
+        speak(response.get('key'), response.get('details')) # Differs in body key values
+        return JsonResponse({'result': 'success'})
+    
     context = {}
     return render(request, 'partial/more/_motivation.html', context)
 
 def technologies(request):
-
+    if request.method == 'POST':
+        response = json.loads(request.body)
+        speak(response.get('key'), response.get('details')) # Differs in body key values
+        return JsonResponse({'result': 'success'})
+    
     context = {}
     return render(request, 'partial/more/_technologies.html', context)
 

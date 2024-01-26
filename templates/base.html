@@ -161,6 +161,11 @@
 
         var csrfToken = getCookie('csrftoken');
         console.log(csrfToken);
+        var currentUrl = window.location.href;
+
+     
+        
+        console.log('{{request.path}}' === '/')
 
         function getCookie(name) {
                 var cookieValue = null;
@@ -180,13 +185,15 @@
            
             const Pdetails = document.querySelectorAll('p');
             let allPdetails = [];
+            console.log(Pdetails.length)
 
-            Pdetails.forEach(function(paragraph, index) {
-                var paragraphContent = paragraph.textContent;
-                allPdetails.push(paragraphContent);
-            });
-            
-            {% block script %}
+           
+                Pdetails.forEach(function(paragraph, index) {
+                    var paragraphContent = paragraph.textContent;
+                    allPdetails.push(paragraphContent);
+                });
+                
+            if ("{{request.path}}" === '/') {
                 fetch("{% url 'index' %}", {
                     method: 'POST',
                     headers: {
@@ -204,18 +211,54 @@
                 })
                 .catch((error) => {
                     console.error('Error', error);
+                });   
+            } else if ("{{request.path}}" === '/motivation') {
+                fetch("{% url 'motivation' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        key: 'tap-more-motivation',
+                        details: allPdetails,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success', data);
+                })
+                .catch((error) => {
+                    console.error('Error', error);
                 });
-
-
-            
-            {% endblock script %}
+            } else if ("{{request.path}}" === '/technologies') {
+                fetch("{% url 'technologies' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        key: 'tap-more-technologies',
+                        details: allPdetails,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success', data);
+                })
+                .catch((error) => {
+                    console.error('Error', error);
+                });
+            }
+           
 
            
         };
 
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         // eligible speech
-        const recognition = new SpeechRecognition();
+        // const recognition = new SpeechRecognition();
         recognition.interimResults = true;
         
 
@@ -230,7 +273,7 @@
         //     window.speechSynthesis.speak(msg);
         // }
 
-
+        // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
         window.addEventListener('load', () => {
            
             recognition.addEventListener('result', (e) => {
@@ -243,11 +286,11 @@
             
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
-                if (text.includes('balita')){
+                if (text === 'news') {
                     window.location.href = "{% url 'newsfeed' %}"
                     
                 }
-                else if (text.includes('home')){
+                else if (text === 'home'){
                     window.location.href = "{% url 'index' %}"
                     fetch("{% url 'index' %}", {
                         method: 'POST',
@@ -267,16 +310,57 @@
                         console.error('Error', error);
                     });
                 }
-                else if (text.includes('current time')) {
+                else if (text === 'time') {
                     window.location.href = "{% url 'current_time_date' %}"
-                    speak('Going to Date and Time Page')
+                    
                 }
-                else if (text.includes('location') || text.includes('current location')) {
+                else if (text === 'current location') {
                     window.location.href = "{% url 'location' %}"
-                    speak('Going to Location Page')
+                    
+                }
+                else if (text === 'motivation') {
+                    window.location.href = "{% url 'motivation' %}"
+                    fetch("{% url 'motivation' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            key: 'motivation',
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
+                }
+                else if (text === 'technologies') {
+                    window.location.href = "{% url 'technologies' %}"
+                    fetch("{% url 'technologies' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            key: 'technologies',
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
 
                 else {
+                    
                     // Change this Logic
                     
                 };
