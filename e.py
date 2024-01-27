@@ -17,6 +17,23 @@
 #     )
 # elevenlabs.play(audio)
 
+import os
+from dotenv import load_dotenv
+
+# import elevenlabs
+# load_dotenv()
+# elevenlabs_api = elevenlabs.set_api_key(os.getenv('ELEVENLABS_API_KEY'))
+
+# from elevenlabs import generate, play, voices
+# # [print(voice) for voice in voices()]
+
+# audio = generate(
+#     text='Hello, This blindally.',
+#     voice='Adam',
+#     model='eleven_multilingual_v2',
+# )
+# play(audio)
+
 # from playsound import playsound
 """
 import gtts

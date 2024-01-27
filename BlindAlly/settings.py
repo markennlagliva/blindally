@@ -53,7 +53,7 @@ class Dev(Configuration):
         'AssistApp',
 
         # 'speech_recognition', 
-        # 'pyttsx3',
+        'pyttsx3',
         # 'elevenlabs',
         'gtts',
         'playsound',

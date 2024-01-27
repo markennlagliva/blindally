@@ -258,7 +258,7 @@
 
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         // eligible speech
-        // const recognition = new SpeechRecognition();
+        const recognition = new SpeechRecognition();
         recognition.interimResults = true;
         
 
@@ -286,11 +286,11 @@
             
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
-                if (text === 'news') {
+                if (text.includes('news')) {
                     window.location.href = "{% url 'newsfeed' %}"
                     
                 }
-                else if (text === 'home'){
+                else if (text.includes('home')){
                     window.location.href = "{% url 'index' %}"
                     fetch("{% url 'index' %}", {
                         method: 'POST',
@@ -310,15 +310,15 @@
                         console.error('Error', error);
                     });
                 }
-                else if (text === 'time') {
+                else if (text.includes('time')) {
                     window.location.href = "{% url 'current_time_date' %}"
                     
                 }
-                else if (text === 'current location') {
+                else if (text.includes('current location')) {
                     window.location.href = "{% url 'location' %}"
                     
                 }
-                else if (text === 'motivation') {
+                else if (text.includes('motivation')) {
                     window.location.href = "{% url 'motivation' %}"
                     fetch("{% url 'motivation' %}", {
                         method: 'POST',
