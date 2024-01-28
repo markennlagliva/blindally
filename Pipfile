@@ -13,6 +13,7 @@ gtts = "*"
 playsound = "==1.2.2"
 python-dotenv = "*"
 openai = "*"
+elevenlabs = "*"
 
 [dev-packages]
 
