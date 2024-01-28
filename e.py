@@ -20,19 +20,22 @@
 import os
 from dotenv import load_dotenv
 
-# import elevenlabs
-# load_dotenv()
-# elevenlabs_api = elevenlabs.set_api_key(os.getenv('ELEVENLABS_API_KEY'))
+import elevenlabs
+load_dotenv()
+elevenlabs_api = elevenlabs.set_api_key(os.getenv('ELEVENLABS_API_KEY'))
 
-# from elevenlabs import generate, play, voices
-# # [print(voice) for voice in voices()]
+from elevenlabs import generate, play, voices, Voice, VoiceSettings
+# [print(voice) for voice in voices()]
 
-# audio = generate(
-#     text='Hello, This blindally.',
-#     voice='Adam',
-#     model='eleven_multilingual_v2',
-# )
-# play(audio)
+
+audio = generate(
+    text='Hello, What are you doing today?',
+    voice=Voice(
+        voice_id='EXAVITQu4vr4xnSDxMaL',
+        settings=VoiceSettings(stability=0.71, similarity_boost=0.5, style=0.0, use_speaker_boost=True)
+    )
+)
+play(audio)
 
 # from playsound import playsound
 """
