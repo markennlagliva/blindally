@@ -17,25 +17,77 @@
 #     )
 # elevenlabs.play(audio)
 
-import os
-from dotenv import load_dotenv
+# import pyttsx3
 
-import elevenlabs
-load_dotenv()
-elevenlabs_api = elevenlabs.set_api_key(os.getenv('ELEVENLABS_API_KEY'))
+# engine = pyttsx3.init()
+# voices = engine.getProperty('voices')
 
-from elevenlabs import generate, play, voices, Voice, VoiceSettings
-# [print(voice) for voice in voices()]
+# for voice in voices:
+#     print(voice, voice.id)
+#     engine.setProperty('voice', voice.id)
+#     engine.say("Hello World!")
+#     engine.runAndWait()
+
+# from googletrans import Translator
+
+# translator = Translator()
 
 
-audio = generate(
-    text='Hello, What are you doing today?',
-    voice=Voice(
-        voice_id='EXAVITQu4vr4xnSDxMaL',
-        settings=VoiceSettings(stability=0.71, similarity_boost=0.5, style=0.0, use_speaker_boost=True)
-    )
-)
-play(audio)
+# result = Translator().translate('Our team then decided to make a sample website that contains the technologies that will help website become accessible and help blind people in interacting with the website easily by removing technological barrier.', dest='tl')
+# print(result.text)
+
+
+# def translate_text(text, target_language='en'):
+#     translator = Translator()
+#     translation = translator.translate(text, dest=target_language)
+#     return translation.text
+
+# # Example usage
+# text_to_translate = "Hello, how are you?"
+# translated_text = translate_text(text_to_translate, target_language='es')
+# print(f"Original text: {text_to_translate}")
+# print(f"Translated text: {translated_text}")
+
+class Hello:
+    def __init__(self, name, age) -> None:
+        self.name = name
+        self.age = age
+
+    def func_name(self):
+        print('It went here')
+        print('This is the none', self.name)
+
+    def func_age(self):
+        print('This is the self.age', self.age)
+
+
+Hello('marvelous', 19).func_age()
+
+
+
+
+# import os
+# from dotenv import load_dotenv
+
+# import elevenlabs
+# load_dotenv()
+# elevenlabs_api = elevenlabs.set_api_key(os.getenv('ELEVENLABS_API_KEY'))
+
+# from elevenlabs import generate, play, voices, Voice, VoiceSettings
+# # [print(voice) for voice in voices()]
+
+
+# audio = generate(
+#     text='Hello, What are you doing today?',
+#     voice=Voice(
+#         voice_id='EXAVITQu4vr4xnSDxMaL',
+#         settings=VoiceSettings(stability=0.71, similarity_boost=0.5, style=0.0)
+#     )
+# )
+# play(audio)
+
+
+
 
 # from playsound import playsound
 """
