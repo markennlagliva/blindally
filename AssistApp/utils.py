@@ -39,7 +39,7 @@ def speak(response, details=None, status=False):
     
     if response == 'home':
         audio = gTTS('You are currently in Home page', lang='en')
-        audio = 
+        
         
     elif response == 'tap-detail-home':
         pass

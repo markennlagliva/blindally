@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 
 # Custom utils.py
-from utils import speak
+from .utils import speak
 
 # Files Manipulation 
 import os

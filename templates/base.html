@@ -60,12 +60,21 @@
 </style>
 {% endblock style %}
 <style>
-    .dropdown-item:hover {
-      background-color: #343a40; /* Set your desired dropdown hover background color */
+    .dropdown-item:hover, .nav-item .nav-link:hover, #mode button:hover {
+      background-color: #ffffff2d; /* Set your desired dropdown hover background color */
       /* Set your desired dropdown hover text color */
+      transform: scale(1.1px);
       transition: 0.5s;
-      color: 
+      
     }
+
+    #mode {
+      
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+
 </style>
 <body>
     <div class="loader"></div>
@@ -84,10 +93,10 @@
           <div class="collapse navbar-collapse text-center text-white" id="navbarNav">
                 <ul class="navbar-nav ms-auto gap-lg-3 gap-1">
                     <li class="nav-item border rounded-5">
-                        <a class="nav-link text-white-50" aria-current="page" href="{% url 'index' %}"><i class="bi bi-house"></i> Home</a>
+                        <a class="nav-link rounded-5 text-white-50" aria-current="page" href="{% url 'index' %}"><i class="bi bi-house"></i> Home</a>
                     </li>
                     <li class="nav-item border rounded-5">
-                        <a class="nav-link text-white-50" href="{% url 'guidelines' %}"><i class="bi bi-people"></i> User Guidelines</a>
+                        <a class="nav-link rounded-5 text-white-50" href="{% url 'guidelines' %}"><i class="bi bi-people"></i> User Guidelines</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white-50 border rounded-5" id="audioDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bi bi-volume-up"></i> Audio apps <i class="bi bi-chevron-down"></i></a>
@@ -120,6 +129,7 @@
                             <a class="dropdown-item" href="#">More Services</a>     -->
                         </div>
                     </li> 
+
                 </ul>
           </div>
           
@@ -149,7 +159,9 @@
     </main>
    
     <footer>
-
+        <div id="mode">              
+            <button id="buttonStatus" class="btn btn-sm border rounded-5"><i><i class="bi bi-translate"></i> <span id="content">English</span></i></button>
+        </div>
     </footer>
 </body>
 
@@ -158,14 +170,50 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
         let mainElement = document.querySelector('main');
+        
+        
+        console.log('This is the Status Before: ', localStorage.getItem('status'));
+        console.log('This is the Mode Before: ', localStorage.getItem('mode'));
+
 
         var csrfToken = getCookie('csrftoken');
         console.log(csrfToken);
         var currentUrl = window.location.href;
 
-     
+        let buttonStatus = document.getElementById('buttonStatus');
+        let contentMode = document.getElementById('content');
+
+        // displays current language mode dynamically
+        if (localStorage.getItem('mode') == 'Filipino') {
+            contentMode.textContent = localStorage.getItem('mode');
+        } else {
+            contentMode.textContent = localStorage.getItem('mode');
+        }
+
+        // TRUE for ENGLISH && FALSE for FILIPINO
+        // Trigger for LocalStorage and for Dynamic values
+        buttonStatus.addEventListener('click', function () {
+            let status = localStorage.getItem('status');
+           
+           console.log('Hello')
+
+           if (status === 'true') {
+               localStorage.setItem('mode', 'Filipino'); 
+               contentMode.textContent = localStorage.getItem('mode');
+               localStorage.setItem('status', false);
+           } else {
+               localStorage.setItem('mode', 'English'); 
+               contentMode.textContent = localStorage.getItem('mode');
+               localStorage.setItem('status', true);
+           }
+           
+
+           console.log('This is the Status After: ', localStorage.getItem('status'));
+           console.log('This the language mode:', localStorage.getItem('mode'))
+        });
+    
         
-        console.log('{{request.path}}' === '/')
+        console.log('Path equality', '{{request.path}}' === '/')
 
         function getCookie(name) {
                 var cookieValue = null;
