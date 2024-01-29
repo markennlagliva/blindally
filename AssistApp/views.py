@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 
 # Custom utils.py
-from .utils import speak
+from utils import speak
 
 # Files Manipulation 
 import os
@@ -13,6 +13,7 @@ import json
 # Home Page
 def index(request):
     if request.method == 'POST':
+        # Status value here either T or F
         response = json.loads(request.body)
         speak(response.get('key'), response.get('details')) # Differs in body key values
         return JsonResponse({'result': 'success'})
