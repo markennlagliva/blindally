@@ -15,8 +15,9 @@ def index(request):
     if request.method == 'POST':
         # Status value here either T or F
         response = json.loads(request.body)
-        speak(response.get('key'), response.get('details')) # Differs in body key values
-        return JsonResponse({'result': 'success'})
+        print(f"This is the status value: {response.get('status')} and the data type: {type(response.get('status'))}" )
+        speak(response.get('key'), response.get('details'), status=response.get('status')) # Differs in body key values
+        return JsonResponse({'result': 'success', 'status': response.get('status')})
 
     context = {}
     return render(request, 'base.html', context)
