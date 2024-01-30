@@ -251,6 +251,7 @@
                     body: JSON.stringify({
                         key: 'tap-detail-home',
                         details: allPdetails,
+                        status: JSON.parse(localStorage.getItem('status')),
                     }),
                 })
                 .then(response => response.json())
