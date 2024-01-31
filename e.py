@@ -22,8 +22,19 @@
 # engine = pyttsx3.init()
 # voices = engine.getProperty('voices')
 
+# from googletrans import Translator
+# details = ['Hello', 'Whats up']
+# print(len(details))
+# if len([details]) >= 2: 
+#     print('Here 1')
+#     result = Translator().translate(details, dest='tl')
+# else:
+#     print('Here 2')
+#     result = Translator().translate(' '.join(details), dest='tl')
 
-print('This is the length value', len(['hello']))
+# print('This is inside tagalog.', result.text)
+
+print(str(['Hello']))
 
 # for voice in voices:
 #     print(voice, voice.id)
@@ -51,20 +62,20 @@ print('This is the length value', len(['hello']))
 # print(f"Original text: {text_to_translate}")
 # print(f"Translated text: {translated_text}")
 
-class Hello:
-    def __init__(self, name, age) -> None:
-        self.name = name
-        self.age = age
+# class Hello:
+#     def __init__(self, name, age) -> None:
+#         self.name = name
+#         self.age = age
 
-    def func_name(self):
-        print('It went here')
-        print('This is the none', self.name)
+#     def func_name(self):
+#         print('It went here')
+#         print('This is the none', self.name)
 
-    def func_age(self):
-        print('This is the self.age', self.age)
+#     def func_age(self):
+#         print('This is the self.age', self.age)
 
 
-Hello('marvelous', 19).func_age()
+# Hello('marvelous', 19).func_age()
 
 
 
