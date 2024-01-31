@@ -22,6 +22,9 @@
 # engine = pyttsx3.init()
 # voices = engine.getProperty('voices')
 
+
+print('This is the length value', len(['hello']))
+
 # for voice in voices:
 #     print(voice, voice.id)
 #     engine.setProperty('voice', voice.id)
