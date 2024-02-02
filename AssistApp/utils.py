@@ -13,6 +13,7 @@ class LanguageMode:
 
     def english_speak(self):
         import pyttsx3
+        
         engine = pyttsx3.init()
         voices = engine.getProperty('voices')
         engine.setProperty('rate', 165)
@@ -56,7 +57,7 @@ def speak(response, details=None, status=True):
         elif response == 'tap-more-motivation':
             LanguageMode(details).english_speak()
 
-        elif response == 'technologies':
+        elif response == 'technology':
             LanguageMode(['Going to tehcnologies page.']).english_speak()
         
         elif response == 'tap-more-technologies':
@@ -75,7 +76,7 @@ def speak(response, details=None, status=True):
         elif response == 'tap-more-motivation':
             LanguageMode(details).tagalog_speak()
 
-        elif response == 'technologies':
+        elif response == 'technology':
             LanguageMode(['Nasa technologies page ka.']).tagalog_speak()
         
         elif response == 'tap-more-technologies':

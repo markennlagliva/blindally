@@ -397,7 +397,7 @@
                         console.error('Error', error);
                     });
                 }
-                else if (text === 'technologies') {
+                else if (text === 'technology') {
                     window.location.href = "{% url 'technologies' %}"
                     fetch("{% url 'technologies' %}", {
                         method: 'POST',
@@ -406,7 +406,7 @@
                             'X-CSRFToken': csrfToken,
                         },
                         body: JSON.stringify({
-                            key: 'technologies',
+                            key: 'technology',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })
