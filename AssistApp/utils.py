@@ -15,17 +15,19 @@ class LanguageMode:
 
     def english_speak(self):
         import pyttsx3
-        
-        engine = pyttsx3.init()
-        voices = engine.getProperty('voices')
-        engine.setProperty('rate', 165)
-        engine.setProperty('voice', voices[1].id)
+        try:
+            engine = pyttsx3.init()
+            voices = engine.getProperty('voices')
+            engine.setProperty('rate', 165)
+            engine.setProperty('voice', voices[1].id)
 
-        # print('This is the length of details.', len([(self.details)]), type(self.details))
-        engine.say(' '.join(self.details))
-   
-        engine.runAndWait()
-        engine.stop()
+            # print('This is the length of details.', len([(self.details)]), type(self.details))
+            engine.say(' '.join(self.details))
+    
+            engine.runAndWait()
+            engine.stop()
+        except:
+            engine.stop()
     
     def tagalog_speak(self):
         from googletrans import Translator

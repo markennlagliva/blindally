@@ -170,10 +170,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
         let mainElement = document.querySelector('main');
-        
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        // eligible speech
+        const recognition = new SpeechRecognition();
+        recognition.interimResults = true;
         
         console.log('This is the Status Before: ', localStorage.getItem('status'));
         console.log('This is the Mode Before: ', localStorage.getItem('mode'));
+
+        if (!localStorage.getItem('status')) {
+    // If not, set a pre-determined default value
+            localStorage.setItem('mode', 'English'); 
+            localStorage.setItem('status', true);
+        };
 
 
         var csrfToken = getCookie('csrftoken');
@@ -183,7 +192,7 @@
         let buttonStatus = document.getElementById('buttonStatus');
         let contentMode = document.getElementById('content');
 
-        // displays current language mode dynamically
+       // displays current language mode dynamically
         if (localStorage.getItem('mode') == 'Filipino') {
             contentMode.textContent = localStorage.getItem('mode');
         } else {
@@ -226,7 +235,7 @@
                     }
                 }
                 return cookieValue;
-            }
+            };
 
         // Request Details by Clicking
         mainElement.onclick = function () {
@@ -307,10 +316,7 @@
            
         };
 
-        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        // eligible speech
-        const recognition = new SpeechRecognition();
-        recognition.interimResults = true;
+        
         
 
         // recognition.lang = 'en-US';
