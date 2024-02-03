@@ -12,7 +12,7 @@ import os
 import json
 
 # Home Page
-@csrf_exempt
+
 def index(request):
     if request.method == 'POST':
         # Status value here either T or F
@@ -25,12 +25,12 @@ def index(request):
     return render(request, 'base.html', context)
 
 # Info apps pages
-@csrf_exempt
+
 def newsfeed(request):
     context = {}
     return render(request, 'partial/info-apps/_news.html', context)
 
-@csrf_exempt
+
 def current_time_date(request):
         
     current_datetime = timezone.now()
@@ -41,27 +41,27 @@ def current_time_date(request):
     context = {}
     return render(request, 'partial/info-apps/_datetime.html', context)
 
-@csrf_exempt
+
 def location(request):
     context = {}
     return render(request, 'partial/info-apps/_location.html', context)
 
-@csrf_exempt
+
 def assistantbot(request):
     return render(request, 'partial/info-apps/_chatbot.html')
 
 # Audio apps pages
-@csrf_exempt
+
 def audio_book(request):
     return render(request, 'partial/audio-apps/_book.html')
 
-@csrf_exempt
+
 def audio_music(request):
     return render(request, 'partial/audio-apps/_music.html')
 
 
 # More pages
-@csrf_exempt
+
 def motivation(request):
     if request.method == 'POST':
         response = json.loads(request.body)
@@ -72,7 +72,7 @@ def motivation(request):
     context = {}
     return render(request, 'partial/more/_motivation.html', context)
 
-@csrf_exempt
+
 def technologies(request):
     if request.method == 'POST':
         response = json.loads(request.body)
@@ -84,7 +84,7 @@ def technologies(request):
     return render(request, 'partial/more/_technologies.html', context)
 
 # About page
-@csrf_exempt
+
 def guidelines(request):
     return render(request, 'partial/_guidelines.html')
 
