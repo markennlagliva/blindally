@@ -88,3 +88,4 @@ def technologies(request):
 def guidelines(request):
     return render(request, 'partial/_guidelines.html')
 
+#added csrf_exempt for 403 forbidden request ERROR
