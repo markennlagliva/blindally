@@ -34,9 +34,10 @@ class LanguageMode:
         # print('This is inside tagalog.', result.text)
         # This is for Filipino Language
         audio = gTTS(result.text, lang='tl', slow=False)
-        audio.save('audio/playsound.mp3')
-        playsound('audio/playsound.mp3')
-        os.remove('audio/playsound.mp3')
+        audio.save('static/audio/playsound.mp3')
+        playsound('static/audio/playsound.mp3')
+        os.remove('static/audio/playsound.mp3')
+        
 
 
 # Status: True = English || False = Tagalog

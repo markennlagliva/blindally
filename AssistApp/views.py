@@ -23,7 +23,7 @@ def index(request):
             return JsonResponse({'result': 'success', 'status': response.get('status')})
 
         except Exception as e:
-            return JsonResponse({"status": False, "error":str(e)}, status=500)
+            return JsonResponse({"error":str(e)})
 
     context = {}
     return render(request, 'base.html', context)
