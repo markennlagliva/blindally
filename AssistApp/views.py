@@ -16,10 +16,14 @@ import json
 def index(request):
     if request.method == 'POST':
         # Status value here either T or F
-        response = json.loads(request.body)
-        print(f"This is the status value: {response.get('status')} and the data type: {type(response.get('status'))}" )
-        speak(response.get('key'), response.get('details'), status=response.get('status')) # Differs in body key values
-        return JsonResponse({'result': 'success', 'status': response.get('status')})
+        try:
+            response = json.loads(request.body)
+            print(f"This is the status value: {response.get('status')} and the data type: {type(response.get('status'))}" )
+            speak(response.get('key'), response.get('details'), status=response.get('status')) # Differs in body key values
+            return JsonResponse({'result': 'success', 'status': response.get('status')})
+
+        except Exception as e:
+            return JsonResponse({"status": False, "error":str(e)}, status=500)
 
     context = {}
     return render(request, 'base.html', context)

@@ -186,7 +186,7 @@
 
 
         var csrfToken = getCookie('csrftoken');
-        console.log(csrfToken);
+        console.log('This is the Token:', csrfToken);
         var currentUrl = window.location.href;
 
         let buttonStatus = document.getElementById('buttonStatus');
@@ -234,6 +234,7 @@
                         }
                     }
                 }
+                console.log('This is inside 2nd Cookie:', cookieValue)
                 return cookieValue;
             };
 

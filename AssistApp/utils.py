@@ -4,8 +4,6 @@ from playsound import playsound
 
 import os
 
-
-
 # language = 'en-us' Male || 'en-au' Female
 # lang = 'tl' or English
 
