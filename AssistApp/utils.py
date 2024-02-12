@@ -33,7 +33,7 @@ class LanguageMode:
 
         # print('This is inside tagalog.', result.text)
         # This is for Filipino Language
-        os.chmod('static/audio', 0o777)
+        # os.chmod('static/audio', 0o777)
         audio = gTTS(result.text, lang='tl', slow=False)
         audio.save('static/audio/playsound.mp3')
         playsound('static/audio/playsound.mp3')
