@@ -440,11 +440,26 @@
                     // });
                 }
 
-                else {
-                    
-                    // Change this Logic
-                    
-                };
+                else if (text.startsWith('set') && text.includes('english')){
+                    if (localStorage.getItem('mode') == 'English') {
+                        speak('language already set in English mode.');
+                    } else {
+                        speak('setting language to english mode.')
+                        localStorage.setItem('mode', 'English'); 
+                        contentMode.textContent = localStorage.getItem('mode');
+                        localStorage.setItem('status', true);    
+                    }
+                }
+                else if (text.startsWith('set') && text.includes('filipino')) {
+                    if (localStorage.getItem('mode') == 'Filipino') {
+                        speak('language already set in Filipino mode.');
+                    } else {
+                        speak('setting language to filipino mode.');
+                        localStorage.setItem('mode', 'Filipino'); 
+                        contentMode.textContent = localStorage.getItem('mode');
+                        localStorage.setItem('status', false);
+                    }
+                }
             };
         });
 
