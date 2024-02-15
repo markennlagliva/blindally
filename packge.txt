@@ -1,0 +1,12 @@
+django==4.2.7
+django-livereload-server
+django-configurations
+pyttsx3
+whitenoise
+gtts
+playsound==1.2.2
+python-dotenv
+openai
+googletrans==3.1.0a0
+
+espeakng

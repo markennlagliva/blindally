@@ -250,81 +250,81 @@
             };
 
         // Request Details by Clicking
-        mainElement.onclick = function () {
+        // mainElement.onclick = function () {
            
-            const Pdetails = document.querySelectorAll('p');
-            let allPdetails = [];
-            // console.log(Pdetails.length)
+        //     const Pdetails = document.querySelectorAll('p');
+        //     let allPdetails = [];
+        //     // console.log(Pdetails.length)
 
            
-                Pdetails.forEach(function(paragraph, index) {
-                    var paragraphContent = paragraph.textContent;
-                    allPdetails.push(paragraphContent);
-                });
+        //         Pdetails.forEach(function(paragraph, index) {
+        //             var paragraphContent = paragraph.textContent;
+        //             allPdetails.push(paragraphContent);
+        //         });
                 
-            if ("{{request.path}}" === '/') {
-                fetch("{% url 'index' %}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken,
-                    },
-                    body: JSON.stringify({
-                        key: 'tap-detail-home',
-                        details: allPdetails,
-                        status: JSON.parse(localStorage.getItem('status')),
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success', data);
-                })
-                .catch((error) => {
-                    console.error('Error', error);
-                });   
-            } else if ("{{request.path}}" === '/motivation') {
-                fetch("{% url 'motivation' %}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken,
-                    },
-                    body: JSON.stringify({
-                        key: 'tap-more-motivation',
-                        details: allPdetails,
-                        status: JSON.parse(localStorage.getItem('status')),
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success', data);
-                })
-                .catch((error) => {
-                    console.error('Error', error);
-                });
-            } else if ("{{request.path}}" === '/technologies') {
-                fetch("{% url 'technologies' %}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken,
-                    },
-                    body: JSON.stringify({
-                        key: 'tap-more-technologies',
-                        details: allPdetails,
-                        status: JSON.parse(localStorage.getItem('status')),
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success', data);
-                })
-                .catch((error) => {
-                    console.error('Error', error);
-                });
-            }
+        //     if ("{{request.path}}" === '/') {
+        //         fetch("{% url 'index' %}", {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRFToken': csrfToken,
+        //             },
+        //             body: JSON.stringify({
+        //                 key: 'tap-detail-home',
+        //                 details: allPdetails,
+        //                 status: JSON.parse(localStorage.getItem('status')),
+        //             }),
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log('Success', data);
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error', error);
+        //         });   
+        //     } else if ("{{request.path}}" === '/motivation') {
+        //         fetch("{% url 'motivation' %}", {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRFToken': csrfToken,
+        //             },
+        //             body: JSON.stringify({
+        //                 key: 'tap-more-motivation',
+        //                 details: allPdetails,
+        //                 status: JSON.parse(localStorage.getItem('status')),
+        //             }),
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log('Success', data);
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error', error);
+        //         });
+        //     } else if ("{{request.path}}" === '/technologies') {
+        //         fetch("{% url 'technologies' %}", {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRFToken': csrfToken,
+        //             },
+        //             body: JSON.stringify({
+        //                 key: 'tap-more-technologies',
+        //                 details: allPdetails,
+        //                 status: JSON.parse(localStorage.getItem('status')),
+        //             }),
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log('Success', data);
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error', error);
+        //         });
+        //     }
                
-        };
+        // };
         
 
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
@@ -342,109 +342,110 @@
             if(e.results[0].isFinal) {
                 if (text === 'home') {
                     window.location.href = "{% url 'index' %}"
-                    speak('you are going to home page.')
+                    // speak('you are going to home page.')
+                    // speak('you are going to newsfeed page.')
+                    fetch("{% url 'index' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            key: 'home',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                     
                 }
                 else if (text === 'guidelines') {
                     window.location.href = "{% url 'guidelines' %}"
-                    speak('you are going to user-guidelines page.')
+                    // speak('you are going to user-guidelines page.')
                 }
                 // Audio Apps
                 else if (text === 'audiobook') {
                     window.location.href = "{% url 'audio_book' %}"
-                    speak('you are goint to audio book page.')
+                    // speak('you are goint to audio book page.')
                 }
                 else if (text === 'music') {
                     window.location.href = "{% url 'audio_music' %}"
-                    speak('you are going to music page.')
+                    // speak('you are going to music page.')
                 }
                 // Info Apps
                 else if (text === 'assistant') {
                     window.location.href = "{% url 'assistantbot' %}"
-                    speak('you are going to assistant bot page.')
+                    // speak('you are going to assistant bot page.')
                 }
                 else if (text === 'time') {
                     window.location.href = "{% url 'current_time_date' %}"
-                    speak('you are going to date and time page.')
+                    // speak('you are going to date and time page.')
                     
                 }
                 else if (text === 'location') {
                     window.location.href = "{% url 'location' %}"
-                    speak('you are going to location page.')      
+                    // speak('you are going to location page.')      
                 }
                 else if (text === 'news'){
                     window.location.href = "{% url 'newsfeed' %}"
-                    speak('you are going to newsfeed page.')
-                    // fetch("{% url 'index' %}", {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //         'X-CSRFToken': csrfToken,
-                            
-                    //     },
-                    //     body: JSON.stringify({
-                    //         key: 'home',
-                    //         status: JSON.parse(localStorage.getItem('status')),
-                    //     }),
-                    // })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     console.log('Success', data);
-                    // })
-                    // .catch((error) => {
-                    //     console.error('Error', error);
-                    // });
+                    
                 }
                 else if (text === 'motivation') {
                     window.location.href = "{% url 'motivation' %}"
-                    speak('you are going to motivation page')
-                    // fetch("{% url 'motivation' %}", {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //         'X-CSRFToken': csrfToken,
-                    //     },
-                    //     body: JSON.stringify({
-                    //         key: 'motivation',
-                    //         status: JSON.parse(localStorage.getItem('status')),
-                    //     }),
-                    // })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     console.log('Success', data);
-                    // })
-                    // .catch((error) => {
-                    //     console.error('Error', error);
-                    // });
+                    // speak('you are going to motivation page')
+                    fetch("{% url 'motivation' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            key: 'motivation',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 else if (text === 'technology') {
                     window.location.href = "{% url 'technologies' %}"
-                    speak('You are going to technology page.')
-                    // fetch("{% url 'technologies' %}", {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //         'X-CSRFToken': csrfToken,
-                    //     },
-                    //     body: JSON.stringify({
-                    //         key: 'technology',
-                    //         status: JSON.parse(localStorage.getItem('status')),
-                    //     }),
-                    // })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     console.log('Success', data);
-                    // })
-                    // .catch((error) => {
-                    //     console.error('Error', error);
-                    // });
+                    // speak('You are going to technology page.')
+                    fetch("{% url 'technologies' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            key: 'technology',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
 
                 else if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {
-                        speak('language already set in English mode.');
+                        // speak('language already set in English mode.');
                     } else {
-                        speak('setting language to english mode.')
+                        // speak('setting language to english mode.')
                         localStorage.setItem('mode', 'English'); 
                         contentMode.textContent = localStorage.getItem('mode');
                         localStorage.setItem('status', true);    
@@ -452,9 +453,9 @@
                 }
                 else if (text.startsWith('set') && text.includes('filipino')) {
                     if (localStorage.getItem('mode') == 'Filipino') {
-                        speak('language already set in Filipino mode.');
+                        // speak('language already set in Filipino mode.');
                     } else {
-                        speak('setting language to filipino mode.');
+                        // speak('setting language to filipino mode.');
                         localStorage.setItem('mode', 'Filipino'); 
                         contentMode.textContent = localStorage.getItem('mode');
                         localStorage.setItem('status', false);

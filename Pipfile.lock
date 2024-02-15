@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "826939c5722e0f5f6cc1f350240839430ad016d2326b066b72e4cd5b2bcfe982"
+            "sha256": "0610b67bb6401e10301adf1a9f11f5815a4c39ac6d664b63982303600d959810"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -313,6 +313,15 @@
             ],
             "index": "pypi",
             "version": "==0.2.27"
+        },
+        "espeakng": {
+            "hashes": [
+                "sha256:1199e7c1fa0ee3c3c6a0b68170ec2a8659ded1815794188de267fdee33d18df4",
+                "sha256:b07f464cdca968516a0dfcc171c587d522ba366fcc4cb5e0efbda2f3e2a1bd05"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==1.0.3"
         },
         "executing": {
             "hashes": [
@@ -852,11 +861,11 @@
         },
         "tqdm": {
             "hashes": [
-                "sha256:d302b3c5b53d47bce91fea46679d9c3c6508cf6332229aa1e7d8653723793386",
-                "sha256:d88e651f9db8d8551a62556d3cff9e3034274ca5d66e93197cf2490e2dcb69c7"
+                "sha256:1ee4f8a893eb9bef51c6e35730cebf234d5d0b6bd112b0271e10ed7c24a02bd9",
+                "sha256:6cd52cdf0fef0e0f543299cfc96fec90d7b8a7e88745f411ec33eb44d5ed3531"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==4.66.1"
+            "version": "==4.66.2"
         },
         "traitlets": {
             "hashes": [
@@ -876,11 +885,11 @@
         },
         "tzdata": {
             "hashes": [
-                "sha256:aa3ace4329eeacda5b7beb7ea08ece826c28d761cda36e747cfbf97996d39bf3",
-                "sha256:dd54c94f294765522c77399649b4fefd95522479a664a0cec87f41bebc6148c9"
+                "sha256:2674120f8d891909751c38abcdfd386ac0a5a1127954fbc332af6b5ceae07efd",
+                "sha256:9068bc196136463f5245e51efda838afa15aaeca9903f49050dfa2679db4d252"
             ],
             "markers": "sys_platform == 'win32'",
-            "version": "==2023.4"
+            "version": "==2024.1"
         },
         "urllib3": {
             "hashes": [
