@@ -250,81 +250,81 @@
             };
 
         // Request Details by Clicking
-        // mainElement.onclick = function () {
+        mainElement.onclick = function () {
            
-        //     const Pdetails = document.querySelectorAll('p');
-        //     let allPdetails = [];
-        //     // console.log(Pdetails.length)
+            const Pdetails = document.querySelectorAll('p');
+            let allPdetails = [];
+            // console.log(Pdetails.length)
 
            
-        //         Pdetails.forEach(function(paragraph, index) {
-        //             var paragraphContent = paragraph.textContent;
-        //             allPdetails.push(paragraphContent);
-        //         });
+                Pdetails.forEach(function(paragraph, index) {
+                    var paragraphContent = paragraph.textContent;
+                    allPdetails.push(paragraphContent);
+                });
                 
-        //     if ("{{request.path}}" === '/') {
-        //         fetch("{% url 'index' %}", {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'X-CSRFToken': csrfToken,
-        //             },
-        //             body: JSON.stringify({
-        //                 key: 'tap-detail-home',
-        //                 details: allPdetails,
-        //                 status: JSON.parse(localStorage.getItem('status')),
-        //             }),
-        //         })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log('Success', data);
-        //         })
-        //         .catch((error) => {
-        //             console.error('Error', error);
-        //         });   
-        //     } else if ("{{request.path}}" === '/motivation') {
-        //         fetch("{% url 'motivation' %}", {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'X-CSRFToken': csrfToken,
-        //             },
-        //             body: JSON.stringify({
-        //                 key: 'tap-more-motivation',
-        //                 details: allPdetails,
-        //                 status: JSON.parse(localStorage.getItem('status')),
-        //             }),
-        //         })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log('Success', data);
-        //         })
-        //         .catch((error) => {
-        //             console.error('Error', error);
-        //         });
-        //     } else if ("{{request.path}}" === '/technologies') {
-        //         fetch("{% url 'technologies' %}", {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'X-CSRFToken': csrfToken,
-        //             },
-        //             body: JSON.stringify({
-        //                 key: 'tap-more-technologies',
-        //                 details: allPdetails,
-        //                 status: JSON.parse(localStorage.getItem('status')),
-        //             }),
-        //         })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log('Success', data);
-        //         })
-        //         .catch((error) => {
-        //             console.error('Error', error);
-        //         });
-        //     }
+            if ("{{request.path}}" === '/') {
+                fetch("{% url 'index' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        key: 'tap-detail-home',
+                        details: allPdetails,
+                        status: JSON.parse(localStorage.getItem('status')),
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success', data);
+                })
+                .catch((error) => {
+                    console.error('Error', error);
+                });   
+            } else if ("{{request.path}}" === '/motivation') {
+                fetch("{% url 'motivation' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        key: 'tap-more-motivation',
+                        details: allPdetails,
+                        status: JSON.parse(localStorage.getItem('status')),
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success', data);
+                })
+                .catch((error) => {
+                    console.error('Error', error);
+                });
+            } else if ("{{request.path}}" === '/technologies') {
+                fetch("{% url 'technologies' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        key: 'tap-more-technologies',
+                        details: allPdetails,
+                        status: JSON.parse(localStorage.getItem('status')),
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success', data);
+                })
+                .catch((error) => {
+                    console.error('Error', error);
+                });
+            }
                
-        // };
+        };
         
 
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
