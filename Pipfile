@@ -16,7 +16,6 @@ openai = "*"
 elevenlabs = "*"
 googletrans = "==3.1.0a0"
 espeakng = "*"
-pyaudio = "*"
 
 [dev-packages]
 
