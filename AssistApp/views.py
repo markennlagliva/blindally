@@ -52,6 +52,34 @@ def location(request):
 
 @csrf_exempt
 def assistantbot(request):
+
+    import requests
+
+    if request.method == 'POST':
+        try:
+            import openai
+            from dotenv import load_dotenv
+            load_dotenv()
+            openai.api_key = os.getenv('OPENAI_KEY_3')
+
+            completion = openai.ChatCompletion.create(
+                model='gpt-3.5-turbo',
+                messages=[
+                    {
+                    "role": "user", 
+                    "content": "Do a paragraph description regarding Software Engineering."
+                    },
+                ]
+            )
+
+            print(completion['choices'][0]['message']['content'])
+
+            return JsonResponse({'result': 'success', 'generated text': completion['choices'][0]['message']['content'], 'data-json': completion})
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({'Error': str(e)})
+
+
     return render(request, 'partial/info-apps/_chatbot.html')
 
 # Audio apps pages

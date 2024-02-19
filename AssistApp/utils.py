@@ -35,9 +35,9 @@ class LanguageMode:
         # This is for Filipino Language
         # os.chmod('static/audio', 0o777)
         audio = gTTS(result.text, lang='tl', slow=False)
-        audio.save('static/audio/playsound.mp3')
-        playsound('static/audio/playsound.mp3')
-        os.remove('static/audio/playsound.mp3')
+        audio.save('audio/playsound.mp3')
+        playsound('audio/playsound.mp3')
+        os.remove('audio/playsound.mp3')
         
 
 
