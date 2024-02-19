@@ -5,6 +5,9 @@
     : Assistant Bot
 {% endblock title %}
 
+
+
+
 {% block script %}
 <script>
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -86,21 +89,22 @@
                 return cookieValue;
             };
 
-        // Request Details by Clicking
-        
+        // <--- Request Details by Clicking --->
             let mainElement = document.querySelector('main');
             mainElement.onclick = function () {
            
            const Pdetails = document.querySelectorAll('p');
            let allPdetails = [];
+          
            // console.log(Pdetails.length)
 
-          
                Pdetails.forEach(function(paragraph, index) {
                    var paragraphContent = paragraph.textContent;
                    allPdetails.push(paragraphContent);
                });
             
+               console.log(allPdetails.slice(-2))
+              
                fetch("{% url 'assistantbot' %}", {
                    method: 'POST',
                    headers: {
@@ -109,7 +113,7 @@
                    },
                    body: JSON.stringify({
                        key: 'tap-detail-home',
-                       details: allPdetails,
+                       details: allPdetails.slice(-2),
                        status: JSON.parse(localStorage.getItem('status')),
                     //    prompt: promptData,
                    }),
@@ -121,55 +125,13 @@
                .catch((error) => {
                    console.error('Error', error);
                });
-           
-        //    ("{{request.path}}" === '/motivation') {
-        //        fetch("{% url 'motivation' %}", {
-        //            method: 'POST',
-        //            headers: {
-        //                'Content-Type': 'application/json',
-        //                'X-CSRFToken': csrfToken,
-        //            },
-        //            body: JSON.stringify({
-        //                key: 'tap-more-motivation',
-        //                details: allPdetails,
-        //                status: JSON.parse(localStorage.getItem('status')),
-        //            }),
-        //        })
-        //        .then(response => response.json())
-        //        .then(data => {
-        //            console.log('Success', data);
-        //        })
-        //        .catch((error) => {
-        //            console.error('Error', error);
-        //        });
-        //    } else if ("{{request.path}}" === '/technologies') {
-        //        fetch("{% url 'technologies' %}", {
-        //            method: 'POST',
-        //            headers: {
-        //                'Content-Type': 'application/json',
-        //                'X-CSRFToken': csrfToken,
-        //            },
-        //            body: JSON.stringify({
-        //                key: 'tap-more-technologies',
-        //                details: allPdetails,
-        //                status: JSON.parse(localStorage.getItem('status')),
-        //            }),
-        //        })
-        //        .then(response => response.json())
-        //        .then(data => {
-        //            console.log('Success', data);
-        //        })
-        //        .catch((error) => {
-        //            console.error('Error', error);
-        //        });
-        //    }
               
        };
        
+       const texts = document.querySelector('#texts')
+       let p = document.createElement('p')
     
-        
-
-        // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
+        // <--- THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE --->
         window.addEventListener('load', () => {
            
             recognition.addEventListener('result', (e) => {
@@ -182,6 +144,74 @@
             
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
+
+                // <--- Feature Request --->
+                if (text.startsWith('request')) {
+
+                    let output = text.replace(/^request\s*/, "")
+                    
+                    p = document.createElement('p');       
+                    p.classList.add('request')
+                    p.classList.add('text-white-50', 'py-2', 'pe-3', 'border', 'border-secondary', 'rounded');
+                    p.innerText = output[0].toUpperCase() + output.slice(1) + '?';
+                    texts.appendChild(p);
+                    
+
+                    fetch("{% url 'chatbot' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            key: 'assistant',
+                            details: output,
+                            status: JSON.parse(localStorage.getItem('status')),
+                            
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        chatbot_reply = document.createElement('p');
+                        chatbot_reply.classList.add('reply');
+                        chatbot_reply.classList.add('text-white-50', 'py-2', 'ps-3', 'border', 'border-success', 'rounded')
+                        chatbot_reply.innerText = data.generatedText; //This is where the processed data will be putted.
+                        texts.appendChild(chatbot_reply);
+
+                        console.log('Success', data)
+                        // SECOND FETCH FOR VOICE
+                        fetch("{% url 'assistantbot' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            key: 'assistant',
+                            details: data.generatedText,
+                            status: JSON.parse(localStorage.getItem('status')),
+                            //    prompt: promptData,
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                       console.log('data')
+                        
+                        
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
+                        
+                        
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
+                }
+
+
+
                 if (text === 'home') {
                     window.location.href = "{% url 'index' %}"
                     // speak('you are going to home page.')
@@ -317,20 +347,20 @@
 {% endblock script %}
 
 {% block content %}
-<div class="container-lg py-lg-0 pt-sm-5 mt-sm-0 mt-5">
-    <div class="row min-vh-100 d-flex justify-content-center align-items-center gap-lg-0 gap-3">
+<div class="container-lg">
+    <div class="row min-vh-100 d-flex flex-column justify-content-center align-items-center ">
 
-        <div class="col-lg-6 align-self-lg-center text-center py-5" data-aos="fade-right">
-            <h1 class="fw-bolder text-center" style="color: #CD86C9">Chat Bot</h1>
-            <!-- <div class="text-white-50 rounded-5">
-                <p class="text-white-50">Motivation for the DMMMSU-SLUC student researchers arose when we saw that normal people could access the website and get their required information without hassle. But when it gets to visually impaired people, they can't access the information even when the same holds significant value for them.</p>
-                <p class="text-white-50">Our team then decided to make a sample website that contains the technologies that will help the website become accessible and help blind people in interacting with the website easily by removing the technological barrier.</p>
-            </div> -->
+        <div class="col-lg-6 align-self-lg-center text-center mt-2" data-aos="fade-right">
+            <h1 class="fw-bolder text-center text-white-50 "><i class="bi bi-robot"></i> BlindAlly Bot</h1>
         </div>
-        <!-- <div class="col-lg-6 text-lg-center py-md-0 py-5" data-aos="fade-right">
-            <img src="{% static 'assets/motivation.gif' %}" class="img-fluid rounded-5" width="350"></i>
-        </div> -->
-     
+       
+        <div id="scroll-pane" class="container">
+            <div class="row">
+                <div class="col" id="texts">
+                    
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock content %}

@@ -1,3 +1,25 @@
+# import threading
+
+# def speak(message):
+#     # Simulate speaking the message
+#     print("Speaking:", message)
+
+# def index(request):
+#     # Call the asynchronous function to get the data
+#     data = get_data()
+#     # Return JSON response
+#     response = 'response'
+
+#     # Start a separate thread to speak the message
+#     threading.Thread(target=speak, args=("Hello, World!",)).start()
+
+#     print(response)
+
+a = ['a', 'b', 'c', 'd']
+
+print(a[-2:])
+
+
 
 # import elevenlabs
 # elevenlabs.set_api_key("e0c96d185e2e75e056f2b3d21e4f2652")
@@ -34,7 +56,7 @@
 
 # print('This is inside tagalog.', result.text)
 
-print(str(['Hello']))
+# print(str(['Hello']))
 
 # for voice in voices:
 #     print(voice, voice.id)

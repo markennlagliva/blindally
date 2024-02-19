@@ -53,28 +53,13 @@ def location(request):
 @csrf_exempt
 def assistantbot(request):
 
-    import requests
-
     if request.method == 'POST':
         try:
-            import openai
-            from dotenv import load_dotenv
-            load_dotenv()
-            openai.api_key = os.getenv('OPENAI_KEY_3')
+            response = json.loads(request.body)
 
-            completion = openai.ChatCompletion.create(
-                model='gpt-3.5-turbo',
-                messages=[
-                    {
-                    "role": "user", 
-                    "content": "Do a paragraph description regarding Software Engineering."
-                    },
-                ]
-            )
+            speak(response.get('key'), details=response.get('details'), status=response.get('status'))
 
-            print(completion['choices'][0]['message']['content'])
-
-            return JsonResponse({'result': 'success', 'generated text': completion['choices'][0]['message']['content'], 'data-json': completion})
+            return JsonResponse({'result': 'success'})
         except Exception as e:
             print(str(e))
             return JsonResponse({'Error': str(e)})
@@ -121,3 +106,42 @@ def guidelines(request):
     return render(request, 'partial/_guidelines.html')
 
 #added csrf_exempt for 403 forbidden request ERROR
+@csrf_exempt
+def set_language(request):
+    if request.method == 'POST':
+        try:
+            response = json.loads(request.body)
+            print('This is the Language mode.')
+            speak(response.get('key'), response.get('details'), response.get('status'))
+
+            return JsonResponse({'result': 'success', 'status': response.get('status')})
+        except Exception as e:
+            return JsonResponse({"error":str(e)})
+        
+@csrf_exempt
+def chatbot(request):
+    if request.method == 'POST':
+        try:
+            import openai
+            from dotenv import load_dotenv
+            load_dotenv()
+            openai.api_key = os.getenv('OPENAI_KEY_3')
+            response = json.loads(request.body)
+
+            
+            completion = openai.ChatCompletion.create(
+                model='gpt-3.5-turbo',
+                messages=[
+                    {
+                    "role": "user", 
+                    #This is Where USER DATA REQUEST will be process.
+                    "content": response.get('details')
+                    },
+                ]
+            )
+            
+            return JsonResponse({'result': 'success', 'generatedText': completion['choices'][0]['message']['content']})
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({'Error': str(e)})
+    

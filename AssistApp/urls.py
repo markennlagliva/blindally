@@ -21,6 +21,8 @@ urlpatterns = [
     # About 
     path('user-guidelines', views.guidelines,  name='guidelines'),
 
-
+    # Process Language
+    path('process-language', views.set_language, name='set_language'),
+    path('process-chatbot-data', views.chatbot, name='chatbot')
 
 ]

@@ -18,6 +18,7 @@ class LanguageMode:
         engine.setProperty('rate', 165)
         engine.setProperty('voice', voices[1].id)
         try:
+            print(self.details)
             # print('This is the length of details.', len([(self.details)]), type(self.details))
             engine.say(' '.join(self.details))
     
@@ -46,6 +47,12 @@ def speak(response, details=None, status=True):
     # Home Page || Base
     print('This is the status server:', status)
     if status:
+        if response == 'set-language':
+            LanguageMode(details).english_speak()
+
+        if response == 'assistant':
+            LanguageMode([details]).english_speak()
+
         if response == 'home':
             LanguageMode(['Proceeding to Home page.']).english_speak() 
                     
@@ -66,6 +73,13 @@ def speak(response, details=None, status=True):
         elif response == 'tap-more-technologies':
             LanguageMode(details).english_speak()  
     else:
+        if response == 'set-language':
+            print(details)
+            LanguageMode(details).tagalog_speak()
+
+        if response == 'assistant':
+            LanguageMode([details]).tagalog_speak()
+
         if response == 'home':
             LanguageMode(['Nasa Home page ka.']).tagalog_speak()
 
