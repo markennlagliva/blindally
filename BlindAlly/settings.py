@@ -57,6 +57,7 @@ class Dev(Configuration):
         # 'elevenlabs',
         'gtts',
         'playsound',
+        'keyboard',
 
     ]
 
@@ -129,7 +130,7 @@ class Dev(Configuration):
 
     LANGUAGE_CODE = 'en-us'
 
-    TIME_ZONE = values.Value('UTC')
+    TIME_ZONE = 'Asia/Manila'
 
     USE_I18N = True
 

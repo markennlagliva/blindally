@@ -164,7 +164,7 @@
                         <img class="img-fluid align-self-center " src="{% static 'assets/blindally-hero.png' %}" width="400" alt="visually-impaired-image-hero-section">
                     </div>
                     <div class="col-lg-6 align-self-lg-center align-self-start" data-aos="fade-right">
-                        <h1 class="text-center text-lg-start fw-bolder " style="color: #CD86C9">Blind Ally</h1>
+                        <h1 class="text-center text-lg-start fw-bolder " style="color: #CD86C9"><i class="bi bi-robot"></i> Blind Ally</h1>
                         <p class="text-white-50 text-center text-lg-start">"Fostering Digital Equity: A Holistic Exploration of Creating an Inclusive Online Experience for the <span style="color: #CD86C9">Visually Impaired Community</span>."</p>
                     </div>
 
@@ -281,6 +281,7 @@
                    allPdetails.push(paragraphContent);
                });
             
+            
                fetch("{% url 'index' %}", {
                    method: 'POST',
                    headers: {
@@ -288,10 +289,9 @@
                        'X-CSRFToken': csrfToken,
                    },
                    body: JSON.stringify({
-                       key: 'tap-detail-home',
+                    //    details: allPdetails,
                        details: allPdetails,
                        status: JSON.parse(localStorage.getItem('status')),
-                    //    prompt: promptData,
                    }),
                })
                .then(response => response.json())
@@ -374,18 +374,17 @@
                             
                         },
                         body: JSON.stringify({
-                            key: 'set-language',
-                            details: '[language already set in English mode.]',
+                            details: 'language already set in English mode.',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error', error);
+                        });
                         // speak('language already set in English mode.');
                     } else {
                         // speak('setting language to english mode.')
@@ -396,8 +395,7 @@
                             'X-CSRFToken': csrfToken,    
                         },
                         body: JSON.stringify({
-                            key: 'set-language',
-                            details: '[setting language to English mode.]',
+                            details: 'setting language to English mode.',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })
@@ -416,58 +414,55 @@
                     if (localStorage.getItem('mode') == 'Filipino') {
                         // speak('language already set in Filipino mode.');
                         fetch("{% url 'set_language' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            key: 'set-language',
-                            details: '[language already set in Filipino mode.]',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrfToken,
+                                
+                            },
+                            body: JSON.stringify({
+                                details: 'language already set in Filipino mode.',
+                                status: JSON.parse(localStorage.getItem('status')),
+                            }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error', error);
+                        });
                     } else {
                         // speak('setting language to filipino mode.');
                         fetch("{% url 'set_language' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            key: 'set-language',
-                            details: '[setting language to filipino mode.]',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                        localStorage.setItem('mode', 'Filipino'); 
-                        contentMode.textContent = localStorage.getItem('mode');
-                        localStorage.setItem('status', false);
-                    }
-                }
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrfToken,
+                                
+                            },
+                            body: JSON.stringify({
+                                details: 'setting language to filipino mode.',
+                                status: JSON.parse(localStorage.getItem('status')),
+                            }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                                localStorage.setItem('mode', 'Filipino'); 
+                                contentMode.textContent = localStorage.getItem('mode');
+                                localStorage.setItem('status', false);
+                            }
+                        }
+                    
 
                 // Starts here Keyword Voice Navigation
                 if (text === 'home') {
                     window.location.href = "{% url 'index' %}"
-                    // speak('you are going to home page.')
-                    // speak('you are going to newsfeed page.')
                     fetch("{% url 'index' %}", {
                         method: 'POST',
                         headers: {
@@ -476,7 +471,7 @@
                             
                         },
                         body: JSON.stringify({
-                            key: 'home',
+                            details: 'You are already in Home Page.',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })
@@ -491,34 +486,160 @@
                 }
                 else if (text === 'guidelines') {
                     window.location.href = "{% url 'guidelines' %}"
-                    // speak('you are going to user-guidelines page.')
+                    fetch("{% url 'guidelines' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'Going to user guidelines page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 // Audio Apps
                 else if (text === 'audiobook') {
                     window.location.href = "{% url 'audio_book' %}"
-                    // speak('you are goint to audio book page.')
+                    fetch("{% url 'audio_book' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to audio book page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 else if (text === 'music') {
                     window.location.href = "{% url 'audio_music' %}"
-                    // speak('you are going to music page.')
+                    fetch("{% url 'audio_music' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to music page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 // Info Apps
                 else if (text === 'assistant') {
                     window.location.href = "{% url 'assistantbot' %}"
                     // speak('you are going to assistant bot page.')
+                    fetch("{% url 'assistantbot' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to the assistant page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 else if (text === 'time') {
                     window.location.href = "{% url 'current_time_date' %}"
-                    // speak('you are going to date and time page.')
+                    fetch("{% url 'current_time_date' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to date and time page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                     
                 }
                 else if (text === 'location') {
                     window.location.href = "{% url 'location' %}"
-                    // speak('you are going to location page.')      
+                    fetch("{% url 'location' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to location page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });     
                 }
                 else if (text === 'news'){
                     window.location.href = "{% url 'newsfeed' %}"
-                    
+                    fetch("{% url 'newsfeed' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to news page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 else if (text === 'motivation') {
                     window.location.href = "{% url 'motivation' %}"
@@ -530,7 +651,7 @@
                             'X-CSRFToken': csrfToken,
                         },
                         body: JSON.stringify({
-                            key: 'motivation',
+                            details: 'you are going to motivation page.',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })
@@ -552,7 +673,7 @@
                             'X-CSRFToken': csrfToken,
                         },
                         body: JSON.stringify({
-                            key: 'technology',
+                            details: 'you are going to technology page.',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })

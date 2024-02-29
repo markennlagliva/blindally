@@ -91,8 +91,10 @@
 
         // <--- Request Details by Clicking --->
             let mainElement = document.querySelector('main');
+
             mainElement.onclick = function () {
-           
+            
+            
            const Pdetails = document.querySelectorAll('p');
            let allPdetails = [];
           
@@ -112,21 +114,20 @@
                        'X-CSRFToken': csrfToken,
                    },
                    body: JSON.stringify({
-                       key: 'tap-detail-home',
                        details: allPdetails.slice(-2),
                        status: JSON.parse(localStorage.getItem('status')),
-                    //    prompt: promptData,
                    }),
                })
                .then(response => response.json())
-               .then(data => {
+               .then(data => {         
                    console.log('Success', data);
                })
                .catch((error) => {
                    console.error('Error', error);
                });
               
-       };
+       }; 
+   
        
        const texts = document.querySelector('#texts')
        let p = document.createElement('p')
@@ -155,6 +156,13 @@
                     p.classList.add('text-white-50', 'py-2', 'pe-3', 'border', 'border-secondary', 'rounded');
                     p.innerText = output[0].toUpperCase() + output.slice(1) + '?';
                     texts.appendChild(p);
+
+                    function hideElement() {
+                        const botDeterminedDiv = document.getElementById('bot-determined');
+                        botDeterminedDiv.style.display = 'none';
+                    }
+
+                    hideElement();
                     
 
                     fetch("{% url 'chatbot' %}", {
@@ -164,7 +172,6 @@
                             'X-CSRFToken': csrfToken,
                         },
                         body: JSON.stringify({
-                            key: 'assistant',
                             details: output,
                             status: JSON.parse(localStorage.getItem('status')),
                             
@@ -172,6 +179,8 @@
                     })
                     .then(response => response.json())
                     .then(data => {
+
+                        // Logic or Process for Speaking Data Generated with ChatGPT -- 2nd Fetch inside
                         chatbot_reply = document.createElement('p');
                         chatbot_reply.classList.add('reply');
                         chatbot_reply.classList.add('text-white-50', 'py-2', 'ps-3', 'border', 'border-success', 'rounded')
@@ -181,41 +190,132 @@
                         console.log('Success', data)
                         // SECOND FETCH FOR VOICE
                         fetch("{% url 'assistantbot' %}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrfToken,
+                            },
+                            body: JSON.stringify({
+                                key: 'assistant',
+                                details: data.generatedText,
+                                status: JSON.parse(localStorage.getItem('status')),
+                                //    prompt: promptData,
+                            }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success', data);    
+                        })
+                        .catch((error) => {
+                            console.error('Error', error);
+                        });
+                        
+                        
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
+                } // End of request Feature Block
+
+
+                if (text.startsWith('set') && text.includes('english')){
+                    if (localStorage.getItem('mode') == 'English') {
+                        fetch("{% url 'set_language' %}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRFToken': csrfToken,
+                            
                         },
                         body: JSON.stringify({
-                            key: 'assistant',
-                            details: data.generatedText,
+                            details: 'language already set in English mode.',
                             status: JSON.parse(localStorage.getItem('status')),
-                            //    prompt: promptData,
                         }),
                     })
                     .then(response => response.json())
                     .then(data => {
-                       console.log('data')
-                        
-                        
+                        console.log('Success', data);
                     })
                     .catch((error) => {
                         console.error('Error', error);
                     });
-                        
-                        
+                        // speak('language already set in English mode.');
+                    } else {
+                        // speak('setting language to english mode.')
+                        fetch("{% url 'set_language' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,    
+                        },
+                        body: JSON.stringify({
+                            details: 'setting language to English mode.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
                     })
                     .catch((error) => {
                         console.error('Error', error);
                     });
+                        localStorage.setItem('mode', 'English'); 
+                        contentMode.textContent = localStorage.getItem('mode');
+                        localStorage.setItem('status', true);    
+                    }
+                } else if (text.startsWith('set') && text.includes('filipino')) {
+                    if (localStorage.getItem('mode') == 'Filipino') {
+                        // speak('language already set in Filipino mode.');
+                        fetch("{% url 'set_language' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'language already set in Filipino mode.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
+                    } else {
+                        // speak('setting language to filipino mode.');
+                        fetch("{% url 'set_language' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'setting language to filipino mode.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
+                        localStorage.setItem('mode', 'Filipino'); 
+                        contentMode.textContent = localStorage.getItem('mode');
+                        localStorage.setItem('status', false);
+                    }
                 }
 
-
-
+                // Starts here Keyword Voice Navigation
                 if (text === 'home') {
                     window.location.href = "{% url 'index' %}"
-                    // speak('you are going to home page.')
-                    // speak('you are going to newsfeed page.')
                     fetch("{% url 'index' %}", {
                         method: 'POST',
                         headers: {
@@ -224,7 +324,7 @@
                             
                         },
                         body: JSON.stringify({
-                            key: 'home',
+                            details: 'You are going to Home Page.',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })
@@ -239,34 +339,160 @@
                 }
                 else if (text === 'guidelines') {
                     window.location.href = "{% url 'guidelines' %}"
-                    // speak('you are going to user-guidelines page.')
+                    fetch("{% url 'guidelines' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'Going to user guidelines page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 // Audio Apps
                 else if (text === 'audiobook') {
                     window.location.href = "{% url 'audio_book' %}"
-                    // speak('you are goint to audio book page.')
+                    fetch("{% url 'audio_book' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to audio book page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 else if (text === 'music') {
                     window.location.href = "{% url 'audio_music' %}"
-                    // speak('you are going to music page.')
+                    fetch("{% url 'audio_music' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to music page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 // Info Apps
                 else if (text === 'assistant') {
                     window.location.href = "{% url 'assistantbot' %}"
                     // speak('you are going to assistant bot page.')
+                    fetch("{% url 'assistantbot' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            details: 'You are already in assistant page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 else if (text === 'time') {
                     window.location.href = "{% url 'current_time_date' %}"
-                    // speak('you are going to date and time page.')
+                    fetch("{% url 'current_time_date' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to date and time page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                     
                 }
                 else if (text === 'location') {
                     window.location.href = "{% url 'location' %}"
-                    // speak('you are going to location page.')      
+                    fetch("{% url 'location' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to location page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });     
                 }
                 else if (text === 'news'){
                     window.location.href = "{% url 'newsfeed' %}"
-                    
+                    fetch("{% url 'newsfeed' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'You are going to news page.',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
                 else if (text === 'motivation') {
                     window.location.href = "{% url 'motivation' %}"
@@ -278,7 +504,7 @@
                             'X-CSRFToken': csrfToken,
                         },
                         body: JSON.stringify({
-                            key: 'motivation',
+                            details: 'you are going to motivation page.',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })
@@ -300,7 +526,7 @@
                             'X-CSRFToken': csrfToken,
                         },
                         body: JSON.stringify({
-                            key: 'technology',
+                            details: 'you are going to technology page.',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })
@@ -313,26 +539,6 @@
                     });
                 }
 
-                else if (text.startsWith('set') && text.includes('english')){
-                    if (localStorage.getItem('mode') == 'English') {
-                        // speak('language already set in English mode.');
-                    } else {
-                        // speak('setting language to english mode.')
-                        localStorage.setItem('mode', 'English'); 
-                        contentMode.textContent = localStorage.getItem('mode');
-                        localStorage.setItem('status', true);    
-                    }
-                }
-                else if (text.startsWith('set') && text.includes('filipino')) {
-                    if (localStorage.getItem('mode') == 'Filipino') {
-                        // speak('language already set in Filipino mode.');
-                    } else {
-                        // speak('setting language to filipino mode.');
-                        localStorage.setItem('mode', 'Filipino'); 
-                        contentMode.textContent = localStorage.getItem('mode');
-                        localStorage.setItem('status', false);
-                    }
-                }
             };
         });
 
@@ -343,23 +549,42 @@
 
         recognition.start();
     });
+    
+   
 </script>
 {% endblock script %}
 
 {% block content %}
-<div class="container-lg">
+<div class="container-lg ">
     <div class="row min-vh-100 d-flex flex-column justify-content-center align-items-center ">
 
-        <div class="col-lg-6 align-self-lg-center text-center mt-2" data-aos="fade-right">
+        <div class="col-lg-6 align-self-lg-center text-center mt-lg-5" data-aos="fade-right">
             <h1 class="fw-bolder text-center text-white-50 "><i class="bi bi-robot"></i> BlindAlly Bot</h1>
         </div>
        
         <div id="scroll-pane" class="container">
             <div class="row">
                 <div class="col" id="texts">
+                    <!-- This is where p tags are inserted -->
                     
+
+                    <div class="container" id="bot-determined">
+                        <div class="row">
+                            <div class="col-lg-6 align-self-lg-center align-self-end py-5" data-aos="fade-right">
+                                <h1 class="fw-bolder text-center" style="color: #CD86C9">How it works?</h1>
+                                <div class="rounded-5">
+                                    <p class="text-white-50">To initiate a request and obtain the desired information, begin by utilizing the "request" keyword. This action prompts the system to process your request and retrieve the specific data you are seeking.</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 text-center py-md-0 py-5" data-aos="fade-right">
+                                <img src="{% static 'assets/chatbot.gif' %}" width="400" class="img-fluid rounded-5">
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>

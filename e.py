@@ -15,9 +15,9 @@
 
 #     print(response)
 
-a = ['a', 'b', 'c', 'd']
+# a = ['a', 'b', 'c', 'd']
 
-print(a[-2:])
+# print(a[-2:])
 
 
 
@@ -122,9 +122,89 @@ print(a[-2:])
 # )
 # play(audio)
 
+# import os
+
+# import gtts
+# from gtts import gTTS
+# from playsound import playsound
+# text = 'Kamusta kayo lahat? Ako nga pala si blind ally ang inyong tagapaglingkod.'
+# audio = gTTS(text, lang='tl') # 1. com.mx, 2. pt
+# audio.save('audio/ex.mp3')
+# playsound('audio/ex.mp3')
+
+# import multiprocessing
+# import pyttsx3
+# import keyboard
+
+# def sayFunc(phrase):
+#     engine = pyttsx3.init()
+#     engine.setProperty('rate', 160)
+#     engine.say(phrase)
+#     engine.runAndWait()
+
+# def say(phrase):
+# 	# if __name__ == "__main__":
+# 		p = multiprocessing.Process(target=sayFunc, args=(phrase,))
+# 		p.start()
+# 		while p.is_alive():
+# 			if keyboard.is_pressed('q'):
+# 				p.terminate()
+# 			else:
+# 				continue
+# 		p.join()
+
+# say("this process is running right now")
+
+import datetime
+
+# Get current date and time
+current_datetime = datetime.datetime.now()
+
+# Format the time in 12-hour format
+time_12_format = current_datetime.strftime("%I:%M %p")
+
+# Format the date in a more readable format
+date_readable_format = current_datetime.strftime("%B %d, %Y")
+
+# Print the formatted date and time
+print("Current time (12-hour format):", time_12_format)
+print("Formatted date:", date_readable_format)
 
 
+# import os
+# from dotenv import load_dotenv
+# import requests
+# from requests import post
+# import base64
+# import json
 
+# load_dotenv()
+# class AudioBook:
+#     def __init__(self) -> None:  
+#         self.client_id = os.getenv('CLIENT_ID')
+#         self.client_secret = os.getenv('CLIENT_SECRET')
+#         print(self.client_id, self.client_secret)
+
+#     def get_token(self):
+#         auth_string = self.client_id + ":" + self.client_secret
+#         auth_bytes = auth_string.encode("utf-8")
+#         auth_base64 = str(base64.b64encode(auth_bytes), "utf-8")
+
+#         url = "https://accounts.spotify.com/api/token"
+
+#         headers = {
+#             "Authorization": "Basic " + auth_base64,
+#             "Content-Type": "application/x-www-form-urlencoded"
+#         }
+
+#         data = {"grant_type": "client_credentials"}
+#         result = post(url, headers=headers, data=data)
+#         json_result = json.loads(result.content)
+#         token = json_result["access_token"]
+#         print('This is the Token', str(token))
+#         return token
+        
+# print(AudioBook().get_token())
 # from playsound import playsound
 """
 import gtts
