@@ -69,6 +69,16 @@
            console.log('This the language mode:', localStorage.getItem('mode'))
         });
 
+         // RETRIEVING SAVED DATA TO DISPLAY --> Music
+         if (localStorage.getItem('musicMarkup') !== null && JSON.parse(localStorage.getItem('isPlayingMusic'))) {
+            setTimeout(function() {
+                // Set the innerHTML after the delay
+                document.querySelector('#player').innerHTML = localStorage.getItem('musicMarkup');
+            }, 4000);
+        } else {
+            document.querySelector('#audiobook-gif').style.display = 'block';
+        };
+
         // CSRF TOKEN 
         function getCookie(name) {
                 var cookieValue = null;
@@ -88,47 +98,47 @@
 
         // <--- Request Details by Clicking --->
             let mainElement = document.querySelector('main');
-            let count_click = 0
-            console.log('count click condition:', count_click == 0)
+
 
             mainElement.onclick = function () {
             
-            count_click += 1
-            
-           const Pdetails = document.querySelectorAll('p');
-           let allPdetails = [];
-          
-           // console.log(Pdetails.length)
-
-               Pdetails.forEach(function(paragraph, index) {
-                   var paragraphContent = paragraph.textContent;
-                   allPdetails.push(paragraphContent);
-               });
-            
-               console.log(allPdetails.slice(-2))
-              
-               fetch("{% url 'audio_music' %}", {
-                   method: 'POST',
-                   headers: {
-                       'Content-Type': 'application/json',
-                       'X-CSRFToken': csrfToken,
-                   },
-                   body: JSON.stringify({
-                       details: 'Testing Music Page.',
-                       status: JSON.parse(localStorage.getItem('status')),
-                   }),
-               })
-               .then(response => response.json())
-               .then(data => {
-                    count_click = 0
-                   
-                   console.log('Success', data);
-               })
-               .catch((error) => {
-                   console.error('Error', error);
-               });
-              
-       }; 
+                if (JSON.parse(localStorage.getItem('isPlayingMusic'))) {
+                    console.log('Music Player Cannot be interrupted when Playing.');
+                    {};
+                } else {
+                    
+                    const Pdetails = document.querySelectorAll('p');
+                    let allPdetails = [];
+                    // console.log(Pdetails.length);
+                        Pdetails.forEach(function(paragraph, index) {
+                            var paragraphContent = paragraph.textContent;
+                            allPdetails.push(paragraphContent);
+                        });
+                        
+                        console.log(allPdetails)
+                        
+                        fetch("{% url 'audio_music' %}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrfToken,
+                            },
+                            body: JSON.stringify({
+                                details: allPdetails,
+                                status: JSON.parse(localStorage.getItem('status')),
+                            }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                                count_click = 0
+                            
+                            console.log('Success', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error', error);
+                        });
+                }
+            }; // End of Main.click ()
    
        
        const texts = document.querySelector('#texts')
@@ -149,77 +159,138 @@
             if(e.results[0].isFinal) {
 
                 // <--- Feature Request --->
-                if (text.startsWith('request')) {
+                // <--- Feature search --->
+                if (text.startsWith('search')) {
+                    let output = text.replace(/^search\s*/, "")
+                    // console.log('Cakes & Eclairs YT '+output)
+                    // Define the endpoint URL
+const url = "https://www.googleapis.com/youtube/v3/search";
 
-                    let output = text.replace(/^request\s*/, "")
-                    
-                    p = document.createElement('p');       
-                    p.classList.add('request')
-                    p.classList.add('text-white-50', 'py-2', 'pe-3', 'border', 'border-secondary', 'rounded');
-                    p.innerText = output[0].toUpperCase() + output.slice(1) + '?';
-                    texts.appendChild(p);
+// Define query parameters
+const params = {
+    part: "snippet",
+    q: 'Music Free ' + output,  // Replace with your search query
+    type: "video",
+    maxResults: 1,  // Limit to 1 result
+    key: "AIzaSyDhvxzKOGQxCvdf9L3TTM6oiqlMfyjOhh4"  // Replace with your YouTube Data API key
+};
 
-                    function hideElement() {
-                        const botDeterminedDiv = document.getElementById('bot-determined');
-                        botDeterminedDiv.style.display = 'none';
-                    }
+// Construct URL with query parameters
+const queryString = new URLSearchParams(params).toString();
+const fullUrl = `${url}?${queryString}`;
 
-                    hideElement();
-                    
+// Send GET request to the API
+fetch(fullUrl)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Extract video details from response
+        if (data.items && data.items.length > 0) {
+            const musicId = data.items[0].id.videoId;
+            const musicTitle = data.items[0].snippet.title;
+            
+            console.log("Music ID:", musicId);
+            console.log("Music Title:", musicTitle);
+            localStorage.setItem('musicId', musicId);
+            localStorage.setItem('musicTitle', musicTitle);
 
-                    fetch("{% url 'chatbot' %}", {
+            let videoContainer = document.querySelector('#player');
+            //width="560" height="315"
+            let markup = `<iframe id="videoFrame" class="embed-responsive-item" src="https://www.youtube.com/embed/${musicId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <h6 class='text-center text-white-50'>${musicTitle}</h6>`
+            
+            // let markup = `
+            // <video width="320" height="240" controls autoplay>
+            //     <source src="https://www.youtube.com/embed/${videoId}" type="video/mp4">
+            //     Your browser does not support the video tag.
+            // </video>
+            // <h6 class='text-center text-white-50'>${videoTitle}</h6>
+            // `
+
+            // Save the markup string to local storage
+            localStorage.setItem('musicMarkup', markup);
+            // Later, to retrieve the saved markup from local storage
+            var savedMarkup = localStorage.getItem('musicMarkup');
+
+            // NOTIFYING AND SPEAKING PURPOSES CODE
+            fetch("{% url 'audio_music' %}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRFToken': csrfToken,
-                        },
-                        body: JSON.stringify({
-                            key: 'assistant',
-                            details: output,
-                            status: JSON.parse(localStorage.getItem('status')),
                             
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        chatbot_reply = document.createElement('p');
-                        chatbot_reply.classList.add('reply');
-                        chatbot_reply.classList.add('text-white-50', 'py-2', 'ps-3', 'border', 'border-success', 'rounded')
-                        chatbot_reply.innerText = data.generatedText; //This is where the processed data will be putted.
-                        texts.appendChild(chatbot_reply);
-
-                        console.log('Success', data)
-                        // SECOND FETCH FOR VOICE
-                        fetch("{% url 'assistantbot' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
                         },
                         body: JSON.stringify({
-                            key: 'assistant',
-                            details: data.generatedText,
+                            details: 'Request for music Provided.',
                             status: JSON.parse(localStorage.getItem('status')),
-                            //    prompt: promptData,
                         }),
                     })
                     .then(response => response.json())
                     .then(data => {
-                       console.log('data')
-                        
-                        
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                        
-                        
+                        console.log('Success', data);
                     })
                     .catch((error) => {
                         console.error('Error', error);
                     });
 
+            setTimeout(function() {
+                // Set the innerHTML after the delay
+                document.querySelector('#player').innerHTML = localStorage.getItem('musicMarkup');
+            }, 4000);
+
+            localStorage.setItem('isPlayingMusic', true);
+
+        } else {
+            console.log("No music found.");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+
+
+                    
                 }; // End of request Feature Block
+
+
+                if (text === 'stop') {
+                    localStorage.setItem('isPlayingMusic', false);
+                    let markup_gif =  `<img id="audiobook-gif" src="{% static 'assets/audiomusic.gif' %}" width="300" class="img-fluid rounded-5 text-center">`
+                    localStorage.setItem('music-gif', markup_gif);
+                    document.querySelector('#player').innerHTML = localStorage.getItem('music-gif');
+                
+                }; // End for STOP keyword
+
+                if (text === 'continue') {
+                    localStorage.setItem('isPlayingMusic', true);
+                    document.querySelector('#player').innerHTML = localStorage.getItem('musicMarkup');
+
+                    if (localStorage.getItem('musicMarkup') === null) {
+                            fetch("{% url 'audio_music' %}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrfToken,
+                                
+                            },
+                            body: JSON.stringify({
+                                details: 'sorry, you have not requested a Music yet.',
+                                status: JSON.parse(localStorage.getItem('status')),
+                            }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error', error);
+                        });
+                    };
+                }; // End for CONTINUTE keyword
+
 
 
                 if (text.startsWith('set') && text.includes('english')){
@@ -559,18 +630,38 @@
 {% endblock script %}
 
 {% block content %}
-<div class="container-lg py-lg-0 pt-sm-5 mt-sm-0 mt-5">
-    <div class="row min-vh-100 d-flex justify-content-center align-items-center gap-lg-0 gap-3">
+<div class="container-lg">
+    <div class="row min-vh-100 d-flex flex-column justify-content-center align-items-center ">
 
-        <div class="col-lg-6 align-self-lg-center text-center py-5" data-aos="fade-right">
-            <h1 class="fw-bolder text-center" style="color: #CD86C9"><i class="bi bi-boombox"></i> Audio Music</h1>
-            
-            <audio controls>
-                <source src="https://p.scdn.co/mp3-preview/cf6bfb6dca2d6e0c9e896f861a8f4a15c5ae2a1b?cid=989b539461e14ec3a11813e2d859860c">
-            </audio>
+        <div class="col-lg-6 align-self-lg-center text-center mt-2" data-aos="fade-right">
+            <h1 class="fw-bolder text-center text-white-50"><i class="bi bi-boombox"></i> Audio Music</h1>
         </div>
        
-     
+        <div class="container">
+            <div class="row">
+                <div class="col text-center" id="texts">
+                    <!-- This is where p tags are inserted -->
+                    
+
+                    <div class="container" id="book-determined">
+                        <div class="row">
+                            <div class="col-lg-6 align-self-lg-center align-self-end py-5" data-aos="fade-right">
+                                <h3 class="fw-bolder text-center" style="color: #CD86C9">"Harmonies Heard: Accessible Music for the Visually Impaired"</h3>
+                                <div class="rounded-5">
+                                    <p class="text-white-50">Find the music you wanted to listen by utilizing and saying the "search" keyword.</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 d-flex flex-column align-items-center py-md-0 py-5 embed-responsive embed-responsive-16by9" data-aos="fade-right" id="player">
+
+                                <img id="audiobook-gif" src="{% static 'assets/audiomusic.gif' %}" width="400" class="img-fluid rounded-5">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
     </div>
 </div>
 {% endblock content %}

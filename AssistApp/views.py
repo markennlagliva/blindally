@@ -106,9 +106,6 @@ def audio_book(request):
             audioBook = AudioApps()
             token = audioBook.get_token()
 
-                
-
-
             speak(details=response.get('details'), status=response.get('status'))
 
             return JsonResponse({'result': 'success'})
@@ -130,7 +127,7 @@ def audio_music(request):
                 
             speak(details=response.get('details'), status=response.get('status'))
 
-            return JsonResponse({'result': 'success', 'result': result, 'songs': songs})
+            return JsonResponse({'result': 'success'})
         except Exception as e:
             print(str(e))
             return JsonResponse({'Error': str(e)})
