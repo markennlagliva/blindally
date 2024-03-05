@@ -34,7 +34,20 @@ def index(request):
 # Info apps pages
 @csrf_exempt
 def newsfeed(request):
-    context = {}
+    if request.method == 'POST':
+        # Status value here either T or F
+        try:
+            response = json.loads(request.body)
+            print(type(response.get('details')), response.get('details'))
+            # print(f"This is the status value: {response.get('status')} and the data type: {type(response.get('status'))}" )
+            speak(response.get('details'), status=response.get('status')) # Differs in body key values
+            return JsonResponse({'result': 'success', 'status': response.get('status')})
+
+        except Exception as e:
+            return JsonResponse({"error":str(e)})
+    current_datetime = datetime.datetime.now()
+    date_readable_format = current_datetime.strftime("%B %d, %Y")
+    context = {'date': date_readable_format}
     return render(request, 'partial/info-apps/_news.html', context)
 
 @csrf_exempt
