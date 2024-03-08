@@ -64,25 +64,25 @@
 #     engine.say("Hello World!")
 #     engine.runAndWait()
 
-# from googletrans import Translator
+from googletrans import Translator
 
-# translator = Translator()
-
-
-# result = Translator().translate('Our team then decided to make a sample website that contains the technologies that will help website become accessible and help blind people in interacting with the website easily by removing technological barrier.', dest='tl')
-# print(result.text)
+translator = Translator()
 
 
-# def translate_text(text, target_language='en'):
-#     translator = Translator()
-#     translation = translator.translate(text, dest=target_language)
-#     return translation.text
+result = Translator().translate('Our team then decided to make a sample website that contains the technologies that will help website become accessible and help blind people in interacting with the website easily by removing technological barrier.', dest='tl')
+print(result.text)
 
-# # Example usage
-# text_to_translate = "Hello, how are you?"
-# translated_text = translate_text(text_to_translate, target_language='es')
-# print(f"Original text: {text_to_translate}")
-# print(f"Translated text: {translated_text}")
+
+def translate_text(text, target_language='en'):
+    translator = Translator()
+    translation = translator.translate(text, dest=target_language)
+    return translation.text
+
+# Example usage
+text_to_translate = "Hello, how are you?"
+translated_text = translate_text(text_to_translate, target_language='es')
+print(f"Original text: {text_to_translate}")
+print(f"Translated text: {translated_text}")
 
 # class Hello:
 #     def __init__(self, name, age) -> None:
@@ -155,20 +155,20 @@
 
 # say("this process is running right now")
 
-import datetime
+# import datetime
 
-# Get current date and time
-current_datetime = datetime.datetime.now()
+# # Get current date and time
+# current_datetime = datetime.datetime.now()
 
-# Format the time in 12-hour format
-time_12_format = current_datetime.strftime("%I:%M %p")
+# # Format the time in 12-hour format
+# time_12_format = current_datetime.strftime("%I:%M %p")
 
-# Format the date in a more readable format
-date_readable_format = current_datetime.strftime("%B %d, %Y")
+# # Format the date in a more readable format
+# date_readable_format = current_datetime.strftime("%B %d, %Y")
 
-# Print the formatted date and time
-print("Current time (12-hour format):", time_12_format)
-print("Formatted date:", date_readable_format)
+# # Print the formatted date and time
+# print("Current time (12-hour format):", time_12_format)
+# print("Formatted date:", date_readable_format)
 
 
 # import os

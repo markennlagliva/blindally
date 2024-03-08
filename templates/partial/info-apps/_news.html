@@ -275,10 +275,10 @@ fetch(fullUrl)
 
                 if (text === 'continue') {
                     localStorage.setItem('isPlayingNews', true);
-                    document.querySelector('#player').innerHTML = localStorage.getItem('musicMarkup');
+                    document.querySelector('#player').innerHTML = localStorage.getItem('newsMarkup');
 
-                    if (localStorage.getItem('musicMarkup') === null) {
-                            fetch("{% url 'audio_music' %}", {
+                    if (localStorage.getItem('newsMarkup') === null) {
+                            fetch("{% url 'newsfeed' %}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

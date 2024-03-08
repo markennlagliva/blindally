@@ -89,12 +89,33 @@
                 return cookieValue;
             };
 
+            // THINK BEFORE MAKING A CODE!
+            // Even the QUESTION was included not only the GENERATED TEXT.
+            // if (localStorage.getItem('lastDetail') != null && localStorage.getItem('lastQuestion') != null ) {
+            //         const txtDetail = document.querySelector('#texts')
+            //         p = document.createElement('p');       
+            //         p.innerHTML = localStorage.getItem('lastQuestion');
+            //         txtDetail.appendChild(p);
+
+            //         p = document.createElement('p');
+            //         p.innerHTML = localStorage.getItem('lastDetail');
+            //         txtDetail.appendChild(p)
+
+            //         function hideElement() {
+            //             const botDeterminedDiv = document.getElementById('bot-determined');
+            //             botDeterminedDiv.style.display = 'none';
+            //         }
+
+            //         hideElement();
+            //     };
+            
+
         // <--- Request Details by Clicking --->
             let mainElement = document.querySelector('main');
 
             mainElement.onclick = function () {
-            
-            
+                    
+
            const Pdetails = document.querySelectorAll('p');
            let allPdetails = [];
           
@@ -105,7 +126,6 @@
                    allPdetails.push(paragraphContent);
                });
             
-               console.log(allPdetails.slice(-2))
               
                fetch("{% url 'assistantbot' %}", {
                    method: 'POST',
@@ -157,6 +177,12 @@
                     p.innerText = output[0].toUpperCase() + output.slice(1) + '?';
                     texts.appendChild(p);
 
+                    // SAVED DATA TO localStorage the QUESTION
+                    let lastQuestionData = `<p class="request text-white-50 py-2 pe-3 border border-secondary rounded" >${output[0].toUpperCase() + output.slice(1) + '?'}</p>`
+                    localStorage.setItem('lastQuestion', lastQuestionData)
+
+
+
                     function hideElement() {
                         const botDeterminedDiv = document.getElementById('bot-determined');
                         botDeterminedDiv.style.display = 'none';
@@ -186,6 +212,9 @@
                         chatbot_reply.classList.add('text-white-50', 'py-2', 'ps-3', 'border', 'border-success', 'rounded')
                         chatbot_reply.innerText = data.generatedText; //This is where the processed data will be putted.
                         texts.appendChild(chatbot_reply);
+
+                        let lastDetailData = `<p class="reply text-white-50 py-2 pe-3 border border-secondary rounded" >${data.generatedText}</p>`
+                        localStorage.setItem('lastDetail', lastDetailData)
 
                         console.log('Success', data)
                         // SECOND FETCH FOR VOICE
