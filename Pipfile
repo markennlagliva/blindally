@@ -13,7 +13,7 @@ gtts = "*"
 playsound = "==1.2.2"
 python-dotenv = "*"
 openai = "==0.28"
-googletrans = "==3.1.0a0"
+googletrans = "==4.0.0-rc1"
 keyboard = "*"
 requests = "*"
 

@@ -89,6 +89,8 @@
                 return cookieValue;
             };
 
+
+            // retrieving data to show 
             // THINK BEFORE MAKING A CODE!
             // Even the QUESTION was included not only the GENERATED TEXT.      
             if (localStorage.getItem('lastQuestion') !== null && localStorage.getItem('lastDetail') !== null) {
@@ -240,6 +242,17 @@
                     .then(response => response.json())
                     .then(data => {
 
+                        const Pdetails = document.querySelectorAll('p');
+                        const Ptotal = Array.from(Pdetails);
+                        const removeTwoPtags = Ptotal.slice(1,3)
+                        // console.log(Pdetails, Pdetails.length)
+
+                        if (Pdetails.length > 5) {
+                            removeTwoPtags.forEach(function(element) {
+                                element.parentNode.removeChild(element);
+                            });
+                        };
+
                         // Logic or Process for Speaking Data Generated with ChatGPT -- 2nd Fetch inside
                         chatbot_reply = document.createElement('p');
                         chatbot_reply.classList.add('reply');
@@ -287,9 +300,9 @@
                     const botDeterminedDiv = document.getElementById('bot-determined');
                     botDeterminedDiv.style.display = 'block';
 
-                    document.querySelector('p.request.text-white-50.py-2.pe-3.border.border-secondary.rounded.aos-init.aos-animate[data-aos="fade-right"]').style.display = 'none';
-                    document.querySelector('p.reply.text-white-50.py-2.pe-3.border.border-secondary.rounded.aos-init.aos-animate[data-aos="fade-right"]').style.display = 'none';
-
+                    document.querySelector('.request').style.display = 'none';
+                    document.querySelector('.reply').style.display = 'none';
+                    
                 };
 
                 if (text.startsWith('set') && text.includes('english')){
