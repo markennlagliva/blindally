@@ -69,20 +69,33 @@ from googletrans import Translator
 translator = Translator()
 
 
-result = Translator().translate('Our team then decided to make a sample website that contains the technologies that will help website become accessible and help blind people in interacting with the website easily by removing technological barrier.', dest='tl')
+result = Translator().translate('Find the music you wanted to listen by utilizing and saying the "search" keyword.', dest='tl')
 print(result.text)
 
+'''
+    --- This is for Assistant Page ---
+    Upang simulan ang isang kahilingan at makuha ang nais na impormasyon, magsimula sa pamamagitan ng paggamit ng "request" na keyword. Ipo-prompt ng pagkilos na ito ang system na iproseso ang iyong kahilingan at kunin ang partikular na data na iyong hinahanap.
 
-def translate_text(text, target_language='en'):
-    translator = Translator()
-    translation = translator.translate(text, dest=target_language)
-    return translation.text
+    --- This is for Audio Book Page ---
+    Hanapin ang aklat na gusto mong pakinggan sa pamamagitan ng paggamit at pagsasabi ng "search" na keyword.
 
-# Example usage
-text_to_translate = "Hello, how are you?"
-translated_text = translate_text(text_to_translate, target_language='es')
-print(f"Original text: {text_to_translate}")
-print(f"Translated text: {translated_text}")
+    --- This is for Music Page ---
+    ( musikang )
+
+    --- This is for News Page ---
+    ( Correct Term -- GMA && TV PATROL )
+'''
+
+# def translate_text(text, target_language='en'):
+#     translator = Translator()
+#     translation = translator.translate(text, dest=target_language)
+#     return translation.text
+
+# # Example usage
+# text_to_translate = "Hello, how are you?"
+# translated_text = translate_text(text_to_translate, target_language='es')
+# print(f"Original text: {text_to_translate}")
+# print(f"Translated text: {translated_text}")
 
 # class Hello:
 #     def __init__(self, name, age) -> None:

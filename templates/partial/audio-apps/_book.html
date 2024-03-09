@@ -114,11 +114,16 @@
            let allPdetails = [];
           
            // console.log(Pdetails.length)
+               
+               if (localStorage.getItem('mode') == 'Filipino') {
+                    allPdetails.push('Hanapin ang aklat na gusto mong pakinggan sa pamamagitan ng paggamit at pagsasabi ng "search" na keyword.')
+               } else{
+                   Pdetails.forEach(function(paragraph, index) {
+                       var paragraphContent = paragraph.textContent;
+                       allPdetails.push(paragraphContent);  
+                   });
+               };
 
-               Pdetails.forEach(function(paragraph, index) {
-                   var paragraphContent = paragraph.textContent;
-                   allPdetails.push(paragraphContent);
-               });
             
                console.log(allPdetails)
               

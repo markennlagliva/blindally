@@ -90,25 +90,45 @@
             };
 
             // THINK BEFORE MAKING A CODE!
-            // Even the QUESTION was included not only the GENERATED TEXT.
-            // if (localStorage.getItem('lastDetail') != null && localStorage.getItem('lastQuestion') != null ) {
-            //         const txtDetail = document.querySelector('#texts')
-            //         p = document.createElement('p');       
-            //         p.innerHTML = localStorage.getItem('lastQuestion');
-            //         txtDetail.appendChild(p);
+            // Even the QUESTION was included not only the GENERATED TEXT.      
+            if (localStorage.getItem('lastQuestion') !== null && localStorage.getItem('lastDetail') !== null) {
+                const txtDetail = document.querySelector('#texts')
+                txtDetail.insertAdjacentHTML('beforeend', localStorage.getItem('lastQuestion'))
+                txtDetail.insertAdjacentHTML('beforeend', localStorage.getItem('lastDetail'))
+                // LOOK HERE
 
-            //         p = document.createElement('p');
-            //         p.innerHTML = localStorage.getItem('lastDetail');
-            //         txtDetail.appendChild(p)
+                function hideElement() {
+                        const botDeterminedDiv = document.getElementById('bot-determined');
+                        botDeterminedDiv.style.display = 'none';
+                    }
 
-            //         function hideElement() {
-            //             const botDeterminedDiv = document.getElementById('bot-determined');
-            //             botDeterminedDiv.style.display = 'none';
-            //         }
+                    hideElement();
+                
+                    // Function to check if 3 hours have passed since the request time
+                    function checkTimeToRemove() {
+                        var requestTime = localStorage.getItem('requestTime');
+                        if (requestTime) {
+                            var currentTime = new Date().getTime(); // Get current time in milliseconds
+                            var elapsedTime = currentTime - parseInt(requestTime); // Calculate time elapsed since request
+                            var threeHoursInMilliseconds = 3 * 60 * 60 * 1000; // Convert 3 hours to milliseconds
+                            if (elapsedTime >= threeHoursInMilliseconds) {
+                                // Remove data from localStorage
+                                localStorage.removeItem('requestTime');
+                                localStorage.removeItem('lastQuestion');
+                                localStorage.removeItem('lastDetail');
+                                console.log("3 hours have passed. Removing data from localStorage.");
+                            } else {
+                                console.log("Less than 3 hours have passed since the request.");
+                            }
+                        } else {
+                            console.log("No request time found in localStorage.");
+                        }
+                    }
 
-            //         hideElement();
-            //     };
-            
+                    // Call the function periodically to check if 3 hours have passed
+                    setInterval(checkTimeToRemove, 60000); // Check every minute (adjust as needed)
+                
+            };
 
         // <--- Request Details by Clicking --->
             let mainElement = document.querySelector('main');
@@ -121,10 +141,18 @@
           
            // console.log(Pdetails.length)
 
-               Pdetails.forEach(function(paragraph, index) {
-                   var paragraphContent = paragraph.textContent;
-                   allPdetails.push(paragraphContent);
-               });
+                
+           if (localStorage.getItem('mode') == 'Filipino' && document.getElementById('bot-determined').style.display === 'block') {
+                allPdetails.push('Upang simulan ang isang kahilingan at makuha ang nais na impormasyon, magsimula sa pamamagitan ng paggamit ng "request" na keyword. Ipo-prompt ng pagkilos na ito ang system na iproseso ang iyong kahilingan at kunin ang partikular na data na iyong hinahanap.')
+            } else if (localStorage.getItem('mode') == 'English' && document.getElementById('bot-determined').style.display === 'block') {
+                allPdetails.push('To initiate a request and obtain the desired information, begin by utilizing the "request" keyword. This action prompts the system to process your request and retrieve the specific data you are seeking.')
+
+            } else {
+                Pdetails.forEach(function(paragraph, index) {
+                    var paragraphContent = paragraph.textContent;
+                    allPdetails.push(paragraphContent);  
+                });
+            };
             
               
                fetch("{% url 'assistantbot' %}", {
@@ -171,16 +199,22 @@
 
                     let output = text.replace(/^request\s*/, "")
                     
-                    p = document.createElement('p');       
-                    p.classList.add('request')
-                    p.classList.add('text-white-50', 'py-2', 'pe-3', 'border', 'border-secondary', 'rounded');
-                    p.innerText = output[0].toUpperCase() + output.slice(1) + '?';
-                    texts.appendChild(p);
+                    question_p = document.createElement('p');       
+                    question_p.classList.add('request')
+                    question_p.classList.add('text-white-50', 'py-2', 'pe-3', 'border', 'border-secondary', 'rounded');
+                    question_p.setAttribute('data-aos', 'fade-right');
+                    question_p.innerText = output[0].toUpperCase() + output.slice(1) + '?';
+                    texts.appendChild(question_p);
 
                     // SAVED DATA TO localStorage the QUESTION
-                    let lastQuestionData = `<p class="request text-white-50 py-2 pe-3 border border-secondary rounded" >${output[0].toUpperCase() + output.slice(1) + '?'}</p>`
+                    let lastQuestionData = `<p class="request text-white-50 py-2 pe-3 border border-secondary rounded" data-aos="fade-right">${output[0].toUpperCase() + output.slice(1) + '?'}</p>`
                     localStorage.setItem('lastQuestion', lastQuestionData)
+                    // console.log(lastQuestionData)
 
+                    // SAVED REQUEST TIME 
+                    var currentTime = new Date().getTime(); // Get current time in milliseconds
+                    console.log('This is the current timestamp:', currentTime)
+                    localStorage.setItem('requestTime', currentTime);
 
 
                     function hideElement() {
@@ -210,11 +244,13 @@
                         chatbot_reply = document.createElement('p');
                         chatbot_reply.classList.add('reply');
                         chatbot_reply.classList.add('text-white-50', 'py-2', 'ps-3', 'border', 'border-success', 'rounded')
+                        chatbot_reply.setAttribute('data-aos', 'fade-right');
                         chatbot_reply.innerText = data.generatedText; //This is where the processed data will be putted.
                         texts.appendChild(chatbot_reply);
 
-                        let lastDetailData = `<p class="reply text-white-50 py-2 pe-3 border border-secondary rounded" >${data.generatedText}</p>`
+                        let lastDetailData = `<p class="reply text-white-50 py-2 ps-3 border border-secondary rounded" data-aos="fade-right">${data.generatedText}</p>`
                         localStorage.setItem('lastDetail', lastDetailData)
+                        // console.log(lastDetailData)
 
                         console.log('Success', data)
                         // SECOND FETCH FOR VOICE
@@ -246,6 +282,15 @@
                     });
                 } // End of request Feature Block
 
+
+                if (text === 'front') {
+                    const botDeterminedDiv = document.getElementById('bot-determined');
+                    botDeterminedDiv.style.display = 'block';
+
+                    document.querySelector('p.request.text-white-50.py-2.pe-3.border.border-secondary.rounded.aos-init.aos-animate[data-aos="fade-right"]').style.display = 'none';
+                    document.querySelector('p.reply.text-white-50.py-2.pe-3.border.border-secondary.rounded.aos-init.aos-animate[data-aos="fade-right"]').style.display = 'none';
+
+                };
 
                 if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {
