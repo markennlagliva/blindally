@@ -22,7 +22,7 @@ class LanguageMode:
     
         engine = pyttsx3.init()
         voices = engine.getProperty('voices')
-        engine.setProperty('rate', 165)
+        engine.setProperty('rate', 170)
         engine.setProperty('voice', voices[1].id)
         engine.say(' '.join(self.details))
         engine.runAndWait()
