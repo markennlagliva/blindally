@@ -160,17 +160,25 @@
 
                 // <--- Feature Request --->
                 // <--- Feature search --->
-                if (text.includes('gma') || text.includes('tv patrol')) {
+                if (text.includes('gma') || text.includes('tv patrol') || text.includes('weather') || text.includes('tv5') || text.includes('abc news')) {
                  
 
                 let channel = text;
                 let requestChannel;
                 if (channel.includes('gma')) {
                     requestChannel = 'GMA NETWORK {{date}} LIVESTREAM'
-                } else {
+                } else if (channel.includes('weather')){
+                    requestChannel = 'DOST-PAGASA Weather Report Public Weather Forecast issued at {{time}} | {{date}} - {{day}}'
+                } else if (channel.includes('tv5')) {
+                    requestChannel = 'EAT BULAGA LIVE | TVJ ON TV5 | {{date}}'
+                } else if (channel.includes('abc news')) {
+                    requestChannel = 'ABC news LIVE'
+                }
+                else {
                     requestChannel = 'ABS-CBN Entertainment {{date}} Live'
                 };
 
+                
                     // console.log('Cakes & Eclairs YT '+output)
                     // Define the endpoint URL
 const url = "https://www.googleapis.com/youtube/v3/search";
@@ -180,6 +188,7 @@ const params = {
     part: "snippet",
     q: requestChannel,  // Replace with your search query
     type: "video",
+    eventType: "live",
     maxResults: 1,  // Limit to 1 result
     key: "AIzaSyDhvxzKOGQxCvdf9L3TTM6oiqlMfyjOhh4"  // Replace with your YouTube Data API key
 };
@@ -197,6 +206,7 @@ fetch(fullUrl)
         return response.json();
     })
     .then(data => {
+        console.log(data)
         // Extract video details from response
         if (data.items && data.items.length > 0) {
             const newsId = data.items[0].id.videoId;
@@ -206,9 +216,13 @@ fetch(fullUrl)
             console.log("News Title:", newsTitle);
             localStorage.setItem('newsId', newsId);
             localStorage.setItem('newsTitle', newsTitle);
-
+         
             let videoContainer = document.querySelector('#player');
             //width="560" height="315"
+
+            var videoFrame = document.getElementById('videoFrame');
+
+           
             let markup = `<iframe id="videoFrame" class="embed-responsive-item" src="https://www.youtube.com/embed/${newsId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <h6 class='text-center text-white-50'>${newsTitle}</h6>`
             
             // let markup = `
@@ -233,7 +247,7 @@ fetch(fullUrl)
                             
                         },
                         body: JSON.stringify({
-                            details: 'Searching for live News.',
+                            details: 'Searching for live or Recent News.',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })
@@ -252,6 +266,7 @@ fetch(fullUrl)
 
             localStorage.setItem('isPlayingNews', true);
 
+            
         } else {
             console.log("No news found.");
         }
@@ -300,7 +315,25 @@ fetch(fullUrl)
                     };
                 }; // End for CONTINUTE keyword
 
+                if (text === 'refresh') {
+                    // Reload the current page
+                    location.reload();
+                    // Create a new KeyboardEvent for the key "k"
+                    const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
 
+                    // Dispatch the key event to simulate the key press
+                    document.dispatchEvent(keyEvent);
+                };
+
+                // if (text === 'test') {
+                //     location.reload()
+                //     // Create a new KeyboardEvent for the key "m"
+                //     const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
+
+                //     // Dispatch the key event to simulate the key press
+                //     document.dispatchEvent(keyEvent);
+
+                // };
 
                 if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {

@@ -363,6 +363,10 @@
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
+                if (text === 'refresh') {
+                    // Reload the current page
+                    location.reload();
+                };
 
                 if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {

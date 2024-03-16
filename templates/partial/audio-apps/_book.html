@@ -264,6 +264,15 @@ fetch(fullUrl)
                     
                 }; // End of request Feature Block
 
+                if (text === 'refresh') {
+                    // Reload the current page
+                    location.reload();
+                    // Create a new KeyboardEvent for the key "k"
+                    const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
+
+                    // Dispatch the key event to simulate the key press
+                    document.dispatchEvent(keyEvent);
+                };
 
                 if (text === 'stop') {
                     localStorage.setItem('isPlayingVideo', false);
@@ -301,22 +310,22 @@ fetch(fullUrl)
                 }; // End for CONTINUTE keyword
 
                 // WORK HERE LATER
-                if (text === 'restart') {
-                    let videoId = localStorage.getItem('videoId');
-                    let videoTitle = localStorage.getItem('videoTitle');
-                    let markup = `<iframe id="videoFrame" class="embed-responsive-item" src="https://www.youtube.com/embed/${videoId}?start=33&autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <h6 class='text-center text-white-50'>${videoTitle}</h6>`
-                    console.log('Title:',videoTitle)
+                // if (text === 'restart') {
+                //     let videoId = localStorage.getItem('videoId');
+                //     let videoTitle = localStorage.getItem('videoTitle');
+                //     let markup = `<iframe id="videoFrame" class="embed-responsive-item" src="https://www.youtube.com/embed/${videoId}?start=33&autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <h6 class='text-center text-white-50'>${videoTitle}</h6>`
+                //     console.log('Title:',videoTitle)
 
-                    let iframe = document.querySelector('#videoFrame');
-                    console.log(iframe.contentWindow.document.querySelector('video'))
-                    // console.log(iframe.contentWindow.document.querySelector('video')).currentTime;
-                    localStorage.setItem('videoMarkup', markup)
-                    document.querySelector('#player').innerHTML = localStorage.getItem('videoMarkup');
-                };
+                //     let iframe = document.querySelector('#videoFrame');
+                //     console.log(iframe.contentWindow.document.querySelector('video'))
+                //     // console.log(iframe.contentWindow.document.querySelector('video')).currentTime;
+                //     localStorage.setItem('videoMarkup', markup)
+                //     document.querySelector('#player').innerHTML = localStorage.getItem('videoMarkup');
+                // };
 
-                if (text.startsWith('skip')) {
-                    let output = text.replace(/^skip\s*/, "")
-                };
+                // if (text.startsWith('skip')) {
+                //     let output = text.replace(/^skip\s*/, "")
+                // };
 
 
 

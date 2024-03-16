@@ -192,10 +192,19 @@ fetch(fullUrl)
         return response.json();
     })
     .then(data => {
+        console.log(data)
         // Extract video details from response
         if (data.items && data.items.length > 0) {
             const musicId = data.items[0].id.videoId;
             const musicTitle = data.items[0].snippet.title;
+            // const embeddable = data.items[0].status.embeddable;
+           
+
+            // if (!embeddable) {
+            //     console.log("Video is not embeddable.");
+            //     // Display a message or take appropriate action
+            // }
+
             
             console.log("Music ID:", musicId);
             console.log("Music Title:", musicTitle);
@@ -204,6 +213,7 @@ fetch(fullUrl)
 
             let videoContainer = document.querySelector('#player');
             //width="560" height="315"
+            
             let markup = `<iframe id="videoFrame" class="embed-responsive-item" src="https://www.youtube.com/embed/${musicId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <h6 class='text-center text-white-50'>${musicTitle}</h6>`
             
             // let markup = `
@@ -246,6 +256,8 @@ fetch(fullUrl)
             }, 4000);
 
             localStorage.setItem('isPlayingMusic', true);
+            // var videoFrame = document.getElementById('videoFrame');
+           
 
         } else {
             console.log("No music found.");
@@ -295,6 +307,15 @@ fetch(fullUrl)
                     };
                 }; // End for CONTINUTE keyword
 
+                if (text === 'refresh') {
+                    // Reload the current page
+                    location.reload();
+                    // Create a new KeyboardEvent for the key "k"
+                    const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
+
+                    // Dispatch the key event to simulate the key press
+                    document.dispatchEvent(keyEvent);
+                };
 
 
                 if (text.startsWith('set') && text.includes('english')){

@@ -110,6 +110,8 @@
                 return cookieValue;
             };
 
+            
+
         // Request Details by Clicking
         if ("{{request.path}}" == '/location') {
             let mainElement = document.querySelector('main');
@@ -118,76 +120,35 @@
            const Pdetails = document.querySelectorAll('h4');
            let allPdetails = [];
            // console.log(Pdetails.length)
-
-          
-               Pdetails.forEach(function(paragraph, index) {
-                   var paragraphContent = paragraph.textContent;
-                   allPdetails.push(paragraphContent);
-               });
-            
-            
-               fetch("{% url 'audio_music' %}", {
-                   method: 'POST',
-                   headers: {
-                       'Content-Type': 'application/json',
-                       'X-CSRFToken': csrfToken,
-                   },
-                   body: JSON.stringify({
-                    //    details: allPdetails,
-                       details: locationData,
-                       status: JSON.parse(localStorage.getItem('status')),
-                   }),
-               })
-               .then(response => response.json())
-               .then(data => {
-                   console.log('Success', data);
-               })
-               .catch((error) => {
-                   console.error('Error', error);
-               });
            
-        //    ("{{request.path}}" === '/motivation') {
-        //        fetch("{% url 'motivation' %}", {
-        //            method: 'POST',
-        //            headers: {
-        //                'Content-Type': 'application/json',
-        //                'X-CSRFToken': csrfToken,
-        //            },
-        //            body: JSON.stringify({
-        //                key: 'tap-more-motivation',
-        //                details: allPdetails,
-        //                status: JSON.parse(localStorage.getItem('status')),
-        //            }),
-        //        })
-        //        .then(response => response.json())
-        //        .then(data => {
-        //            console.log('Success', data);
-        //        })
-        //        .catch((error) => {
-        //            console.error('Error', error);
-        //        });
-        //    } else if ("{{request.path}}" === '/technologies') {
-        //        fetch("{% url 'technologies' %}", {
-        //            method: 'POST',
-        //            headers: {
-        //                'Content-Type': 'application/json',
-        //                'X-CSRFToken': csrfToken,
-        //            },
-        //            body: JSON.stringify({
-        //                key: 'tap-more-technologies',
-        //                details: allPdetails,
-        //                status: JSON.parse(localStorage.getItem('status')),
-        //            }),
-        //        })
-        //        .then(response => response.json())
-        //        .then(data => {
-        //            console.log('Success', data);
-        //        })
-        //        .catch((error) => {
-        //            console.error('Error', error);
-        //        });
-        //    }
-              
+           Pdetails.forEach(function(paragraph, index) {
+               var paragraphContent = paragraph.textContent;
+               allPdetails.push(paragraphContent);
+           });
+        
+        
+           fetch("{% url 'audio_music' %}", {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json',
+                   'X-CSRFToken': csrfToken,
+               },
+               body: JSON.stringify({
+                //    details: allPdetails,
+                   details: locationData,
+                   status: JSON.parse(localStorage.getItem('status')),
+               }),
+           })
+           .then(response => response.json())
+           .then(data => {
+               console.log('Success', data);
+           })
+           .catch((error) => {
+               console.error('Error', error);
+           });
+          
+           
+       
             };
        
         }
@@ -195,7 +156,8 @@
 
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
         window.addEventListener('load', () => {
-           
+
+                      
             recognition.addEventListener('result', (e) => {
             const text = Array.from(e.results)
             .map(result => result[0])
@@ -207,6 +169,10 @@
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
+                if (text === 'refresh') {
+                    // Reload the current page
+                    location.reload();
+                };
 
                 if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {
@@ -302,6 +268,7 @@
                                 localStorage.setItem('status', false);
                             }
                         }
+
                     
 
                 // Starts here Keyword Voice Navigation

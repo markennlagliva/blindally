@@ -118,7 +118,7 @@
                                 localStorage.removeItem('requestTime');
                                 localStorage.removeItem('lastQuestion');
                                 localStorage.removeItem('lastDetail');
-                                console.log("3 hours have passed. Removing data from localStorage.");
+                                // console.log("3 hours have passed. Removing data from localStorage.");
                             } else {
                                 console.log("Less than 3 hours have passed since the request.");
                             }
@@ -295,6 +295,10 @@
                     });
                 } // End of request Feature Block
 
+                if (text === 'refresh') {
+                    // Reload the current page
+                    location.reload();
+                };
 
                 if (text === 'front') {
                     const botDeterminedDiv = document.getElementById('bot-determined');

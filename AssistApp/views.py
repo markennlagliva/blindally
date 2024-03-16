@@ -47,7 +47,20 @@ def newsfeed(request):
             return JsonResponse({"error":str(e)})
     current_datetime = datetime.datetime.now()
     date_readable_format = current_datetime.strftime("%B %d, %Y")
-    context = {'date': date_readable_format}
+    day_of_week = current_datetime.strftime("%A")
+
+    from datetime import time
+    # Specify the time to compare (4:00 PM or 16:00)
+    compare_time = time(16, 0)  # 4:00 PM
+
+    # Compare the current time with the specified time
+    if current_datetime.time() < compare_time:
+        formatted_time = "4AM"
+    else:
+        formatted_time = "4PM"
+
+
+    context = {'date': date_readable_format, 'day': day_of_week, 'time': formatted_time}
     return render(request, 'partial/info-apps/_news.html', context)
 
 @csrf_exempt

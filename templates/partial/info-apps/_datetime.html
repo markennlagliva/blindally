@@ -197,7 +197,8 @@
 
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
         window.addEventListener('load', () => {
-           
+
+            
             recognition.addEventListener('result', (e) => {
             const text = Array.from(e.results)
             .map(result => result[0])
@@ -209,6 +210,10 @@
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
+                if (text === 'refresh') {
+                    // Reload the current page
+                    location.reload();
+                };
 
                 if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {

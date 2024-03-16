@@ -64,13 +64,31 @@
 #     engine.say("Hello World!")
 #     engine.runAndWait()
 
-from googletrans import Translator
+# from googletrans import Translator
 
-translator = Translator()
+# translator = Translator()
 
 
-result = Translator().translate('Find the music you wanted to listen by utilizing and saying the "search" keyword.', dest='tl')
-print(result.text)
+# result = Translator().translate('Find the music you wanted to listen by utilizing and saying the "search" keyword.', dest='tl')
+# print(result.text)
+from collections import Counter
+def removeDuplicates(string):
+    # Split the string into words
+    words = string.split()
+
+    # Count occurrences of each word
+    word_counts = Counter(words)
+
+    # Keep only words that occur once
+    unique_words = [word for word, count in word_counts.items() if count == 1]
+
+    # Join the unique words back into a string
+    return ' '.join(unique_words)
+            
+text = 'to be or not to be'
+print(removeDuplicates(text))
+
+
 
 '''
     --- This is for Assistant Page ---
