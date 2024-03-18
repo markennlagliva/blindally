@@ -184,13 +184,25 @@
 const url = "https://www.googleapis.com/youtube/v3/search";
 console.log('{{date}}')
 // Define query parameters
-const params = {
-    part: "snippet",
-    q: requestChannel,  // Replace with your search query
-    type: "video",
-    eventType: "live",
-    maxResults: 1,  // Limit to 1 result
-    key: "AIzaSyDhvxzKOGQxCvdf9L3TTM6oiqlMfyjOhh4"  // Replace with your YouTube Data API key
+let params;
+if (text === 'abc news') {
+        params = {
+        part: "snippet",
+        q: requestChannel,  // Replace with your search query
+        type: "video",
+        eventType: "live",
+        maxResults: 1,  // Limit to 1 result
+        key: "AIzaSyDhvxzKOGQxCvdf9L3TTM6oiqlMfyjOhh4"  // Replace with your YouTube Data API key
+    };
+} else {
+    params = {
+        part: "snippet",
+        q: requestChannel,  // Replace with your search query
+        type: "video",
+        // eventType: "live",
+        maxResults: 1,  // Limit to 1 result
+        key: "AIzaSyDhvxzKOGQxCvdf9L3TTM6oiqlMfyjOhh4"  // Replace with your YouTube Data API key
+    };
 };
 
 // Construct URL with query parameters
