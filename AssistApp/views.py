@@ -19,7 +19,7 @@ from playsound import playsound
 # Home Page
 @csrf_exempt
 def index(request):
-    playsound('audio/notif.mp3')
+    # playsound('audio/notif.mp3')
     if request.method == 'POST':
         # Status value here either T or F
         try:
