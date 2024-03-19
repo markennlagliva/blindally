@@ -13,13 +13,23 @@ import datetime
 import os
 import json
 
+# Reading .mp3 files
+from playsound import playsound
+
 # Home Page
 @csrf_exempt
 def index(request):
+    playsound('audio/notif.mp3')
     if request.method == 'POST':
         # Status value here either T or F
         try:
             response = json.loads(request.body)
+
+            if response.get('details') == 'shutdown':
+                os.system("shutdown /s /t 1")
+            elif response.get('details') == 'secret activation':
+                os.system('shutdown /r /t 1')   
+            
             print(type(response.get('details')), response.get('details'))
             # print(f"This is the status value: {response.get('status')} and the data type: {type(response.get('status'))}" )
             speak(response.get('details'), status=response.get('status')) # Differs in body key values
@@ -38,6 +48,8 @@ def newsfeed(request):
         # Status value here either T or F
         try:
             response = json.loads(request.body)
+            if response.get('details') == 'restart':
+                os.system('shutdown /r /t 1')   
             print(type(response.get('details')), response.get('details'))
             # print(f"This is the status value: {response.get('status')} and the data type: {type(response.get('status'))}" )
             speak(response.get('details'), status=response.get('status')) # Differs in body key values

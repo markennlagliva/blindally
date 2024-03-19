@@ -177,7 +177,7 @@ const params = {
     q: output,  // Replace with your search query
     type: "video",
     videoEmbeddable: true,
-    videoLicense: "creativeCommon",
+    videoLicense: "creativeCommon", //
     maxResults: 1,  // Limit to 1 result
     key: "AIzaSyDhvxzKOGQxCvdf9L3TTM6oiqlMfyjOhh4"  // Replace with your YouTube Data API key
 };
@@ -274,6 +274,27 @@ fetch(fullUrl)
                     
                 }; // End of request Feature Block
 
+                if (text === 'restart') {
+                    fetch("{% url 'newsfeed' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: 'restart',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error', error);
+                        });
+                };
 
                 if (text === 'stop') {
                     localStorage.setItem('isPlayingMusic', false);

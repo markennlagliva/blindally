@@ -101,7 +101,10 @@
 
 
             mainElement.onclick = function () {
-            
+                // IFRAME
+                // var iframe = document.getElementById('videoFrame');
+                // console.log(iframe)
+                // console.log(iframe.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*'));
                 if (JSON.parse(localStorage.getItem('isPlayingNews'))) {
                     console.log('News Cannot be interrupted when Playing.');
                     {};
@@ -330,6 +333,7 @@ fetch(fullUrl)
                 if (text === 'refresh') {
                     // Reload the current page
                     location.reload();
+
                     // Create a new KeyboardEvent for the key "k"
                     const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
 
