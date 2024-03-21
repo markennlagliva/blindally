@@ -28,7 +28,7 @@ def index(request):
             if response.get('details') == 'shutdown':
                 os.system("shutdown /s /t 1")
             elif response.get('details') == 'secret activation':
-                os.system('shutdown /r /t 1')   
+                os.system('shutdown /r /t 1') 
             
             print(type(response.get('details')), response.get('details'))
             # print(f"This is the status value: {response.get('status')} and the data type: {type(response.get('status'))}" )
@@ -40,6 +40,18 @@ def index(request):
 
     context = {}
     return render(request, 'base.html', context)
+
+@csrf_exempt
+def dom_notif(request):
+    if request.method == 'POST':
+        try:
+            response = json.loads(request.body)
+            speak(response.get('details'), status=response.get('status')) # Differs in body key values
+            return JsonResponse({'result': 'success', 'status': response.get('status')})
+
+        except Exception as e:
+            return JsonResponse({"error":str(e)})
+
 
 # Info apps pages
 @csrf_exempt
