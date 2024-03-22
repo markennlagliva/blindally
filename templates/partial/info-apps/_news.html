@@ -341,15 +341,17 @@ fetch(fullUrl)
                     document.dispatchEvent(keyEvent);
                 };
 
-                // if (text === 'test') {
-                //     location.reload()
-                //     // Create a new KeyboardEvent for the key "m"
-                //     const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
 
-                //     // Dispatch the key event to simulate the key press
-                //     document.dispatchEvent(keyEvent);
 
-                // };
+                if (text === 'test') {
+                    const iframe = document.getElementById("videoFrame");
+                    console.log(iframe)
+                    const video = iframe.contentWindow.document.getElementsByTagName("video")[0];
+
+                    video.play();
+                    
+
+                };
 
                 if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {
