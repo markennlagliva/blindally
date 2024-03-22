@@ -69,12 +69,89 @@
            console.log('This the language mode:', localStorage.getItem('mode'))
         });
 
+        let player;
          // RETRIEVING SAVED DATA TO DISPLAY --> News
-         if (localStorage.getItem('newsMarkup') !== null && JSON.parse(localStorage.getItem('isPlayingNews'))) {
-            setTimeout(function() {
-                // Set the innerHTML after the delay
-                document.querySelector('#player').innerHTML = localStorage.getItem('newsMarkup');
-            }, 4000);
+         if (localStorage.getItem('newsId') !== null && JSON.parse(localStorage.getItem('isPlayingNews'))) {
+            // onYouTubeIframeAPIReady();
+            
+             // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+          
+          tag.src = "https://www.youtube.com/iframe_api";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+          // 3. This function creates an <iframe> (and YouTube player)
+          //    after the API code downloads.
+
+        
+          function onYouTubeIframeAPIReady() {
+            var savedVideoId = localStorage.getItem('newsId');
+            if (savedVideoId) {
+                
+                player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                videoId: savedVideoId,
+                playerVars: {
+                    'playsinline': 1,
+                    'autoplay': 1,
+                    'origin': "https://www.youtube.com",
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    // 'onStateChange': onPlayerStateChange
+                }
+                });  
+                localStorage.setItem('iplayer', JSON.stringify(player))
+                // console.log()
+            } 
+          }
+
+          // 4. The API will call this function when the video player is ready.
+          function onPlayerReady(event) {
+            event.target.playVideo();
+          }
+          // 5. The API calls this function when the player's state changes.
+          //    The function indicates that when playing a video (state=1),
+          //    the player should play for six seconds and then stop.
+          // var done = false;
+          // function onPlayerStateChange(event) {
+          //   if (event.data == YT.PlayerState.PLAYING && !done) {
+          //     setTimeout(stopVideo, 6000);
+          //     done = true;
+          //   }
+          // }
+          function changeVideo(videoId) {
+            
+            if (player) {
+            player.loadVideoById(videoId);
+            } else {
+            console.error('Player not initialized!');
+            }
+        }
+          function stopVideo() {
+            
+            player.stopVideo();
+          }
+
+          function pauseVideo() {
+             
+             console.log(player.pauseVideo())
+            if (player.pauseVideo) {
+              player.pauseVideo();
+            } 
+          }
+
+          function playVideo() {
+            // player = JSON.parse(localStorage.getItem('iplayer'))
+            console.log(player.playVideo)
+            if (player.playVideo) {
+              player.playVideo();
+            
+            } 
+          }
+                
         } else {
             document.querySelector('#audiobook-gif').style.display = 'block';
         };
@@ -107,9 +184,11 @@
                 // console.log(iframe.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*'));
                 if (JSON.parse(localStorage.getItem('isPlayingNews'))) {
                     console.log('News Cannot be interrupted when Playing.');
+                    pauseVideo()
+                    localStorage.setItem('isPlayingNews', false)
                     {};
                 } else {
-                    
+                   
                     const Pdetails = document.querySelectorAll('p');
                     let allPdetails = [];
                     // console.log(Pdetails.length);
@@ -140,9 +219,91 @@
                         .catch((error) => {
                             console.error('Error', error);
                         });
+                        localStorage.setItem('isPlayingNews', true)
                 }
             }; // End of Main.click ()
    
+        // START YOUTUBE API IFRAME
+        
+        // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+          
+          tag.src = "https://www.youtube.com/iframe_api";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+          // 3. This function creates an <iframe> (and YouTube player)
+          //    after the API code downloads.
+
+        
+          function onYouTubeIframeAPIReady() {
+            var savedVideoId = localStorage.getItem('newsId');
+            if (savedVideoId) {
+                
+                player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                videoId: savedVideoId,
+                playerVars: {
+                    'playsinline': 1,
+                    'autoplay': 1,
+                    'origin': "https://www.youtube.com",
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    // 'onStateChange': onPlayerStateChange
+                }
+                });  
+                localStorage.setItem('iplayer', JSON.stringify(player))
+                // console.log()
+            } 
+          }
+
+          // 4. The API will call this function when the video player is ready.
+          function onPlayerReady(event) {
+            event.target.playVideo();
+          }
+          // 5. The API calls this function when the player's state changes.
+          //    The function indicates that when playing a video (state=1),
+          //    the player should play for six seconds and then stop.
+          // var done = false;
+          // function onPlayerStateChange(event) {
+          //   if (event.data == YT.PlayerState.PLAYING && !done) {
+          //     setTimeout(stopVideo, 6000);
+          //     done = true;
+          //   }
+          // }
+          function changeVideo(videoId) {
+            
+            if (player) {
+            player.loadVideoById(videoId);
+            } else {
+            console.error('Player not initialized!');
+            }
+        }
+          function stopVideo() {
+            
+            player.stopVideo();
+          }
+
+          function pauseVideo() {
+             
+             console.log(player.pauseVideo())
+            if (player.pauseVideo) {
+              player.pauseVideo();
+            } 
+          }
+
+          function playVideo() {
+            // player = JSON.parse(localStorage.getItem('iplayer'))
+            console.log(player.playVideo)
+            if (player.playVideo) {
+              player.playVideo();
+            
+            } 
+          }
+
+          // END OF YOUTUBE IFRAME API
        
        const texts = document.querySelector('#texts')
        let p = document.createElement('p')
@@ -229,16 +390,26 @@ fetch(fullUrl)
             
             console.log("News ID:", newsId);
             console.log("News Title:", newsTitle);
-            localStorage.setItem('newsId', newsId);
-            localStorage.setItem('newsTitle', newsTitle);
+            
          
             let videoContainer = document.querySelector('#player');
             //width="560" height="315"
 
-            var videoFrame = document.getElementById('videoFrame');
-
-           
-            let markup = `<iframe id="videoFrame" class="embed-responsive-item" src="https://www.youtube.com/embed/${newsId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <h6 class='text-center text-white-50'>${newsTitle}</h6>`
+            // YOUTUBE IFRAME API
+            
+            if (localStorage.getItem('newsId') != null) {
+               
+                changeVideo(newsId);
+                localStorage.setItem('newsId', newsId);
+                localStorage.setItem('newsTitle', newsTitle);
+            } else {
+                localStorage.setItem('newsId', newsId);
+                localStorage.setItem('newsTitle', newsTitle);
+                onYouTubeIframeAPIReady();
+                
+            }
+            
+            // let markup = `<iframe id="videoFrame" class="embed-responsive-item" src="https://www.youtube.com/embed/${newsId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <h6 class='text-center text-white-50'>${newsTitle}</h6>`
             
             // let markup = `
             // <video width="320" height="240" controls autoplay>
@@ -249,9 +420,9 @@ fetch(fullUrl)
             // `
 
             // Save the markup string to local storage
-            localStorage.setItem('newsMarkup', markup);
+            // localStorage.setItem('newsMarkup', markup);
             // Later, to retrieve the saved markup from local storage
-            var savedMarkup = localStorage.getItem('newsMarkup');
+            // var savedMarkup = localStorage.getItem('newsMarkup');
 
             // NOTIFYING AND SPEAKING PURPOSES CODE
             fetch("{% url 'newsfeed' %}", {
@@ -274,12 +445,15 @@ fetch(fullUrl)
                         console.error('Error', error);
                     });
 
-            setTimeout(function() {
-                // Set the innerHTML after the delay
-                document.querySelector('#player').innerHTML = localStorage.getItem('newsMarkup');
-            }, 4000);
+            // setTimeout(function() {
+            //     // Set the innerHTML after the delay
+            //     document.querySelector('#player').innerHTML = localStorage.getItem('newsMarkup');
+            // }, 4000);
 
             localStorage.setItem('isPlayingNews', true);
+            // window.location.href = "{% url 'newsfeed' %}"
+          
+            
 
             
         } else {
@@ -297,17 +471,17 @@ fetch(fullUrl)
 
                 if (text === 'stop') {
                     localStorage.setItem('isPlayingNews', false);
-                    let markup_gif =  `<img id="audiobook-gif" src="{% static 'assets/news.gif' %}" width="300" class="img-fluid rounded-5 text-center">`
-                    localStorage.setItem('music-gif', markup_gif);
-                    document.querySelector('#player').innerHTML = localStorage.getItem('music-gif');
+                    pauseVideo()
+                    
                 
                 }; // End for STOP keyword
 
-                if (text === 'continue') {
+                if (text === 'play') {
                     localStorage.setItem('isPlayingNews', true);
-                    document.querySelector('#player').innerHTML = localStorage.getItem('newsMarkup');
+                    playVideo()
+                
 
-                    if (localStorage.getItem('newsMarkup') === null) {
+                    if (localStorage.getItem('newsId') === null) {
                             fetch("{% url 'newsfeed' %}", {
                             method: 'POST',
                             headers: {
@@ -334,24 +508,15 @@ fetch(fullUrl)
                     // Reload the current page
                     location.reload();
 
-                    // Create a new KeyboardEvent for the key "k"
-                    const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
+                    // window.location.href = "{% url 'newsfeed' %}"
 
-                    // Dispatch the key event to simulate the key press
-                    document.dispatchEvent(keyEvent);
+                    // // Create a new KeyboardEvent for the key "k"
+                    // const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
+
+                    // // Dispatch the key event to simulate the key press
+                    // document.dispatchEvent(keyEvent);
                 };
 
-
-
-                if (text === 'test') {
-                    const iframe = document.getElementById("videoFrame");
-                    console.log(iframe)
-                    const video = iframe.contentWindow.document.getElementsByTagName("video")[0];
-
-                    video.play();
-                    
-
-                };
 
                 if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {
