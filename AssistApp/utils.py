@@ -57,7 +57,7 @@ class LanguageMode:
         audio = gTTS(result.text, lang='tl', slow=False)
 
         print(settings.MEDIA_ROOT)
-        os.chmod(settings.MEDIA_ROOT, 0o777)
+        os.chmod(settings.MEDIA_ROOT, 0o666)
 
         print('saving file...')
         audio.save(f'{settings.MEDIA_ROOT}/playsound.mp3')
