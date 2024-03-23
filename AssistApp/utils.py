@@ -59,8 +59,7 @@ class LanguageMode:
         print(settings.BASE_DIR)
 
         print('saving file...')
-        data = audio.save(f'{settings.BASE_DIR}/audio/playsound.mp3')
-        print(data)
+        audio.save(f'{settings.BASE_DIR}/audio/playsound.mp3')
         print('saved file...')
 
         print('playing sound...')
