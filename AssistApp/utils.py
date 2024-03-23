@@ -56,8 +56,10 @@ class LanguageMode:
         # os.chmod('static/audio', 0o777)
         audio = gTTS(result.text, lang='tl', slow=False)
 
-        print(settings.MEDIA_ROOT)
-        os.chmod(settings.MEDIA_ROOT, 0o666)
+        print(settings.MEDIA_ROOT, type(settings.MEDIA_ROOT))
+        print('playing sound...')
+        playsound(f'{settings.MEDIA_ROOT}/notif.mp3')
+
 
         print('saving file...')
         audio.save(f'{settings.MEDIA_ROOT}/playsound.mp3')
