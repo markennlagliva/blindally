@@ -11,6 +11,8 @@ import keyboard
 # lang = 'tl' or English
 import multiprocessing
 
+from django.conf import settings
+
 
 class LanguageMode:
     def __init__(self, details) -> None:
@@ -53,16 +55,20 @@ class LanguageMode:
         # This is for Filipino Language
         # os.chmod('static/audio', 0o777)
         audio = gTTS(result.text, lang='tl', slow=False)
+
+        print(settings.BASE_DIR)
+
         print('saving file...')
-        audio.save('/audio/playsound.mp3')
+        data = audio.save(f'{settings.BASE_DIR}/audio/playsound.mp3')
+        print(data)
         print('saved file...')
 
         print('playing sound...')
-        playsound('/audio/playsound.mp3')
+        playsound(f'{settings.BASE_DIR}/audio/playsound.mp3')
         print('played sound...')
 
         print('removing sound...')
-        os.remove('/audio/playsound.mp3')
+        os.remove(f'{settings.BASE_DIR}/audio/playsound.mp3')
         print('removed sound...')
 
 
