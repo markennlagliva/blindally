@@ -56,18 +56,19 @@ class LanguageMode:
         # os.chmod('static/audio', 0o777)
         audio = gTTS(result.text, lang='tl', slow=False)
 
-        print(settings.BASE_DIR)
+        print(settings.MEDIA_ROOT)
+        os.chmod(settings.MEDIA_ROOT, 0o777)
 
         print('saving file...')
-        audio.save(f'{settings.BASE_DIR}/audio/playsound.mp3')
+        audio.save(f'{settings.MEDIA_ROOT}/playsound.mp3')
         print('saved file...')
 
         print('playing sound...')
-        playsound(f'{settings.BASE_DIR}/audio/playsound.mp3')
+        playsound(f'{settings.MEDIA_ROOT}/playsound.mp3')
         print('played sound...')
 
         print('removing sound...')
-        os.remove(f'{settings.BASE_DIR}/audio/playsound.mp3')
+        os.remove(f'{settings.MEDIA_ROOT}/playsound.mp3')
         print('removed sound...')
 
 
