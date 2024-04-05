@@ -364,14 +364,14 @@ fetch(fullUrl)
             
             console.log("Music ID:", musicId);
             console.log("Music Title:", musicTitle);
-            localStorage.setItem('musicId', musicId);
-            localStorage.setItem('musicTitle', musicTitle);
+            
 
             let videoContainer = document.querySelector('#player');
             //width="560" height="315"
             
             // MUSIC YOUTUBE IFRAME API
-
+            
+           
             if (localStorage.getItem('musicId') != null) {
                changeVideo(musicId);
                localStorage.setItem('musicId', musicId);
@@ -825,7 +825,7 @@ fetch(fullUrl)
     <div class="row min-vh-100 d-flex flex-column justify-content-center align-items-center ">
 
         <div class="col-lg-6 align-self-lg-center text-center mt-2" data-aos="fade-right">
-            <h1 class="fw-bolder text-center text-white-50"><i class="bi bi-boombox"></i> Audio Music</h1>
+            <h1 class="fw-bolder text-center text-white-50"><i class="bi bi-boombox"></i> <span style="color:  #ADD8E6;">Audio Music</span></h1>
         </div>
        
         <div class="container">
@@ -837,14 +837,14 @@ fetch(fullUrl)
                     <div class="container" id="book-determined">
                         <div class="row">
                             <div class="col-lg-6 align-self-lg-center align-self-end py-5" data-aos="fade-right">
-                                <h3 class="fw-bolder text-center" style="color: #CD86C9">"Harmonies Heard: Accessible Music for the Visually Impaired"</h3>
+                                <h3 class="fw-bolder text-center" style="color: #ADD8E6">"Harmonies Heard: Accessible Music for the Visually Impaired"</h3>
                                 <div class="rounded-5">
                                     <p class="text-white-50">Find the music you wanted to listen by utilizing and saying the "search" keyword.</p>
                                 </div>
                             </div>
                             <div class="col-lg-6 d-flex flex-column align-items-center py-md-0 py-5 embed-responsive embed-responsive-16by9" data-aos="fade-right" id="player">
 
-                                <img id="audiobook-gif" src="{% static 'assets/audiomusic.gif' %}" width="400" class="img-fluid rounded-5">
+                                <img id="audiobook-gif" src="{% static 'assets/audiomusic.jpg' %}" width="400" class="img-fluid rounded-5">
                             </div>
                         </div>
                     </div>

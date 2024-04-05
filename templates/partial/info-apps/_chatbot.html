@@ -120,7 +120,7 @@
                                 localStorage.removeItem('lastDetail');
                                 // console.log("3 hours have passed. Removing data from localStorage.");
                             } else {
-                                console.log("Less than 3 hours have passed since the request.");
+                                // console.log("Less than 3 hours have passed since the request.");
                             }
                         } else {
                             console.log("No request time found in localStorage.");
@@ -131,6 +131,22 @@
                     setInterval(checkTimeToRemove, 60000); // Check every minute (adjust as needed)
                 
             };
+
+            
+            function scrollPane() {
+                const Plen = document.querySelectorAll('p');
+                console.log(Plen.length)
+                const containerDiv = document.querySelector('.container')
+                console.log(containerDiv)
+                if (Plen.length > 1) {
+                    if (containerDiv && containerDiv.classList.contains('34g')) {
+                        console.log('heyy')
+                        containerDiv.id = 'scroll-pane';
+
+                    };
+                };
+            };
+            scrollPane();
 
         // <--- Request Details by Clicking --->
             let mainElement = document.querySelector('main');
@@ -207,6 +223,7 @@
                     question_p.setAttribute('data-aos', 'fade-right');
                     question_p.innerText = output[0].toUpperCase() + output.slice(1) + '?';
                     texts.appendChild(question_p);
+                    scrollPane();
 
                     // SAVED DATA TO localStorage the QUESTION
                     let lastQuestionData = `<p class="request text-white-50 py-2 pe-3 border border-secondary rounded" data-aos="fade-right">${output[0].toUpperCase() + output.slice(1) + '?'}</p>`
@@ -260,6 +277,7 @@
                         chatbot_reply.setAttribute('data-aos', 'fade-right');
                         chatbot_reply.innerText = data.generatedText; //This is where the processed data will be putted.
                         texts.appendChild(chatbot_reply);
+                        chatbot_reply.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
                         let lastDetailData = `<p class="reply text-white-50 py-2 ps-3 border border-secondary rounded" data-aos="fade-right">${data.generatedText}</p>`
                         localStorage.setItem('lastDetail', lastDetailData)
@@ -646,14 +664,14 @@
 {% endblock script %}
 
 {% block content %}
-<div class="container-lg ">
+<div class="container-lg">
     <div class="row min-vh-100 d-flex flex-column justify-content-center align-items-center ">
 
         <div class="col-lg-6 align-self-lg-center text-center mt-lg-5" data-aos="fade-right">
-            <h1 class="fw-bolder text-center text-white-50 "><i class="bi bi-robot"></i> BlindAlly Bot</h1>
+            <h1 class="fw-bolder text-center text-white-50 "><i class="bi bi-robot"></i> <span style="color:  #ADD8E6;">BlindAlly Bot</span></h1>
         </div>
        
-        <div id="scroll-pane" class="container">
+        <div class="container 34g">
             <div class="row">
                 <div class="col" id="texts">
                     <!-- This is where p tags are inserted -->
@@ -662,13 +680,13 @@
                     <div class="container" id="bot-determined">
                         <div class="row">
                             <div class="col-lg-6 align-self-lg-center align-self-end py-5" data-aos="fade-right">
-                                <h1 class="fw-bolder text-center" style="color: #CD86C9">How it works?</h1>
+                                <h1 class="fw-bolder text-center" style="color: #ADD8E6">How it works?</h1>
                                 <div class="rounded-5">
                                     <p class="text-white-50">To initiate a request and obtain the desired information, begin by utilizing the "request" keyword. This action prompts the system to process your request and retrieve the specific data you are seeking.</p>
                                 </div>
                             </div>
                             <div class="col-lg-6 text-center py-md-0 py-5" data-aos="fade-right">
-                                <img src="{% static 'assets/chatbot.gif' %}" width="400" class="img-fluid rounded-5">
+                                <img src="{% static 'assets/chatbot.jpg' %}" width="400" class="img-fluid rounded-5">
                             </div>
                         </div>
                     </div>
