@@ -171,6 +171,45 @@
                 return cookieValue;
             };
 
+            // Speaking Details Command
+        function details() {
+            if (JSON.parse(localStorage.getItem('isPlayingVideo'))) {
+                console.log('Audio is playing cannot Interupt, stop the video first.')
+            // SET TO FALSE THE ('isPlayingVideo') & STOP the VIDEO iframe
+                {}
+            // localStorage.setItem('isPlayingVideo', false);
+
+           } else {
+            const speakDetails = document.querySelectorAll('p');
+            let theDetails = []
+
+            speakDetails.forEach(function(par, idx){
+                let parContent = par.textContent;
+                theDetails.push(parContent);
+            });
+            
+            fetch("{% url 'index' %}", {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'X-CSRFToken': csrfToken,
+                   },
+                   body: JSON.stringify({
+                    //    details: allPdetails,
+                       details: theDetails,
+                       status: JSON.parse(localStorage.getItem('status')),
+                   }),
+               })
+               .then(response => response.json())
+               .then(data => {
+                   console.log('Success', data);
+               })
+               .catch((error) => {
+                   console.error('Error', error);
+               });
+            }
+        };
+
         // <--- Request Details by Clicking --->
             let mainElement = document.querySelector('main');
 
@@ -417,6 +456,10 @@ fetch(fullUrl)
                     // Reload the current page
                     location.reload();
                     
+                };
+
+                if (text === 'details') {
+                    details();
                 };
 
                 if (text === 'stop') {

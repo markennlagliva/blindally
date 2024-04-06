@@ -84,6 +84,39 @@
         };
         console.log('{{request.path}}')
 
+
+    // Speaking Details Command
+    function details() {
+            const speakDetails = document.querySelectorAll('p');
+            let theDetails = []
+
+            speakDetails.forEach(function(par, idx){
+                let parContent = par.textContent;
+                theDetails.push(parContent);
+            });
+            
+            fetch("{% url 'index' %}", {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'X-CSRFToken': csrfToken,
+                   },
+                   body: JSON.stringify({
+                    //    details: allPdetails,
+                       details: theDetails,
+                       status: JSON.parse(localStorage.getItem('status')),
+                   }),
+               })
+               .then(response => response.json())
+               .then(data => {
+                   console.log('Success', data);
+               })
+               .catch((error) => {
+                   console.error('Error', error);
+               });
+        };
+
+
     // Request Details by Clicking
     if ("{{request.path}}" == '/user-guidelines') {
         let mainElement = document.querySelector('main');
@@ -185,6 +218,10 @@
                     // Reload the current page
                     location.reload();
                 };
+
+            if (text === 'details') {
+                details();
+            };
 
             if (text.startsWith('set') && text.includes('english')){
                 if (localStorage.getItem('mode') == 'English') {

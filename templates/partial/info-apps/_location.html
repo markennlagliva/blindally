@@ -110,7 +110,36 @@
                 return cookieValue;
             };
 
+            // Speaking Details Command
+            function status() {
+            const speakDetails = document.querySelectorAll('h4');
+            let theDetails = []
+
+            speakDetails.forEach(function(par, idx){
+                let parContent = par.textContent;
+                theDetails.push(parContent);
+            });
             
+            fetch("{% url 'index' %}", {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'X-CSRFToken': csrfToken,
+                   },
+                   body: JSON.stringify({
+                    //    details: allPdetails,
+                       details: locationData,
+                       status: JSON.parse(localStorage.getItem('status')),
+                   }),
+               })
+               .then(response => response.json())
+               .then(data => {
+                   console.log('Success', data);
+               })
+               .catch((error) => {
+                   console.error('Error', error);
+               });
+        }; 
 
         // Request Details by Clicking
         if ("{{request.path}}" == '/location') {
@@ -172,6 +201,10 @@
                 if (text === 'refresh') {
                     // Reload the current page
                     location.reload();
+                };
+
+                if (text === 'status') {
+                    status();
                 };
 
                 if (text.startsWith('set') && text.includes('english')){
