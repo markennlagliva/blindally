@@ -260,4 +260,21 @@ def chatbot(request):
         except Exception as e:
             print(str(e))
             return JsonResponse({'Error': str(e)})
+
+@csrf_exempt
+def address_location(request):
+    if request.method == 'POST':
+        try:
+            from geopy.geocoders import Nominatim
+
+            geoLoc = Nominatim(user_agent="GetLoc")
+
+            response = json.loads(request.body)
+            locname = geoLoc.reverse(f"{response.get('lat')}, {response.get('long')}")
+            for data in locname.address.split():
+                print(data)
+
+            return JsonResponse({'result': 'success', 'address': locname.address})
+        except Exception as e:
+            return JsonResponse({"error":str(e)})
     

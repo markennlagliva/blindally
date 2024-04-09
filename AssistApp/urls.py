@@ -25,6 +25,7 @@ urlpatterns = [
 
     # Process Language
     path('process-language', views.set_language, name='set_language'),
-    path('process-chatbot-data', views.chatbot, name='chatbot')
+    path('process-chatbot-data', views.chatbot, name='chatbot'),
+    path('reverse-geocoding-location', views.address_location, name='reverse-geocoding')
 
 ]

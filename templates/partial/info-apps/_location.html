@@ -9,9 +9,59 @@
 <script>
     // navigator.geolocation.getCurrentPosition(position => {
     //     const { latitude, longitude } = position.coords;
-
-    //     map.innerHTML = '<iframe class="embed-responsive-item" src="https://maps.google.com/maps?q-'+latitude+','+longitude+'&amp;z=15&amp;outpud=embed"></iframe>';
+    //     console.log(latitude, longitude)
+    //     // map.innerHTML = '<iframe class="embed-responsive-item" src="https://maps.google.com/maps?q-'+latitude+','+longitude+'&amp;z=15&amp;outpud=embed"></iframe>';
     // });
+
+    // Check if the browser supports Geolocation
+if ("geolocation" in navigator) {
+  // Get the user's current position
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      // Success callback
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+      
+      // You can perform further actions with the latitude and longitude here
+      // reverse-geocoding
+      fetch("{% url 'reverse-geocoding' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({
+            //    details: allPdetails,
+                details: locationData,
+                lat: latitude,
+                long: longitude,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+        locationData = '';
+        const location = document.querySelector('.location');
+        location.innerHTML = `${data.address}`;
+    
+        locationData = `Here's your location ${data.address}`
+            console.log('Success', data);
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        });
+
+    },
+    function(error) {
+      // Error callback
+      console.error("Error getting user location:", error);
+    }
+  );
+} else {
+  console.log("Geolocation is not supported by this browser.");
+}
+
+
     let locationData = '';
     async function fetchData() {
         let url = 'https://ipinfo.io/json?token=c9e9e9718317d4';
@@ -32,7 +82,7 @@
 
     }
 
-    fetchData();
+    // fetchData();
 
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         // eligible speech

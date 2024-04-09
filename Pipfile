@@ -16,6 +16,7 @@ openai = "*"
 googletrans = "==4.0.0-rc1"
 keyboard = "*"
 requests = "*"
+geopy = "==2.4.1"
 
 [dev-packages]
 
