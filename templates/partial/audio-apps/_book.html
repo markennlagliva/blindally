@@ -26,6 +26,7 @@
         
         console.log('This is the Status Before: ', localStorage.getItem('status'));
         console.log('This is the Mode Before: ', localStorage.getItem('mode'));
+        console.log("AIzaSyDzA0jRBhq_G2XdHa6_1vmo1T7lficAXyY")
 
         if (!localStorage.getItem('status')) {
     // If not, set a pre-determined default value
@@ -376,7 +377,9 @@ const params = {
     // videoEmbeddable: true,
     // videoLicense: "creativeCommon",
     maxResults: 1,  // Limit to 1 result
-    key: "AIzaSyAc919AKSiKq0eg_pnZIYej_vH1YqVXUS8"  // Replace with your YouTube Data API key markennlagliva
+    key: "AIzaSyDzA0jRBhq_G2XdHa6_1vmo1T7lficAXyY",
+    
+    // key: "AIzaSyAc919AKSiKq0eg_pnZIYej_vH1YqVXUS8"  // Replace with your YouTube Data API key markennlagliva
 };
 
 // Construct URL with query parameters
@@ -472,7 +475,7 @@ fetch(fullUrl)
                     localStorage.setItem('isPlayingVideo', true);
                     playVideo();
 
-                    if (localStorage.getItem('videoMarkup') === null) {
+                    if (localStorage.getItem('videoId') === null) {
                             fetch("{% url 'audio_book' %}", {
                             method: 'POST',
                             headers: {

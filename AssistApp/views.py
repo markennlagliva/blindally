@@ -271,10 +271,22 @@ def address_location(request):
 
             response = json.loads(request.body)
             locname = geoLoc.reverse(f"{response.get('lat')}, {response.get('long')}")
-            for data in locname.address.split():
-                print(data)
+            # Extract area and country
+            address = locname.raw['address']
+            anemity = address.get('amenity', '') if address.get('amenity', '') else ''
+            area = address.get('quarter', '') if address.get('quarter', '') else ''
+            town = address.get('town', '') if address.get('town', '') else ''
+            state = address.get('state', '') if address.get('state', '') else ''
+            region = address.get('region', '') if address.get('region', '') else ''
+            country = address.get('country', '') if address.get('country', '') else ''
+            loc = [anemity, area, town, state, region, country]
 
-            return JsonResponse({'result': 'success', 'address': locname.address})
+            full_loc = []
+            for l in loc:
+                if l:
+                    full_loc.append(l)            
+
+            return JsonResponse({'result': 'success', 'address': ', '.join(full_loc)})
         except Exception as e:
             return JsonResponse({"error":str(e)})
     

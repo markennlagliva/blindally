@@ -213,9 +213,9 @@
 
             if (text === 'details') {
                 details();
-            };
+            }
 
-            if (text.startsWith('set') && text.includes('english')){
+            else if (text.startsWith('set') && text.includes('english')){
                 if (localStorage.getItem('mode') == 'English') {
                     fetch("{% url 'set_language' %}", {
                     method: 'POST',
@@ -312,7 +312,7 @@
                 
 
             // Starts here Keyword Voice Navigation
-            if (text === 'home') {
+            else if (text === 'home') {
                 window.location.href = "{% url 'index' %}"
                 fetch("{% url 'index' %}", {
                     method: 'POST',
@@ -535,18 +535,55 @@
                 .catch((error) => {
                     console.error('Error', error);
                 });
-            }
+            } else {
+                     fetch("{% url 'index' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            details: 'command not recognized',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
 
-           
+                }
         };
     });
 
 
     recognition.addEventListener('end', (e) => {
-       recognition.start(); 
-    });
+            // recognition.stop();
+           if (localStorage.getItem('mode') == 'Filipino') {
+            setTimeout(function() {
+              
+                recognition.start();
+            }, 5000);
 
-    recognition.start();
+           } else {
+            setTimeout(function() {
+                recognition.start(); 
+            }, 3000)
+           }
+        });
+
+        if (localStorage.getItem('mode') == 'Filipino') {
+            setTimeout(function() {
+                // console.log("Paused for 5 seconds");
+                recognition.start();
+            }, 5000); // 5000 milliseconds = 5 seconds
+
+           } else {
+            recognition.start();
+        }
 });
 
 </script>

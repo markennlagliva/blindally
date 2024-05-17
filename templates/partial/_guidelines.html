@@ -26,6 +26,24 @@
     console.log('This is the Status Before: ', localStorage.getItem('status'));
     console.log('This is the Mode Before: ', localStorage.getItem('mode'));
 
+    // AUDIO MANIPUATION - instruction
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    function playAudio() {       
+        audioPlayer.play();     
+    }
+
+    // function pauseAudio() {
+    //     audioPlayer.pause();
+    // }
+
+    // function stopAudio() {
+    //     audioPlayer.pause();
+    //     audioPlayer.currentTime = 0;
+    //     document.getElementById('trigger-close-button').click();
+    // }
+
+
     if (!localStorage.getItem('status')) {
 // If not, set a pre-determined default value
         localStorage.setItem('mode', 'English'); 
@@ -199,6 +217,8 @@
    
     }
     
+    // INSTRUCTION
+    let instruction = false
 
     // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
     window.addEventListener('load', () => {
@@ -217,13 +237,46 @@
             if (text === 'refresh') {
                     // Reload the current page
                     location.reload();
-                };
+            }
+            else if (text === 'instruction') {
+                instruction = true;
+                document.getElementById('trigger-button').click();
+                var language = localStorage.getItem('mode');
 
-            if (text === 'details') {
+                // Get the audio element
+                var audio = document.getElementById('audioPlayer');
+
+                // Set the source based on the language
+                if (language === 'Filipino') {
+                    audio.src = '{% static "audio/fil_guidelines.mp3" %}';
+                } else {
+                    audio.src = '{% static "audio/guidelines.mp3" %}';
+  }
+                playAudio();
+                
+                console.log('play audio');
+            } 
+            // else if (text === 'continue') {
+            //     playAudio();
+            //     console.log('continue playing the audio');
+            // } 
+            // else if (text == 'skip') {
+            //     if (audioPlayer) {
+            //         stopAudio();
+            //         console.log('stopped audio instruction')
+            //     }
+            // } else if (text === 'stop') {
+            //     if (audioPlayer) {
+            //         pauseAudio();
+            //         console.log('pause audio')
+            //     }
+            // }
+
+            else if (text === 'details') {
                 details();
-            };
+            }
 
-            if (text.startsWith('set') && text.includes('english')){
+            else if (text.startsWith('set') && text.includes('english')){
                 if (localStorage.getItem('mode') == 'English') {
                     fetch("{% url 'set_language' %}", {
                     method: 'POST',
@@ -320,7 +373,7 @@
                 
 
             // Starts here Keyword Voice Navigation
-            if (text === 'home') {
+            else if (text === 'home') {
                 window.location.href = "{% url 'index' %}"
                 fetch("{% url 'index' %}", {
                     method: 'POST',
@@ -421,7 +474,7 @@
                         'X-CSRFToken': csrfToken,
                     },
                     body: JSON.stringify({
-                        details: 'You are going to the assistant page.',
+                        details: 'I am your assistant, How may I help you?',
                         status: JSON.parse(localStorage.getItem('status')),
                     }),
                 })
@@ -543,18 +596,79 @@
                 .catch((error) => {
                     console.error('Error', error);
                 });
+            } else {
+                fetch("{% url 'index' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            details: 'command not recognized',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
             }
 
            
         };
     });
 
-
     recognition.addEventListener('end', (e) => {
-       recognition.start(); 
-    });
+            // recognition.stop();
 
-    recognition.start();
+        if (localStorage.getItem('mode') == 'Filipino') {
+            
+            if (instruction) {
+                    let audio = document.getElementById('audioPlayer');
+                    let audioStop = audio.duration * 1000;
+                    setTimeout(function() {
+                        document.getElementById('trigger-close-button').click();
+                        recognition.start();
+                        instruction = false;
+                    }, audioStop)
+                    
+                } else {
+                    setTimeout(function() {
+                        recognition.start(); 
+                    }, 5000)
+                }   
+
+           } else {
+                console.log(instruction);
+                if (instruction) {
+                    let audio = document.getElementById('audioPlayer');
+                    let audioStop = audio.duration * 1000;
+                    setTimeout(function() {
+                        document.getElementById('trigger-close-button').click();
+                        recognition.start();
+                        instruction = false;
+                    }, audioStop)
+                    
+                } else {
+                    setTimeout(function() {
+                        recognition.start(); 
+                    }, 3000)
+                }   
+           }
+        });
+
+        if (localStorage.getItem('mode') == 'Filipino') {
+            setTimeout(function() {
+                // console.log("Paused for 5 seconds");
+                recognition.start();
+            }, 5000); // 5000 milliseconds = 5 seconds
+
+           } else {
+            recognition.start();
+        }
 });
 
 </script>
@@ -592,7 +706,58 @@
         <div class="col-lg-6 text-center py-md-0 py-5" data-aos="fade-right">
             <img src="{% static 'assets/guidelines.jpg' %}" class="img-fluid rounded-5" width="350"></i>
         </div>
-     
+        
+       
+{% endblock content %}
+
+{% block instruction %}
+         <!-- Button trigger modal -->
+    <button id="trigger-button" type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Instruction
+    </button>
+  
+  <!-- Modal -->
+  <div class="modal fade"  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" >
+      <div class="modal-content" style="background-color: rgb(51, 67, 119);">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-white-50" id="exampleModalLabel"><i class="bi bi-info-square-fill"></i> Instruction</h1>
+          <button id="trigger-close-button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-white-50">
+            These are the available keywords, 
+           <br>• home – going to home page.
+           <br>• guidelines – going to user guidelines page.
+           <br>• audiobook – going to audiobook page.
+           <br>• music – going to music page.
+           <br>• assistant – going to the assistant page.
+           <br>• time – going to current date and time page.
+           <br>• location – going to location page.
+           <br>• newsfeed – going to Live news page.
+           <br>• motivation – going to researcher’s motivation page.
+           <br>• technology – going to technology used page.
+    
+           <br>2. Set language either English or Filipino (Tagalog),
+           <br>• set Filipino – setting the language to Filipino mode.
+           <br>• set English – setting the language to English mode.
+    
+           <br>3. Reload the Page,
+           <br>• refresh – reload current page.
+    
+           <br>4. Know the content inside,
+            <br>• details – it will read aloud the contents.
+          </p>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
     </div>
 </div>
-{% endblock content %}
+
+<audio id="audioPlayer" class="d-none" src="{% static 'audio/guidelines.mp3' %}"></audio>
+{% endblock instruction %}

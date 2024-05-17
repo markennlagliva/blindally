@@ -174,11 +174,65 @@
         </section>
        
     </main>
+
+    {% block instruction %}
+      <!-- Button trigger modal -->
+      <button id="trigger-button" type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Instruction
+    </button>
+  
+  <!-- Modal -->
+  <div class="modal fade"  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" >
+      <div class="modal-content" style="background-color: rgb(51, 67, 119);">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-white-50" id="exampleModalLabel"><i class="bi bi-info-square-fill"></i> Instruction</h1>
+          <button id="trigger-close-button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-white-50">
+            Each page has commands that only work on that specific page.
+            <br>These are the available keywords, 
+           <br>• home – going to home page.
+           <br>• guidelines – going to user guidelines page.
+           <br>• audiobook – going to audiobook page.
+           <br>• music – going to music page.
+           <br>• assistant – going to the assistant page.
+           <br>• time – going to current date and time page.
+           <br>• location – going to location page.
+           <br>• newsfeed – going to Live news page.
+           <br>• motivation – going to researcher’s motivation page.
+           <br>• technology – going to technology used page.
+    
+           <br>2. Set language either English or Filipino (Tagalog),
+           <br>• set Filipino – setting the language to Filipino mode.
+           <br>• set English – setting the language to English mode.
+    
+           <br>3. Reload the Page,
+           <br>• refresh – reload current page.
+    
+           <br>4. Know the content inside,
+            <br>• details – it will read aloud the contents.
+          </p>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+    </div>
+</div>
+
+<audio id="audioPlayer" class="d-none" src="{% static 'audio/home.mp3' %}"></audio>
+    {% endblock instruction %}
    
     <footer>
         <div id="mode">              
             <button id="buttonStatus" class="btn btn-sm border rounded-5"><i><i class="bi bi-translate"></i> <span id="content">English</span></i></button>
         </div>
+        
     </footer>
 </body>
 
@@ -194,6 +248,7 @@
         // eligible speech
         const recognition = new SpeechRecognition();
         recognition.interimResults = true;
+        // recognition.continuous = true;
 
         recognition.lang = 'en-US';
         function speak(text) {
@@ -206,17 +261,17 @@
             window.speechSynthesis.speak(msg);
         };
         
-        console.log('This is the Status Before: ', localStorage.getItem('status'));
-        console.log('This is the Mode Before: ', localStorage.getItem('mode'));
+        // console.log('This is the Status Before: ', localStorage.getItem('status'));
+        // console.log('This is the Mode Before: ', localStorage.getItem('mode'));
 
         document.addEventListener("DOMContentLoaded", function() {
             let greetings;
             // Code to execute when the DOM is fully loaded
             console.log("DOM is fully loaded.");
             if (localStorage.getItem('mode') == 'English') {
-                greetings = 'What can I do for you?'
+                greetings = 'Welcome!, say the keyword "instruction" to know all the available command words and how to operate the application.'
             } else {
-                greetings = 'Ano ang mapaglilingkod ko?'
+                greetings = 'Hello, sabihin ang keyword na instruction para malaman lahat ng pwedeng commands.'
             };
             
             fetch("{% url 'notification' %}", {
@@ -250,7 +305,7 @@
 
 
         var csrfToken = getCookie('csrftoken');
-        console.log('This is the Token:', csrfToken);
+        // console.log('This is the Token:', csrfToken);
         var currentUrl = window.location.href;
 
         let buttonStatus = document.getElementById('buttonStatus');
@@ -268,7 +323,7 @@
         buttonStatus.addEventListener('click', function () {
             let status = localStorage.getItem('status');
            
-           console.log('Hello')
+        //    console.log('Hello')
 
            if (status === 'true') {
                localStorage.setItem('mode', 'Filipino'); 
@@ -295,7 +350,7 @@
                         }
                     }
                 }
-                console.log('This is inside 2nd Cookie:', cookieValue)
+                // console.log('This is inside 2nd Cookie:', cookieValue)
                 return cookieValue;
             };
 
@@ -372,6 +427,14 @@
        
         }
         
+         // AUDIO MANIPUATION - instruction
+        const audioPlayer = document.getElementById('audioPlayer');
+        
+        function playAudio() {       
+            audioPlayer.play();     
+        }
+        // INSTRUCTION
+        let instruction = false
 
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
         window.addEventListener('load', () => {
@@ -386,17 +449,33 @@
             
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
-
+                // recognition.stop()
                 if (text === 'refresh') {
                     // Reload the current page
                     location.reload();
-                };
+                }
+                else if (text === 'instruction'){
+                    instruction = true;
+                document.getElementById('trigger-button').click();
+                var language = localStorage.getItem('mode');
 
-                if (text === 'details') {
+                // Get the audio element
+                var audio = document.getElementById('audioPlayer');
+
+                // Set the source based on the language
+                if (language === 'Filipino') {
+                    audio.src = '{% static "audio/fil_home.mp3" %}';
+                } else {
+                    audio.src = '{% static "audio/home.mp3" %}';
+                }
+                playAudio();
+                }
+
+                else if (text === 'details') {
                     details();
-                };
+                }
 
-                if (text === 'shutdown') {
+                else if (text === 'shutdown') {
                     fetch("{% url 'index' %}", {
                         method: 'POST',
                         headers: {
@@ -416,8 +495,8 @@
                         .catch((error) => {
                             console.error('Error', error);
                         });
-                };
-                if (text === 'secret activation') {
+                }
+                else if (text === 'secret activation') {
                     fetch("{% url 'index' %}", {
                         method: 'POST',
                         headers: {
@@ -437,9 +516,9 @@
                         .catch((error) => {
                             console.error('Error', error);
                         });
-                };
+                }
 
-                if (text.startsWith('set') && text.includes('english')){
+                else if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {
                         fetch("{% url 'set_language' %}", {
                         method: 'POST',
@@ -536,7 +615,7 @@
                     
 
                 // Starts here Keyword Voice Navigation
-                if (text === 'home') {
+                else if (text === 'home') {
                     window.location.href = "{% url 'index' %}"
                     fetch("{% url 'index' %}", {
                         method: 'POST',
@@ -630,6 +709,7 @@
                 else if (text === 'assistant') {
                     window.location.href = "{% url 'assistantbot' %}"
                     // speak('you are going to assistant bot page.')
+
                     fetch("{% url 'assistantbot' %}", {
                         method: 'POST',
                         headers: {
@@ -637,7 +717,7 @@
                             'X-CSRFToken': csrfToken,
                         },
                         body: JSON.stringify({
-                            details: 'You are going to the assistant page.',
+                            details: 'I am your assistant, How may I help you?',
                             status: JSON.parse(localStorage.getItem('status')),
                         }),
                     })
@@ -759,6 +839,25 @@
                     .catch((error) => {
                         console.error('Error', error);
                     });
+                } else {
+                     fetch("{% url 'index' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            details: 'command not recognized',
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error', error);
+                    });
                 }
 
                
@@ -767,10 +866,51 @@
 
 
         recognition.addEventListener('end', (e) => {
-           recognition.start(); 
+            // recognition.stop();
+           if (localStorage.getItem('mode') == 'Filipino') {
+            if (instruction) {
+                    let audio = document.getElementById('audioPlayer');
+                    let audioStop = audio.duration * 1000;
+                    setTimeout(function() {
+                        document.getElementById('trigger-close-button').click();
+                        recognition.start();
+                        instruction = false;
+                    }, audioStop)
+                    
+                } else {
+                    setTimeout(function() {
+                        recognition.start(); 
+                    }, 5000)
+                }   
+
+           } else {
+                console.log(instruction);
+                if (instruction) {
+                    let audio = document.getElementById('audioPlayer');
+                    let audioStop = audio.duration * 1000;
+                    setTimeout(function() {
+                        document.getElementById('trigger-close-button').click();
+                        recognition.start();
+                        instruction = false;
+                    }, audioStop)
+                    
+                } else {
+                    setTimeout(function() {
+                        recognition.start(); 
+                    }, 3000)
+                }   
+           }
         });
 
-        recognition.start();
+        if (localStorage.getItem('mode') == 'Filipino') {
+            setTimeout(function() {
+                // console.log("Paused for 5 seconds");
+                recognition.start();
+            }, 5000); // 5000 milliseconds = 5 seconds
+
+           } else {
+            recognition.start();
+        }
     });
 
     </script>
