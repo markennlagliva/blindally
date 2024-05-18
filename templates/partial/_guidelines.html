@@ -27,11 +27,11 @@
     console.log('This is the Mode Before: ', localStorage.getItem('mode'));
 
     // AUDIO MANIPUATION - instruction
-    const audioPlayer = document.getElementById('audioPlayer');
+    // const audioPlayer = document.getElementById('audioPlayer');
     
-    function playAudio() {       
-        audioPlayer.play();     
-    }
+    // function playAudio() {       
+    //     audioPlayer.play();     
+    // }
 
     // function pauseAudio() {
     //     audioPlayer.pause();
@@ -251,7 +251,11 @@
                     audio.src = '{% static "audio/fil_guidelines.mp3" %}';
                 } else {
                     audio.src = '{% static "audio/guidelines.mp3" %}';
-  }
+                }
+
+                function playAudio() {       
+                    audio.play();     
+                }
                 playAudio();
                 
                 console.log('play audio');

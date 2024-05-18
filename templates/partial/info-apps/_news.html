@@ -262,7 +262,32 @@
             }; // End of Main.click ()
    
         // START YOUTUBE API IFRAME
+        let isPlayingtheNews = false;
+        let audioPlayer;
         
+        function exit_delete_audio() {
+            fetch("{% url 'delete_audio' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({
+                    //    details: allPdetails,
+                    details: 'exit audio successfully.',
+                    status: JSON.parse(localStorage.getItem('status')),
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success', data);
+            })
+            .catch((error) => {
+                console.error('Error', error);
+            });
+            isPlayingtheNews = false;
+        }
+
         // 2. This code loads the IFrame Player API code asynchronously.
         var tag = document.createElement('script');
           
@@ -342,7 +367,7 @@
           }
 
           // END OF YOUTUBE IFRAME API
-       
+       let tookout_newsVideo = true;
        const texts = document.querySelector('#texts')
        let p = document.createElement('p')
     
@@ -362,6 +387,7 @@
 
                 // <--- Feature Request --->
                 // <--- Feature search --->
+            if (tookout_newsVideo) {
                 if (text.includes('gma') || text.includes('tv patrol') || text.includes('weather') || text.includes('tv5') || text.includes('abc news')) {
                  
 
@@ -506,6 +532,112 @@ fetch(fullUrl)
 
                     
                 }; // End of request Feature Block
+            } // end logic tookout_newsVideo
+            
+                if (text.startsWith('search')) {
+                    let output = text.replace(/^search\s*/, "")
+                    console.log(output)
+
+                    fetch("{% url 'news' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                            
+                        },
+                        body: JSON.stringify({
+                            details: output,
+                            status: JSON.parse(localStorage.getItem('status')),
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success', data);
+
+                            console.log(data.hasNews, typeof(data.hasNews))
+                            console.log('Check equality', data.hasNews == true)
+                            if (data.hasNews == true) {
+                                const textss = document.querySelector('#texts');
+                                textss.style.overflowY = 'auto';
+                                document.getElementById('book-determined').style.display = 'none';
+
+                                let searchNews = `
+                                    <div class="card-body mt-5" id="searchNews" data-aos="fade-right">
+                                        <img src="${data.urlToImage}" class="img-fluid" width="200">
+                                        <br>
+                                        <h3 class="text-white-50">${data.titleNews}</h3>
+                                        <br>
+                                        <hr>
+                                        <p class="text-white-50">${data.content_web}</p>
+                                    </div>
+                                `;
+
+                                // Ensure data is sanitized or validated before inserting into the DOM to prevent XSS attacks.
+                                textss.innerHTML += searchNews;
+                                var language = localStorage.getItem('mode');
+
+                                // Get the audio element
+                                var audio = document.getElementById('audioPlayer');
+                                audio.src = '{% static "audio/newssound.mp3" %}';
+                                audioPlayer = audio;
+                                // Set the source based on the language
+                                
+
+                                function playAudio() {       
+                                    audio.play();  
+                                    isPlayingtheNews = true;   
+                                }
+                                playAudio();
+                            } else {
+                                fetch("{% url 'newsfeed' %}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': csrfToken,
+                                        
+                                    },
+                                    body: JSON.stringify({
+                                        details: 'Please try again, no news found.',
+                                        status: JSON.parse(localStorage.getItem('status')),
+                                    }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Success', data);
+                                })
+                                .catch((error) => {
+                                    console.error('Error', error);
+                                });
+                            };
+
+
+                            
+                        })
+                        .catch((error) => {
+                            console.error('Error', error);
+                        });
+
+                    // NEWS TEXT - exit, wait, continue
+                } else if (text == 'exit'){
+                    if (isPlayingtheNews) {
+                        // delete audio
+                        audioPlayer.pause();
+                        exit_delete_audio();    
+                        document.getElementById('searchNews').style.display = 'none';
+                        document.getElementById('book-determined').style.display = 'block';
+                        
+                    }
+                } else if (text == 'wait') {
+                    if (isPlayingtheNews) {
+                        audioPlayer.pause();
+                        isPlayingtheNews = false;
+                    }
+                } else if (text == 'continue') {
+                    if (!isPlayingtheNews) {
+                        audioPlayer.play();
+                        isPlayingtheNews = true;
+                    }
+                }
 
                 if (text === 'details') {
                     details();
@@ -657,6 +789,7 @@ fetch(fullUrl)
 
                 // Starts here Keyword Voice Navigation
                 if (text === 'home') {
+                    exit_delete_audio();
                     window.location.href = "{% url 'index' %}"
                     fetch("{% url 'index' %}", {
                         method: 'POST',
@@ -680,6 +813,7 @@ fetch(fullUrl)
                     
                 }
                 else if (text === 'guidelines') {
+                    exit_delete_audio();
                     window.location.href = "{% url 'guidelines' %}"
                     fetch("{% url 'guidelines' %}", {
                         method: 'POST',
@@ -703,6 +837,7 @@ fetch(fullUrl)
                 }
                 // Audio Apps
                 else if (text === 'audiobook') {
+                    exit_delete_audio();
                     window.location.href = "{% url 'audio_book' %}"
                     fetch("{% url 'audio_book' %}", {
                         method: 'POST',
@@ -725,6 +860,7 @@ fetch(fullUrl)
                     });
                 }
                 else if (text === 'music') {
+                    exit_delete_audio();
                     window.location.href = "{% url 'audio_music' %}"
                     fetch("{% url 'audio_music' %}", {
                         method: 'POST',
@@ -748,6 +884,7 @@ fetch(fullUrl)
                 }
                 // Info Apps
                 else if (text === 'assistant') {
+                    exit_delete_audio();
                     window.location.href = "{% url 'assistantbot' %}"
                     // speak('you are going to assistant bot page.')
                     fetch("{% url 'assistantbot' %}", {
@@ -770,6 +907,7 @@ fetch(fullUrl)
                     });
                 }
                 else if (text === 'time') {
+                    exit_delete_audio();
                     window.location.href = "{% url 'current_time_date' %}"
                     fetch("{% url 'current_time_date' %}", {
                         method: 'POST',
@@ -793,6 +931,7 @@ fetch(fullUrl)
                     
                 }
                 else if (text === 'location') {
+                    exit_delete_audio();
                     window.location.href = "{% url 'location' %}"
                     fetch("{% url 'location' %}", {
                         method: 'POST',
@@ -815,6 +954,7 @@ fetch(fullUrl)
                     });     
                 }
                 else if (text === 'news'){
+                    exit_delete_audio();
                     window.location.href = "{% url 'newsfeed' %}"
                     fetch("{% url 'newsfeed' %}", {
                         method: 'POST',
@@ -837,6 +977,7 @@ fetch(fullUrl)
                     });
                 }
                 else if (text === 'motivation') {
+                    exit_delete_audio();
                     window.location.href = "{% url 'motivation' %}"
                     // speak('you are going to motivation page')
                     fetch("{% url 'motivation' %}", {
@@ -859,6 +1000,7 @@ fetch(fullUrl)
                     });
                 }
                 else if (text === 'technology') {
+                    exit_delete_audio();
                     window.location.href = "{% url 'technologies' %}"
                     // speak('You are going to technology page.')
                     fetch("{% url 'technologies' %}", {
@@ -933,3 +1075,7 @@ fetch(fullUrl)
     </div>
 </div>
 {% endblock content %}
+
+{% block news %}
+<audio id="audioPlayer" class="d-none" src=""></audio>
+{% endblock news %}

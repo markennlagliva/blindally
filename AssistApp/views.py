@@ -290,3 +290,69 @@ def address_location(request):
         except Exception as e:
             return JsonResponse({"error":str(e)})
     
+@csrf_exempt
+def news(request):
+    if request.method == 'POST':
+        try:
+            response = json.loads(request.body)
+            output, status = response.get('details'), response.get('status')
+            speak(f'Scraping the whole news for {output}, please wait for a moment ', status)
+            import requests
+            response = requests.get(f'https://newsapi.org/v2/everything?q={output}&apiKey=e4ab186e11c44ce98d27149a279b3ef9')
+            data = response.json()
+            print(data['totalResults'], type(data['totalResults']))
+            content_web = []
+            hasNews = data['totalResults'] > 0
+            if data['totalResults'] > 0:
+                import random
+                # Generate a random integer between 1 and 10 (inclusive)
+                random_integer = random.randint(1, 10)
+                title = data['articles'][random_integer]['title']
+                url = data['articles'][random_integer]['url']
+                urlToImage = data['articles'][random_integer]['urlToImage']
+
+                # print(title)
+                # print(url)
+                # print(content)
+                # if content is None:
+                # Get information on URL website
+                import requests
+                from bs4 import BeautifulSoup
+
+                # Step 2: Fetch the webpage content
+                response = requests.get(url)
+                webpage_content = response.text
+
+                # Step 3: Parse the HTML content
+                soup = BeautifulSoup(webpage_content, 'html.parser')
+
+                # Step 4: Extract all <p> tags
+                p_tags = soup.find_all('p')
+
+                # Step 5: Process the extracted <p> tags
+                
+                for p in p_tags:
+                    content_web.append(p.get_text())
+                # else:
+                #     content_web.append(content)
+                from gtts import gTTS
+                audio = gTTS(' '.join(content_web), lang='en', slow=False)
+                audio.save('static/audio/newssound.mp3')
+            else:
+                speak('Sorry no news found, Try finding another news!', status)
+            
+            print(' '.join(content_web))
+            # speak(' '.join(content_web), status)
+
+
+
+            return JsonResponse({'result': 'success', 'status': data, 'titleNews': title, 'content_web': content_web, 'hasNews': hasNews, 'urlToImage': urlToImage})
+        except Exception as e:
+            return JsonResponse({"error":str(e)})
+
+@csrf_exempt
+def delete_audio(request):
+    if request.method == 'POST':
+        os.remove('static/audio/newssound.mp3')
+
+    return JsonResponse({'result': 'success'})

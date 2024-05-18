@@ -228,6 +228,9 @@
 <audio id="audioPlayer" class="d-none" src="{% static 'audio/home.mp3' %}"></audio>
     {% endblock instruction %}
    
+    {% block news %}
+    {% endblock news %}
+
     <footer>
         <div id="mode">              
             <button id="buttonStatus" class="btn btn-sm border rounded-5"><i><i class="bi bi-translate"></i> <span id="content">English</span></i></button>
@@ -428,11 +431,11 @@
         }
         
          // AUDIO MANIPUATION - instruction
-        const audioPlayer = document.getElementById('audioPlayer');
+        // const audioPlayer = document.getElementById('audioPlayer');
         
-        function playAudio() {       
-            audioPlayer.play();     
-        }
+        // function playAudio() {       
+        //     audioPlayer.play();     
+        // }
         // INSTRUCTION
         let instruction = false
 
@@ -467,6 +470,10 @@
                     audio.src = '{% static "audio/fil_home.mp3" %}';
                 } else {
                     audio.src = '{% static "audio/home.mp3" %}';
+                }
+
+                function playAudio() {       
+                    audio.play();     
                 }
                 playAudio();
                 }
