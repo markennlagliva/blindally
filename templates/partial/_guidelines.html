@@ -5,6 +5,73 @@
     : Guidelines
 {% endblock title %}
 
+
+{% block content %}
+<div class="container-lg py-lg-0 pt-sm-5 mt-sm-0 mt-5">
+    <div class="row min-vh-100 d-flex justify-content-center align-items-center gap-lg-0 gap-3">
+
+        <div class="col-lg-6 align-self-lg-center align-self-end py-5" data-aos="fade-right">
+            <h1 class="fw-bolder text-center" style="color: #ADD8E6"><i class="bi bi-eye"></i> User Guidelines</h1>
+            <div class="text-white-50 rounded-5">
+                
+                <ul>
+                    <p class="text-white-50">
+                        <!-- <span style="color: #ADD8E6;">BlindAlly</span> - audio plays at the beginning. <br> -->
+                        <span style="color: #ADD8E6;">BlindAlly</span> - has specific commands for every pages to navigate properly. <br>
+                        <span style="color: #ADD8E6;">Communicate</span> - say the available keywords to request information and process request, only applicable for (news, audio books, music and chat bot). <br>
+                        <span style="color: #ADD8E6;;">User</span> - requested to select desired options from the lists of options through voice. <br>
+                        <span style="color: #ADD8E6;;">Speak</span> - only when entire audio stops. <br>
+                        <span style="color: #ADD8E6;;">Desired web page</span> - will be redirected. <br>
+                        <span style="color: #ADD8E6;;">Contents</span> - of redirected page will be read aloud. <br>
+                        <!-- <span style="color: #ADD8E6;;">Double tab the screen</span> - to know current position, double tap the screen.  -->
+                    </p> 
+                   <p class="text-white-50"></p>
+                    <p class="text-white-50"></1>
+                    <p class="text-white-50"></p>
+                    <p class="text-white-50"></p>
+                    <p class="text-white-50"></p>
+                    <p class="text-white-50"></p>
+                    <p class="text-white-50"></p>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6 text-center py-md-0 py-5" data-aos="fade-right">
+            <img src="{% static 'assets/guidelines.jpg' %}" class="img-fluid rounded-5" width="350"></i>
+        </div>
+        
+       
+{% endblock content %}
+
+{% block instruction %}
+         <!-- Button trigger modal -->
+    <button id="trigger-button" type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Instruction
+    </button>
+  
+  <!-- Modal -->
+  <div class="modal fade"  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" >
+      <div class="modal-content" style="background-color: rgb(51, 67, 119);">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-white-50" id="exampleModalLabel"><i class="bi bi-info-square-fill"></i> Instruction</h1>
+          <button id="trigger-close-button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+           {% include 'partial/instruction.html' %}
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+    </div>
+</div>
+
+<audio id="audioPlayer" class="d-none" src="{% static 'audio/instruction.mp3' %}"></audio>
+{% endblock instruction %}
+
 {% block script %}
 <script>
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -219,10 +286,11 @@
     
     // INSTRUCTION
     let instruction = false
+    let theAudio;
 
     // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
     window.addEventListener('load', () => {
-       
+        // document.addEventListener("DOMContentLoaded", function() {
         recognition.addEventListener('result', (e) => {
         const text = Array.from(e.results)
         .map(result => result[0])
@@ -233,6 +301,18 @@
         
         // Navigation -> Thru Voice 
         if(e.results[0].isFinal) {
+
+            if (instruction) {
+                        // const audioPlayer = document.getElementById('audioPlayer');
+                    if (text === 'skip') {
+                        theAudio.pause();
+                        theAudio.currentTime = 0;
+                        document.getElementById('trigger-close-button').click();
+                        instruction = false;
+
+                    };
+
+            } else {
 
             if (text === 'refresh') {
                     // Reload the current page
@@ -245,12 +325,12 @@
 
                 // Get the audio element
                 var audio = document.getElementById('audioPlayer');
-
+                theAudio = audio;
                 // Set the source based on the language
                 if (language === 'Filipino') {
-                    audio.src = '{% static "audio/fil_guidelines.mp3" %}';
+                    audio.src = '{% static "audio/fil_instruction.mp3" %}';
                 } else {
-                    audio.src = '{% static "audio/guidelines.mp3" %}';
+                    audio.src = '{% static "audio/instruction.mp3" %}';
                 }
 
                 function playAudio() {       
@@ -620,10 +700,12 @@
                         console.error('Error', error);
                     });
             }
-
+        
+        }
            
         };
     });
+
 
     recognition.addEventListener('end', (e) => {
             // recognition.stop();
@@ -633,9 +715,9 @@
             if (instruction) {
                     let audio = document.getElementById('audioPlayer');
                     let audioStop = audio.duration * 1000;
+                    recognition.start();
                     setTimeout(function() {
                         document.getElementById('trigger-close-button').click();
-                        recognition.start();
                         instruction = false;
                     }, audioStop)
                     
@@ -650,9 +732,9 @@
                 if (instruction) {
                     let audio = document.getElementById('audioPlayer');
                     let audioStop = audio.duration * 1000;
+                    recognition.start();
                     setTimeout(function() {
                         document.getElementById('trigger-close-button').click();
-                        recognition.start();
                         instruction = false;
                     }, audioStop)
                     
@@ -673,95 +755,8 @@
            } else {
             recognition.start();
         }
+        
 });
 
 </script>
 {% endblock script %}
-
-{% block content %}
-<div class="container-lg py-lg-0 pt-sm-5 mt-sm-0 mt-5">
-    <div class="row min-vh-100 d-flex justify-content-center align-items-center gap-lg-0 gap-3">
-
-        <div class="col-lg-6 align-self-lg-center align-self-end py-5" data-aos="fade-right">
-            <h1 class="fw-bolder text-center" style="color: #ADD8E6"><i class="bi bi-eye"></i> User Guidelines</h1>
-            <div class="text-white-50 rounded-5">
-                
-                <ul>
-                    <p class="text-white-50">
-                        <!-- <span style="color: #ADD8E6;">BlindAlly</span> - audio plays at the beginning. <br> -->
-                        <span style="color: #ADD8E6;">BlindAlly</span> - has specific commands for every pages to navigate properly. <br>
-                        <span style="color: #ADD8E6;">Communicate</span> - say the available keywords to request information and process request, only applicable for (news, audio books, music and chat bot). <br>
-                        <span style="color: #ADD8E6;;">User</span> - requested to select desired options from the lists of options through voice. <br>
-                        <span style="color: #ADD8E6;;">Speak</span> - only when entire audio stops. <br>
-                        <span style="color: #ADD8E6;;">Desired web page</span> - will be redirected. <br>
-                        <span style="color: #ADD8E6;;">Contents</span> - of redirected page will be read aloud. <br>
-                        <!-- <span style="color: #ADD8E6;;">Double tab the screen</span> - to know current position, double tap the screen.  -->
-                    </p> 
-                   <p class="text-white-50"></p>
-                    <p class="text-white-50"></1>
-                    <p class="text-white-50"></p>
-                    <p class="text-white-50"></p>
-                    <p class="text-white-50"></p>
-                    <p class="text-white-50"></p>
-                    <p class="text-white-50"></p>
-                </ul>
-            </div>
-        </div>
-        <div class="col-lg-6 text-center py-md-0 py-5" data-aos="fade-right">
-            <img src="{% static 'assets/guidelines.jpg' %}" class="img-fluid rounded-5" width="350"></i>
-        </div>
-        
-       
-{% endblock content %}
-
-{% block instruction %}
-         <!-- Button trigger modal -->
-    <button id="trigger-button" type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Instruction
-    </button>
-  
-  <!-- Modal -->
-  <div class="modal fade"  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable" >
-      <div class="modal-content" style="background-color: rgb(51, 67, 119);">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-white-50" id="exampleModalLabel"><i class="bi bi-info-square-fill"></i> Instruction</h1>
-          <button id="trigger-close-button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p class="text-white-50">
-            These are the available keywords, 
-           <br>• home – going to home page.
-           <br>• guidelines – going to user guidelines page.
-           <br>• audiobook – going to audiobook page.
-           <br>• music – going to music page.
-           <br>• assistant – going to the assistant page.
-           <br>• time – going to current date and time page.
-           <br>• location – going to location page.
-           <br>• newsfeed – going to Live news page.
-           <br>• motivation – going to researcher’s motivation page.
-           <br>• technology – going to technology used page.
-    
-           <br>2. Set language either English or Filipino (Tagalog),
-           <br>• set Filipino – setting the language to Filipino mode.
-           <br>• set English – setting the language to English mode.
-    
-           <br>3. Reload the Page,
-           <br>• refresh – reload current page.
-    
-           <br>4. Know the content inside,
-            <br>• details – it will read aloud the contents.
-          </p>
-        </div>
-        <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div> -->
-      </div>
-    </div>
-  </div>
-    </div>
-</div>
-
-<audio id="audioPlayer" class="d-none" src="{% static 'audio/guidelines.mp3' %}"></audio>
-{% endblock instruction %}

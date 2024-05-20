@@ -190,30 +190,7 @@
           <button id="trigger-close-button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p class="text-white-50">
-            Each page has commands that only work on that specific page.
-            <br>These are the available keywords, 
-           <br>• home – going to home page.
-           <br>• guidelines – going to user guidelines page.
-           <br>• audiobook – going to audiobook page.
-           <br>• music – going to music page.
-           <br>• assistant – going to the assistant page.
-           <br>• time – going to current date and time page.
-           <br>• location – going to location page.
-           <br>• newsfeed – going to Live news page.
-           <br>• motivation – going to researcher’s motivation page.
-           <br>• technology – going to technology used page.
-    
-           <br>2. Set language either English or Filipino (Tagalog),
-           <br>• set Filipino – setting the language to Filipino mode.
-           <br>• set English – setting the language to English mode.
-    
-           <br>3. Reload the Page,
-           <br>• refresh – reload current page.
-    
-           <br>4. Know the content inside,
-            <br>• details – it will read aloud the contents.
-          </p>
+            {% include 'partial/instruction.html' %} 
         </div>
         <!-- <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -225,7 +202,8 @@
     </div>
 </div>
 
-<audio id="audioPlayer" class="d-none" src="{% static 'audio/home.mp3' %}"></audio>
+
+<audio id="audioPlayer" class="d-none" src="{% static 'audio/instruction.mp3' %}"></audio>
     {% endblock instruction %}
    
     {% block news %}
@@ -438,7 +416,7 @@
         // }
         // INSTRUCTION
         let instruction = false
-
+        let theAudio;
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
         window.addEventListener('load', () => {
            
@@ -452,24 +430,37 @@
             
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
+
+                if (instruction) {
+                        // const audioPlayer = document.getElementById('audioPlayer');
+                    if (text === 'skip') {
+                        theAudio.pause();
+                        theAudio.currentTime = 0;
+                        document.getElementById('trigger-close-button').click();
+                        instruction = false;
+
+                    };
+
+                }
+                else {
                 // recognition.stop()
                 if (text === 'refresh') {
                     // Reload the current page
                     location.reload();
                 }
                 else if (text === 'instruction'){
-                    instruction = true;
+                instruction = true;
                 document.getElementById('trigger-button').click();
                 var language = localStorage.getItem('mode');
 
                 // Get the audio element
                 var audio = document.getElementById('audioPlayer');
-
+                theAudio = audio;
                 // Set the source based on the language
                 if (language === 'Filipino') {
-                    audio.src = '{% static "audio/fil_home.mp3" %}';
+                    audio.src = '{% static "audio/fil_instruction.mp3" %}';
                 } else {
-                    audio.src = '{% static "audio/home.mp3" %}';
+                    audio.src = '{% static "audio/instruction.mp3" %}';
                 }
 
                 function playAudio() {       
@@ -867,7 +858,7 @@
                     });
                 }
 
-               
+            } // else end tag if (instruction)
             };
         });
 
@@ -878,9 +869,9 @@
             if (instruction) {
                     let audio = document.getElementById('audioPlayer');
                     let audioStop = audio.duration * 1000;
+                    recognition.start();
                     setTimeout(function() {
                         document.getElementById('trigger-close-button').click();
-                        recognition.start();
                         instruction = false;
                     }, audioStop)
                     
@@ -895,9 +886,10 @@
                 if (instruction) {
                     let audio = document.getElementById('audioPlayer');
                     let audioStop = audio.duration * 1000;
+                    recognition.start();
                     setTimeout(function() {
                         document.getElementById('trigger-close-button').click();
-                        recognition.start();
+                      
                         instruction = false;
                     }, audioStop)
                     
