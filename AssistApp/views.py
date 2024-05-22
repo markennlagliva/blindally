@@ -239,24 +239,38 @@ def set_language(request):
 def chatbot(request):
     if request.method == 'POST':
         try:
-            import openai
-            from dotenv import load_dotenv
-            load_dotenv()
-            openai.api_key = os.getenv('OPENAI_KEY_3')
+            # import openai
+            # from dotenv import load_dotenv
+            # load_dotenv()
+            # openai.api_key = os.getenv('OPENAI_KEY_3')
             response = json.loads(request.body)
             
-            completion = openai.ChatCompletion.create(
-                model='gpt-3.5-turbo',
+            # completion = openai.ChatCompletion.create(
+            #     model='gpt-3.5-turbo',
+            #     messages=[
+            #         {
+            #         "role": "user", 
+            #         #This is Where USER DATA REQUEST will be process.
+            #         "content": response.get('details')
+            #         },
+            #     ]
+            # )
+            
+            # return JsonResponse({'result': 'success', 'generatedText': completion['choices'][0]['message']['content']})
+            from g4f.client import Client
+            client = Client()
+
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
                 messages=[
                     {
-                    "role": "user", 
-                    #This is Where USER DATA REQUEST will be process.
-                    "content": response.get('details')
+                        "role": "user",
+                        "content": response.get('details') + ' English response only and Summarize, maximum of 4000 or less than 4000 characters only. Only characters or numbers response only.',
                     },
                 ]
             )
-            
-            return JsonResponse({'result': 'success', 'generatedText': completion['choices'][0]['message']['content']})
+
+            return JsonResponse({'result': 'success', 'generatedText': response.choices[0].message.content})
         except Exception as e:
             print(str(e))
             return JsonResponse({'Error': str(e)})

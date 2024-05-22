@@ -214,9 +214,9 @@
             // Code to execute when the DOM is fully loaded
             console.log("DOM is fully loaded.");
             if (localStorage.getItem('mode') == 'English') {
-                greetings = 'What can I do for you?'
+                greetings = 'Welcome, this is Blind Ally'
             } else {
-                greetings = 'Ano ang mapaglilingkod ko?'
+                greetings = 'Welcome, ito si Blind Ally'
             };
             
             fetch("{% url 'notification' %}", {
@@ -372,7 +372,7 @@
        
         }
         
-
+        let isActive = false;
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
         window.addEventListener('load', () => {
            
@@ -387,139 +387,108 @@
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
-                if (text === 'refresh') {
-                    // Reload the current page
-                    location.reload();
-                };
-
-                if (text === 'details') {
-                    details();
-                };
-
-                if (text === 'shutdown') {
-                    fetch("{% url 'index' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'shutdown',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Success', data);
-                        })
-                        .catch((error) => {
-                            console.error('Error', error);
-                        });
-                };
-                if (text === 'secret activation') {
-                    fetch("{% url 'index' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'secret activation',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Success', data);
-                        })
-                        .catch((error) => {
-                            console.error('Error', error);
-                        });
-                };
-
-                if (text.startsWith('set') && text.includes('english')){
+                if (text === 'blind ally') {
+                    console.log('Activated, what can I do for you?');
                     if (localStorage.getItem('mode') == 'English') {
-                        fetch("{% url 'set_language' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'language already set in English mode.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Success', data);
-                        })
-                        .catch((error) => {
-                            console.error('Error', error);
-                        });
-                        // speak('language already set in English mode.');
+                        var audio = new Audio("{% static 'audio/activation.mp3' %}");
                     } else {
-                        // speak('setting language to english mode.')
-                        fetch("{% url 'set_language' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,    
-                        },
-                        body: JSON.stringify({
-                            details: 'setting language to English mode.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                        localStorage.setItem('mode', 'English'); 
-                        contentMode.textContent = localStorage.getItem('mode');
-                        localStorage.setItem('status', true);    
-                    }
-                } else if (text.startsWith('set') && text.includes('filipino')) {
-                    if (localStorage.getItem('mode') == 'Filipino') {
-                        // speak('language already set in Filipino mode.');
-                        fetch("{% url 'set_language' %}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': csrfToken,
-                                
-                            },
-                            body: JSON.stringify({
-                                details: 'language already set in Filipino mode.',
-                                status: JSON.parse(localStorage.getItem('status')),
-                            }),
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Success', data);
-                        })
-                        .catch((error) => {
-                            console.error('Error', error);
-                        });
-                    } else {
-                        // speak('setting language to filipino mode.');
-                        fetch("{% url 'set_language' %}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': csrfToken,
-                                
-                            },
-                            body: JSON.stringify({
-                                details: 'setting language to filipino mode.',
-                                status: JSON.parse(localStorage.getItem('status')),
-                            }),
+                        var audio = new Audio("{% static 'audio/fil_activation.mp3' %}");
+                    };
+                    audio.play();
+                    isActive = true;
+                };
+
+                if (isActive) {
+                    // CHANGE WAKE UP WORD "TEST"
+                    let availableCommands = ['blind ally', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
+                        
+                        if (text === 'refresh') {
+                            // Reload the current page
+                            location.reload();
+                        }
+
+                        else if (text === 'details') {
+                            details();
+                            isActive = false;
+                        }
+
+                        else if (text === 'shutdown') {
+                            fetch("{% url 'index' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'shutdown',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Success', data);
+                                })
+                                .catch((error) => {
+                                    console.error('Error', error);
+                                });
+                        }
+                        else if (text === 'secret activation') {
+                            fetch("{% url 'index' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'secret activation',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Success', data);
+                                })
+                                .catch((error) => {
+                                    console.error('Error', error);
+                                });
+                        }
+
+                        else if (text.startsWith('set') && text.includes('english')){
+                            if (localStorage.getItem('mode') == 'English') {
+                                fetch("{% url 'set_language' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'language already set in English mode.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Success', data);
+                                })
+                                .catch((error) => {
+                                    console.error('Error', error);
+                                });
+                                // speak('language already set in English mode.');
+                            } else {
+                                // speak('setting language to english mode.')
+                                fetch("{% url 'set_language' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,    
+                                },
+                                body: JSON.stringify({
+                                    details: 'setting language to English mode.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
                             })
                             .then(response => response.json())
                             .then(data => {
@@ -528,240 +497,299 @@
                             .catch((error) => {
                                 console.error('Error', error);
                             });
-                                localStorage.setItem('mode', 'Filipino'); 
+                                localStorage.setItem('mode', 'English'); 
                                 contentMode.textContent = localStorage.getItem('mode');
-                                localStorage.setItem('status', false);
+                                localStorage.setItem('status', true);    
                             }
+                            isActive = false;
+                        } else if (text.startsWith('set') && text.includes('filipino')) {
+                            if (localStorage.getItem('mode') == 'Filipino') {
+                                // speak('language already set in Filipino mode.');
+                                fetch("{% url 'set_language' %}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': csrfToken,
+                                        
+                                    },
+                                    body: JSON.stringify({
+                                        details: 'language already set in Filipino mode.',
+                                        status: JSON.parse(localStorage.getItem('status')),
+                                    }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Success', data);
+                                })
+                                .catch((error) => {
+                                    console.error('Error', error);
+                                });
+                            } else {
+                                // speak('setting language to filipino mode.');
+                                fetch("{% url 'set_language' %}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRFToken': csrfToken,
+                                        
+                                    },
+                                    body: JSON.stringify({
+                                        details: 'setting language to filipino mode.',
+                                        status: JSON.parse(localStorage.getItem('status')),
+                                    }),
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log('Success', data);
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error', error);
+                                    });
+                                        localStorage.setItem('mode', 'Filipino'); 
+                                        contentMode.textContent = localStorage.getItem('mode');
+                                        localStorage.setItem('status', false);
+                                    }
+                                isActive = false;
+                            }
+                            
+
+                        // Starts here Keyword Voice Navigation
+                        else if (text === 'home') {
+                            window.location.href = "{% url 'index' %}"
+                            fetch("{% url 'index' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are already in Home Page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                            
+                        }
+                        else if (text === 'guidelines') {
+                            window.location.href = "{% url 'guidelines' %}"
+                            fetch("{% url 'guidelines' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'Going to user guidelines page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        // Audio Apps
+                        else if (text === 'audiobook') {
+                            window.location.href = "{% url 'audio_book' %}"
+                            fetch("{% url 'audio_book' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to audio book page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        else if (text === 'music') {
+                            window.location.href = "{% url 'audio_music' %}"
+                            fetch("{% url 'audio_music' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to music page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        // Info Apps
+                        else if (text === 'assistant') {
+                            window.location.href = "{% url 'assistantbot' %}"
+                            // speak('you are going to assistant bot page.')
+                            fetch("{% url 'assistantbot' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to the assistant page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        else if (text === 'time') {
+                            window.location.href = "{% url 'current_time_date' %}"
+                            fetch("{% url 'current_time_date' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to date and time page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                            
+                        }
+                        else if (text === 'location') {
+                            window.location.href = "{% url 'location' %}"
+                            fetch("{% url 'location' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to location page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });     
+                        }
+                        else if (text === 'news'){
+                            window.location.href = "{% url 'newsfeed' %}"
+                            fetch("{% url 'newsfeed' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to news page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        else if (text === 'motivation') {
+                            window.location.href = "{% url 'motivation' %}"
+                            // speak('you are going to motivation page')
+                            fetch("{% url 'motivation' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                },
+                                body: JSON.stringify({
+                                    details: 'you are going to motivation page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        else if (text === 'technology') {
+                            window.location.href = "{% url 'technologies' %}"
+                            // speak('You are going to technology page.')
+                            fetch("{% url 'technologies' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                },
+                                body: JSON.stringify({
+                                    details: 'you are going to technology page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        } else if (!availableCommands.includes(text)) {
+                            console.log('command not recognized')
+                            if (localStorage.getItem('mode') == 'English') {
+                                var audio = new Audio("{% static 'audio/notrecognized.mp3' %}");
+                            } else {
+                                var audio = new Audio("{% static 'audio/fil_notrecognized.mp3' %}");
+                            };
+                            audio.play();
+                            isActive = false;
                         }
                     
-
-                // Starts here Keyword Voice Navigation
-                if (text === 'home') {
-                    window.location.href = "{% url 'index' %}"
-                    fetch("{% url 'index' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are already in Home Page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                    
-                }
-                else if (text === 'guidelines') {
-                    window.location.href = "{% url 'guidelines' %}"
-                    fetch("{% url 'guidelines' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'Going to user guidelines page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                // Audio Apps
-                else if (text === 'audiobook') {
-                    window.location.href = "{% url 'audio_book' %}"
-                    fetch("{% url 'audio_book' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to audio book page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                else if (text === 'music') {
-                    window.location.href = "{% url 'audio_music' %}"
-                    fetch("{% url 'audio_music' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to music page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                // Info Apps
-                else if (text === 'assistant') {
-                    window.location.href = "{% url 'assistantbot' %}"
-                    // speak('you are going to assistant bot page.')
-                    fetch("{% url 'assistantbot' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to the assistant page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                else if (text === 'time') {
-                    window.location.href = "{% url 'current_time_date' %}"
-                    fetch("{% url 'current_time_date' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to date and time page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                    
-                }
-                else if (text === 'location') {
-                    window.location.href = "{% url 'location' %}"
-                    fetch("{% url 'location' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to location page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });     
-                }
-                else if (text === 'news'){
-                    window.location.href = "{% url 'newsfeed' %}"
-                    fetch("{% url 'newsfeed' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to news page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                else if (text === 'motivation') {
-                    window.location.href = "{% url 'motivation' %}"
-                    // speak('you are going to motivation page')
-                    fetch("{% url 'motivation' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                        },
-                        body: JSON.stringify({
-                            details: 'you are going to motivation page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                else if (text === 'technology') {
-                    window.location.href = "{% url 'technologies' %}"
-                    // speak('You are going to technology page.')
-                    fetch("{% url 'technologies' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                        },
-                        body: JSON.stringify({
-                            details: 'you are going to technology page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-
-               
+                   
+                } // End of isActive
             };
         });
 
