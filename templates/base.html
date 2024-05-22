@@ -210,6 +210,7 @@
         console.log('This is the Mode Before: ', localStorage.getItem('mode'));
 
         document.addEventListener("DOMContentLoaded", function() {
+            isActive = false;
             let greetings;
             // Code to execute when the DOM is fully loaded
             console.log("DOM is fully loaded.");
@@ -238,6 +239,7 @@
                .catch((error) => {
                    console.error('Error', error);
                });
+
         });
 
         
@@ -372,7 +374,9 @@
        
         }
         
-        let isActive = false;
+        // or DOM CONTENT LOAD to false
+        let isActive;
+
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
         window.addEventListener('load', () => {
            
