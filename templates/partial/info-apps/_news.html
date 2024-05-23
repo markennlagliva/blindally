@@ -13,6 +13,15 @@
         recognition.interimResults = true;
 
         recognition.lang = 'en-US';
+
+        document.addEventListener("DOMContentLoaded", function() {
+            isActive = false;
+            instruction = false;
+            isPlayingtheNews = false;
+            playingNews = false;
+            // isBot = false;
+        });   
+
         function speak(text) {
             const msg = new SpeechSynthesisUtterance(text);
 
@@ -342,6 +351,36 @@
 
           // END OF YOUTUBE IFRAME API
        
+          // Initialization
+        let isActive;
+        let instruction;
+        let isPlayingtheNews;
+        let playingNews;
+        let theAudio;
+
+        function exit_delete_audio() {
+            fetch("{% url 'delete_audio' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({
+                    //    details: allPdetails,
+                    details: 'exit audio successfully.',
+                    status: JSON.parse(localStorage.getItem('status')),
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success', data);
+            })
+            .catch((error) => {
+                console.error('Error', error);
+            });
+            isPlayingtheNews = false;
+        }
+
        const texts = document.querySelector('#texts')
        let p = document.createElement('p')
     
@@ -359,524 +398,737 @@
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
+                  if (text === 'blind ally') {
+                console.log('Activated, what can I do for you?');
+                    if (localStorage.getItem('mode') == 'English') {
+                        var audio = new Audio("{% static 'audio/activation.mp3' %}");
+                    } else {
+                        var audio = new Audio("{% static 'audio/fil_activation.mp3' %}");
+                    };
+                    audio.play();
+                    isActive = true;
+                };
+
                 // <--- Feature Request --->
                 // <--- Feature search --->
-                if (text.includes('gma') || text.includes('tv patrol') || text.includes('weather') || text.includes('tv5') || text.includes('abc news')) {
-                 
+                        if (false) {
+                        if (text.includes('gma') || text.includes('tv patrol') || text.includes('weather') || text.includes('tv5') || text.includes('abc news')) {
+                        
 
-                let channel = text;
-                let requestChannel;
-                if (channel.includes('gma')) {
-                    requestChannel = 'GMA NETWORK {{date}} LIVESTREAM'
-                } else if (channel.includes('weather')){
-                    requestChannel = 'DOST-PAGASA Weather Report Public Weather Forecast issued at {{time}} | {{date}} - {{day}}'
-                } else if (channel.includes('tv5')) {
-                    requestChannel = 'EAT BULAGA LIVE | TVJ ON TV5 | {{date}}'
-                } else if (channel.includes('abc news')) {
-                    requestChannel = 'ABC news LIVE'
-                }
-                else {
-                    requestChannel = 'ABS-CBN Entertainment {{date}} Live'
-                };
+                        let channel = text;
+                        let requestChannel;
+                        if (channel.includes('gma')) {
+                            requestChannel = 'GMA NETWORK {{date}} LIVESTREAM'
+                        } else if (channel.includes('weather')){
+                            requestChannel = 'DOST-PAGASA Weather Report Public Weather Forecast issued at {{time}} | {{date}} - {{day}}'
+                        } else if (channel.includes('tv5')) {
+                            requestChannel = 'EAT BULAGA LIVE | TVJ ON TV5 | {{date}}'
+                        } else if (channel.includes('abc news')) {
+                            requestChannel = 'ABC news LIVE'
+                        }
+                        else {
+                            requestChannel = 'ABS-CBN Entertainment {{date}} Live'
+                        };
 
-                
-                    // console.log('Cakes & Eclairs YT '+output)
-                    // Define the endpoint URL
-const url = "https://www.googleapis.com/youtube/v3/search";
-console.log('{{date}}')
-// Define query parameters
-let params;
-if (text === 'abc news') {
-        params = {
-        part: "snippet",
-        q: requestChannel,  // Replace with your search query
-        type: "video",
-        eventType: "live",
-        maxResults: 1,  // Limit to 1 result
-        key: "AIzaSyDgdZIe2Xs8ycbTzbhJZiDPP1ZstHcktu0"  // Replace with your YouTube Data API key mkenndave
-    };
-} else {
-    params = {
-        part: "snippet",
-        q: requestChannel,  // Replace with your search query
-        type: "video",
-        // eventType: "live",
-        maxResults: 1,  // Limit to 1 result
-        key: "AIzaSyDgdZIe2Xs8ycbTzbhJZiDPP1ZstHcktu0"  // Replace with your YouTube Data API key
-    };
-};
-
-// Construct URL with query parameters
-const queryString = new URLSearchParams(params).toString();
-const fullUrl = `${url}?${queryString}`;
-
-// Send GET request to the API
-fetch(fullUrl)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log(data)
-        // Extract video details from response
-        if (data.items && data.items.length > 0) {
-            const newsId = data.items[0].id.videoId;
-            const newsTitle = data.items[0].snippet.title;
-            
-            console.log("News ID:", newsId);
-            console.log("News Title:", newsTitle);
-            
-         
-            let videoContainer = document.querySelector('#player');
-            //width="560" height="315"
-
-            // NEWS YOUTUBE IFRAME API
-            
-            if (localStorage.getItem('newsId') != null) {
-               
-                changeVideo(newsId);
-                localStorage.setItem('newsId', newsId);
-                localStorage.setItem('newsTitle', newsTitle);
-            } else {
-                localStorage.setItem('newsId', newsId);
-                localStorage.setItem('newsTitle', newsTitle);
-                onYouTubeIframeAPIReady();  
-            }
-            
-            // let markup = `<iframe id="videoFrame" class="embed-responsive-item" src="https://www.youtube.com/embed/${newsId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <h6 class='text-center text-white-50'>${newsTitle}</h6>`
-            
-            // let markup = `
-            // <video width="320" height="240" controls autoplay>
-            //     <source src="https://www.youtube.com/embed/${videoId}" type="video/mp4">
-            //     Your browser does not support the video tag.
-            // </video>
-            // <h6 class='text-center text-white-50'>${videoTitle}</h6>
-            // `
-
-            // Save the markup string to local storage
-            // localStorage.setItem('newsMarkup', markup);
-            // Later, to retrieve the saved markup from local storage
-            // var savedMarkup = localStorage.getItem('newsMarkup');
-
-            // NOTIFYING AND SPEAKING PURPOSES CODE
-            fetch("{% url 'newsfeed' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'Searching for live or Recent News.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-
-            // setTimeout(function() {
-            //     // Set the innerHTML after the delay
-            //     document.querySelector('#player').innerHTML = localStorage.getItem('newsMarkup');
-            // }, 4000);
-
-            localStorage.setItem('isPlayingNews', true);
-            // window.location.href = "{% url 'newsfeed' %}"
-          
-            
-
-            
+                        
+                            // console.log('Cakes & Eclairs YT '+output)
+                            // Define the endpoint URL
+        const url = "https://www.googleapis.com/youtube/v3/search";
+        console.log('{{date}}')
+        // Define query parameters
+        let params;
+        if (text === 'abc news') {
+                params = {
+                part: "snippet",
+                q: requestChannel,  // Replace with your search query
+                type: "video",
+                eventType: "live",
+                maxResults: 1,  // Limit to 1 result
+                key: "AIzaSyDgdZIe2Xs8ycbTzbhJZiDPP1ZstHcktu0"  // Replace with your YouTube Data API key mkenndave
+            };
         } else {
-            console.log("No news found.");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-    });
+            params = {
+                part: "snippet",
+                q: requestChannel,  // Replace with your search query
+                type: "video",
+                // eventType: "live",
+                maxResults: 1,  // Limit to 1 result
+                key: "AIzaSyDgdZIe2Xs8ycbTzbhJZiDPP1ZstHcktu0"  // Replace with your YouTube Data API key
+            };
+        };
 
+        // Construct URL with query parameters
+        const queryString = new URLSearchParams(params).toString();
+        const fullUrl = `${url}?${queryString}`;
 
+        // Send GET request to the API
+        fetch(fullUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+                // Extract video details from response
+                if (data.items && data.items.length > 0) {
+                    const newsId = data.items[0].id.videoId;
+                    const newsTitle = data.items[0].snippet.title;
                     
-                }; // End of request Feature Block
-
-                if (text === 'details') {
-                    details();
-                };
-
-                if (text === 'stop') {
-                    localStorage.setItem('isPlayingNews', false);
-                    pauseVideo()
+                    console.log("News ID:", newsId);
+                    console.log("News Title:", newsTitle);
                     
                 
-                }; // End for STOP keyword
+                    let videoContainer = document.querySelector('#player');
+                    //width="560" height="315"
 
-                if (text === 'play') {
-                    localStorage.setItem('isPlayingNews', true);
-                    playVideo()
-                
-
-                    if (localStorage.getItem('newsId') === null) {
-                            fetch("{% url 'newsfeed' %}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': csrfToken,
-                                
-                            },
-                            body: JSON.stringify({
-                                details: 'sorry, you have not requested a News TV yet.',
-                                status: JSON.parse(localStorage.getItem('status')),
-                            }),
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Success', data);
-                        })
-                        .catch((error) => {
-                            console.error('Error', error);
-                        });
-                    };
-                }; // End for CONTINUTE keyword
-
-                if (text === 'refresh') {
-                    // Reload the current page
-                    location.reload();
-
-                    // window.location.href = "{% url 'newsfeed' %}"
-
-                    // // Create a new KeyboardEvent for the key "k"
-                    // const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
-
-                    // // Dispatch the key event to simulate the key press
-                    // document.dispatchEvent(keyEvent);
-                };
-
-
-                if (text.startsWith('set') && text.includes('english')){
-                    if (localStorage.getItem('mode') == 'English') {
-                        fetch("{% url 'set_language' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'language already set in English mode.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                        // speak('language already set in English mode.');
-                    } else {
-                        // speak('setting language to english mode.')
-                        fetch("{% url 'set_language' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,    
-                        },
-                        body: JSON.stringify({
-                            details: 'setting language to English mode.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                        localStorage.setItem('mode', 'English'); 
-                        contentMode.textContent = localStorage.getItem('mode');
-                        localStorage.setItem('status', true);    
-                    }
-                } else if (text.startsWith('set') && text.includes('filipino')) {
-                    if (localStorage.getItem('mode') == 'Filipino') {
-                        // speak('language already set in Filipino mode.');
-                        fetch("{% url 'set_language' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'language already set in Filipino mode.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                    } else {
-                        // speak('setting language to filipino mode.');
-                        fetch("{% url 'set_language' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'setting language to filipino mode.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                        localStorage.setItem('mode', 'Filipino'); 
-                        contentMode.textContent = localStorage.getItem('mode');
-                        localStorage.setItem('status', false);
-                    }
-                }
-
-                // Starts here Keyword Voice Navigation
-                if (text === 'home') {
-                    window.location.href = "{% url 'index' %}"
-                    fetch("{% url 'index' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to Home page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
+                    // NEWS YOUTUBE IFRAME API
                     
-                }
-                else if (text === 'guidelines') {
-                    window.location.href = "{% url 'guidelines' %}"
-                    fetch("{% url 'guidelines' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'Going to user guidelines page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                // Audio Apps
-                else if (text === 'audiobook') {
-                    window.location.href = "{% url 'audio_book' %}"
-                    fetch("{% url 'audio_book' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to audio book page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                else if (text === 'music') {
-                    window.location.href = "{% url 'audio_music' %}"
-                    fetch("{% url 'audio_music' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to music page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                // Info Apps
-                else if (text === 'assistant') {
-                    window.location.href = "{% url 'assistantbot' %}"
-                    // speak('you are going to assistant bot page.')
-                    fetch("{% url 'assistantbot' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to assistant page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
-                else if (text === 'time') {
-                    window.location.href = "{% url 'current_time_date' %}"
-                    fetch("{% url 'current_time_date' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to date and time page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
+                    if (localStorage.getItem('newsId') != null) {
                     
-                }
-                else if (text === 'location') {
-                    window.location.href = "{% url 'location' %}"
-                    fetch("{% url 'location' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                            
-                        },
-                        body: JSON.stringify({
-                            details: 'You are going to location page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });     
-                }
-                else if (text === 'news'){
-                    window.location.href = "{% url 'newsfeed' %}"
+                        changeVideo(newsId);
+                        localStorage.setItem('newsId', newsId);
+                        localStorage.setItem('newsTitle', newsTitle);
+                    } else {
+                        localStorage.setItem('newsId', newsId);
+                        localStorage.setItem('newsTitle', newsTitle);
+                        onYouTubeIframeAPIReady();  
+                    }
+                    
+                    // let markup = `<iframe id="videoFrame" class="embed-responsive-item" src="https://www.youtube.com/embed/${newsId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <h6 class='text-center text-white-50'>${newsTitle}</h6>`
+                    
+                    // let markup = `
+                    // <video width="320" height="240" controls autoplay>
+                    //     <source src="https://www.youtube.com/embed/${videoId}" type="video/mp4">
+                    //     Your browser does not support the video tag.
+                    // </video>
+                    // <h6 class='text-center text-white-50'>${videoTitle}</h6>
+                    // `
+
+                    // Save the markup string to local storage
+                    // localStorage.setItem('newsMarkup', markup);
+                    // Later, to retrieve the saved markup from local storage
+                    // var savedMarkup = localStorage.getItem('newsMarkup');
+
+                    // NOTIFYING AND SPEAKING PURPOSES CODE
                     fetch("{% url 'newsfeed' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'Searching for live or Recent News.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+
+                    // setTimeout(function() {
+                    //     // Set the innerHTML after the delay
+                    //     document.querySelector('#player').innerHTML = localStorage.getItem('newsMarkup');
+                    // }, 4000);
+
+                    localStorage.setItem('isPlayingNews', true);
+                    // window.location.href = "{% url 'newsfeed' %}"
+                
+                    
+
+                    
+                } else {
+                    console.log("No news found.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+
+
                             
-                        },
-                        body: JSON.stringify({
-                            details: 'You are already in news page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
+                        }; // End of request Feature Block
+                    } // end of False - Not using
+                
+            if (playingNews) {
+                if (text == 'exit'){
+                    if (isPlayingtheNews) {
+                        // delete audio
+                        theAudio.pause();
+                        exit_delete_audio();    
+                        document.getElementById('searchNews').style.display = 'none';
+                        document.getElementById('book-determined').style.display = 'block';
+                        playingNews = false;
+                        
+                    }
+                } else if (text == 'wait') {
+                    if (isPlayingtheNews) {
+                        theAudio.pause();
+                        isPlayingtheNews = false;
+                    }
+                } else if (text == 'continue') {
+                    if (!isPlayingtheNews) {
+                        theAudio.play();
+                        isPlayingtheNews = true;
+                    }
                 }
-                else if (text === 'motivation') {
-                    window.location.href = "{% url 'motivation' %}"
-                    // speak('you are going to motivation page')
-                    fetch("{% url 'motivation' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                        },
-                        body: JSON.stringify({
-                            details: 'you are going to motivation page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
+            } // End playingNews not isPlayingtheNews
+
+                    if (isActive) {
+                        let availableCommands = ['blind ally', 'search', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
+                        if (text === 'details') {
+                            details();
+                            isActive = false;
+
+                        } 
+                        else if (text.startsWith('search')) {
+                            let output = text.replace(/^search\s*/, "")
+                            console.log('Requested Input:', output)
+
+                                
+                                let news_country;
+                                let news_lang;
+                                if (localStorage.getItem('mode') == 'English') {
+                                    news_country = 'US';
+                                    news_lang = 'en';
+                                } else {
+                                    news_country = 'PH';
+                                    news_lang = 'tl';
+                                };
+                                
+                                const url = `https://real-time-news-data.p.rapidapi.com/search?query=${output}&country=${news_country}&lang=${news_lang}`;
+                                    const options = {
+                                    method: 'GET',
+                                    headers: {
+                                        'X-RapidAPI-Key': '1cb3bdc85emsh88a3549de3600d6p1ffddcjsn92e56802c9d2',
+                                        'X-RapidAPI-Host': 'real-time-news-data.p.rapidapi.com'
+                                    }
+                                };
+                                  let news_content;
+                                try {
+                                    // NEWS DATA FETCH
+                                    fetch(url, options)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log('Success', data);
+
+                                        const textss = document.querySelector('#texts');
+                                        textss.style.overflowY = 'auto';
+                                        document.getElementById('book-determined').style.display = 'none';
+
+                                        // Fetch the HTML content of the news page
+                                      
+                                        fetch(data.data[0].link, { mode: 'cors'})
+                                        .then(response => response.text())
+                                        .then(html => {
+                                            // Create a new DOM parser
+                                            const parser = new DOMParser();
+                                            // Parse the fetched HTML content
+                                            const doc = parser.parseFromString(html, 'text/html');
+                                            // Get all <p> tags
+                                            const pTags = doc.querySelectorAll('p');
+                                            // Combine the text content of all <p> tags
+                                            const combinedText = Array.from(pTags)
+                                            .map(p => p.textContent)
+                                            .join(' ');
+                                            // Log the combined text
+                                            console.log(combinedText);
+                                            news_content = combinedText;
+                                        })
+                                        .catch(error => {
+                                            console.error('Error fetching or parsing the page:', error);
+                                        });
+
+
+                                        // searchNews where Display HTML tags created and will be Appended
+                                        let searchNews = `
+                                            <div class="card-body mt-5" id="searchNews" data-aos="fade-right">
+                                                <img src="${data.data[0].photo_url}" class="img-fluid" width="200">
+                                                <br>
+                                                <p class="text-white-50 h3">Title - ${data.data[0].title}</p>
+                                                <br>
+                                                <hr>
+                                                <p class="text-white-50">${news_content}</p>
+                                            </div>
+                                        `;
+
+                                        // Ensure data is sanitized or validated before inserting into the DOM to prevent XSS attacks.
+                                        textss.innerHTML += searchNews;
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error', error);
+                                    });
+                                } catch (error) {
+                                    console.error(error);
+                                }
+
+
+                        // fetch("{% url 'news' %}", {
+                        //     method: 'POST',
+                        //     headers: {
+                        //         'Content-Type': 'application/json',
+                        //         'X-CSRFToken': csrfToken,
+                                
+                        //     },
+                        //     body: JSON.stringify({
+                        //         details: output,
+                        //         status: JSON.parse(localStorage.getItem('status')),
+                        //     }),
+                        // })
+                        // .then(response => response.json())
+                        // .then(data => {
+                        //     console.log('Success', data);
+
+                        //         console.log(data.hasNews, typeof(data.hasNews))
+                        //         console.log('Check equality', data.hasNews == true)
+                        //         if (data.hasNews == true) {
+                        //             const textss = document.querySelector('#texts');
+                        //             textss.style.overflowY = 'auto';
+                        //             document.getElementById('book-determined').style.display = 'none';
+
+                        //             let searchNews = `
+                        //                 <div class="card-body mt-5" id="searchNews" data-aos="fade-right">
+                        //                     <img src="${data.urlToImage}" class="img-fluid" width="200">
+                        //                     <br>
+                        //                     <h3 class="text-white-50">${data.titleNews}</h3>
+                        //                     <br>
+                        //                     <hr>
+                        //                     <p class="text-white-50">${data.content_web}</p>
+                        //                 </div>
+                        //             `;
+
+                        //             // Ensure data is sanitized or validated before inserting into the DOM to prevent XSS attacks.
+                        //             textss.innerHTML += searchNews;
+                        //             var language = localStorage.getItem('mode');
+
+                        //             //logic for that AUDIO
+                        //             var audio = new Audio("{% static 'audio/newssound.mp3' %}");
+                            
+                        //             theAudio = audio;
+                                        
+                        //             audio.play();  
+                        //             isPlayingtheNews = true;
+                        //             playingNews = true;   
+                                
+                        //         } else {
+                        //             fetch("{% url 'newsfeed' %}", {
+                        //                 method: 'POST',
+                        //                 headers: {
+                        //                     'Content-Type': 'application/json',
+                        //                     'X-CSRFToken': csrfToken,
+                                            
+                        //                 },
+                        //                 body: JSON.stringify({
+                        //                     details: 'Please try again, no news found.',
+                        //                     status: JSON.parse(localStorage.getItem('status')),
+                        //                 }),
+                        //             })
+                        //             .then(response => response.json())
+                        //             .then(data => {
+                        //                 console.log('Success', data);
+                        //             })
+                        //             .catch((error) => {
+                        //                 console.error('Error', error);
+                        //             });
+                        //         };
+
+
+                                
+                        //     })
+                        //     .catch((error) => {
+                        //         console.error('Error', error);
+                        //     });
+                        isActive = false;
+                    // NEWS TEXT - exit, wait, continue
                 }
-                else if (text === 'technology') {
-                    window.location.href = "{% url 'technologies' %}"
-                    // speak('You are going to technology page.')
-                    fetch("{% url 'technologies' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken,
-                        },
-                        body: JSON.stringify({
-                            details: 'you are going to technology page.',
-                            status: JSON.parse(localStorage.getItem('status')),
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error', error);
-                    });
-                }
+
+                        // if (text === 'stop') {
+                        //     localStorage.setItem('isPlayingNews', false);
+                        //     pauseVideo()
+                            
+                        
+                        // }; // End for STOP keyword
+
+                        // if (text === 'play') {
+                        //     localStorage.setItem('isPlayingNews', true);
+                        //     playVideo()
+                        
+
+                        //     if (localStorage.getItem('newsId') === null) {
+                        //             fetch("{% url 'newsfeed' %}", {
+                        //             method: 'POST',
+                        //             headers: {
+                        //                 'Content-Type': 'application/json',
+                        //                 'X-CSRFToken': csrfToken,
+                                        
+                        //             },
+                        //             body: JSON.stringify({
+                        //                 details: 'sorry, you have not requested a News TV yet.',
+                        //                 status: JSON.parse(localStorage.getItem('status')),
+                        //             }),
+                        //         })
+                        //         .then(response => response.json())
+                        //         .then(data => {
+                        //             console.log('Success', data);
+                        //         })
+                        //         .catch((error) => {
+                        //             console.error('Error', error);
+                        //         });
+                        //     };
+                        // }; // End for CONTINUTE keyword
+
+                        else if (text === 'refresh') {
+                            // Reload the current page
+                            location.reload();
+                            
+                            // window.location.href = "{% url 'newsfeed' %}"
+
+                            // // Create a new KeyboardEvent for the key "k"
+                            // const keyEvent = new KeyboardEvent('keydown', { key: 'k' });
+
+                            // // Dispatch the key event to simulate the key press
+                            // document.dispatchEvent(keyEvent);
+                        }
+
+
+                        else if (text.startsWith('set') && text.includes('english')){
+                            if (localStorage.getItem('mode') == 'English') {
+                                fetch("{% url 'set_language' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'language already set in English mode.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                                // speak('language already set in English mode.');
+                            } else {
+                                // speak('setting language to english mode.')
+                                fetch("{% url 'set_language' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,    
+                                },
+                                body: JSON.stringify({
+                                    details: 'setting language to English mode.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                                localStorage.setItem('mode', 'English'); 
+                                contentMode.textContent = localStorage.getItem('mode');
+                                localStorage.setItem('status', true);    
+                            }
+                            isActive = false;
+                        } else if (text.startsWith('set') && text.includes('filipino')) {
+                            if (localStorage.getItem('mode') == 'Filipino') {
+                                // speak('language already set in Filipino mode.');
+                                fetch("{% url 'set_language' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'language already set in Filipino mode.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                            } else {
+                                // speak('setting language to filipino mode.');
+                                fetch("{% url 'set_language' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'setting language to filipino mode.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                                localStorage.setItem('mode', 'Filipino'); 
+                                contentMode.textContent = localStorage.getItem('mode');
+                                localStorage.setItem('status', false);
+                            }
+                            isActive = false;
+                        }
+
+                        // Starts here Keyword Voice Navigation
+                        else if (text === 'home') {
+                            window.location.href = "{% url 'index' %}"
+                            fetch("{% url 'index' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to Home page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                            
+                        }
+                        else if (text === 'guidelines') {
+                            window.location.href = "{% url 'guidelines' %}"
+                            fetch("{% url 'guidelines' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'Going to user guidelines page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        // Audio Apps
+                        else if (text === 'audiobook') {
+                            window.location.href = "{% url 'audio_book' %}"
+                            fetch("{% url 'audio_book' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to audio book page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        else if (text === 'music') {
+                            window.location.href = "{% url 'audio_music' %}"
+                            fetch("{% url 'audio_music' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to music page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        // Info Apps
+                        else if (text === 'assistant') {
+                            window.location.href = "{% url 'assistantbot' %}"
+                            // speak('you are going to assistant bot page.')
+                            fetch("{% url 'assistantbot' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to assistant page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        else if (text === 'time') {
+                            window.location.href = "{% url 'current_time_date' %}"
+                            fetch("{% url 'current_time_date' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to date and time page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                            
+                        }
+                        else if (text === 'location') {
+                            window.location.href = "{% url 'location' %}"
+                            fetch("{% url 'location' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are going to location page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });     
+                        }
+                        else if (text === 'news'){
+                            window.location.href = "{% url 'newsfeed' %}"
+                            fetch("{% url 'newsfeed' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                    
+                                },
+                                body: JSON.stringify({
+                                    details: 'You are already in news page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        else if (text === 'motivation') {
+                            window.location.href = "{% url 'motivation' %}"
+                            // speak('you are going to motivation page')
+                            fetch("{% url 'motivation' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                },
+                                body: JSON.stringify({
+                                    details: 'you are going to motivation page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        }
+                        else if (text === 'technology') {
+                            window.location.href = "{% url 'technologies' %}"
+                            // speak('You are going to technology page.')
+                            fetch("{% url 'technologies' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                },
+                                body: JSON.stringify({
+                                    details: 'you are going to technology page.',
+                                    status: JSON.parse(localStorage.getItem('status')),
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
+                        } else if (!availableCommands.includes(text)) {
+                            console.log('command not recognized')
+                            if (localStorage.getItem('mode') == 'English') {
+                                var audio = new Audio("{% static 'audio/notrecognized.mp3' %}");
+                            } else {
+                                var audio = new Audio("{% static 'audio/fil_notrecognized.mp3' %}");
+                            };
+                            audio.play();
+                            isActive = false;
+                        }
+            } // end of isActive
 
             };
         });

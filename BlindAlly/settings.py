@@ -59,11 +59,18 @@ class Dev(Configuration):
         'playsound',
         'keyboard',
 
+        'corsheaders',
+
     ]
 
     MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',
         'whitenoise.middleware.WhiteNoiseMiddleware',
+        
+        # CORS 
+        'corsheaders.middleware.CorsMiddleware',
+        'django.middleware.common.CommonMiddleware',
+
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
@@ -73,6 +80,13 @@ class Dev(Configuration):
 
         'livereload.middleware.LiveReloadScript',
     ]
+
+    CORS_ALLOWED_ORIGINS = [
+        "http://127.0.0.1:8000",
+        "http://localhost:8000",
+    ]
+
+    CORS_ALLOW_ALL_ORIGINS = True
 
     ROOT_URLCONF = 'BlindAlly.urls'
 

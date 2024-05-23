@@ -174,6 +174,32 @@
         </section>
        
     </main>
+
+    {% block instruction %}
+    <!-- Button trigger modal -->
+    <button id="trigger-button" type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Instruction
+    </button>
+
+     <!-- Modal -->
+  <div class="modal fade"  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" >
+      <div class="modal-content" style="background-color: rgb(51, 67, 119);">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-white-50" id="exampleModalLabel"><i class="bi bi-info-square-fill"></i> Instruction</h1>
+          <button id="trigger-close-button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {% include 'partial/instruction.html' %} 
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  {% endblock instruction %}
    
     <footer>
         <div id="mode">              
@@ -211,13 +237,14 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             isActive = false;
+            instruction = false;
             let greetings;
             // Code to execute when the DOM is fully loaded
             console.log("DOM is fully loaded.");
             if (localStorage.getItem('mode') == 'English') {
                 greetings = 'Welcome, this is Blind Ally'
             } else {
-                greetings = 'Welcome, ito si Blind Ally'
+                greetings = 'Welcome, ako si Blind Ally'
             };
             
             fetch("{% url 'notification' %}", {
@@ -376,6 +403,8 @@
         
         // or DOM CONTENT LOAD to false
         let isActive;
+        let instruction;
+        let theAudio;
 
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
         window.addEventListener('load', () => {
@@ -402,6 +431,16 @@
                     isActive = true;
                 };
 
+                if (instruction) {
+                    if (text === 'skip') {
+                        theAudio.pause();
+                        theAudio.currentTime = 0;
+                        document.getElementById('trigger-close-button').click();
+                        instruction = false;
+
+                    };
+                };
+
                 if (isActive) {
                     // CHANGE WAKE UP WORD "TEST"
                     let availableCommands = ['blind ally', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
@@ -409,6 +448,19 @@
                         if (text === 'refresh') {
                             // Reload the current page
                             location.reload();
+                        } else if (text === 'instruction') {
+                            instruction = true;
+                            document.getElementById('trigger-button').click();
+
+                            if (localStorage.getItem('mode') == 'English') {
+                                var audio = new Audio("{% static 'audio/instruction.mp3' %}");
+                            } else {
+                                var audio = new Audio("{% static 'audio/fil_instruction.mp3' %}");
+                            };
+                            theAudio = audio;
+                            audio.play();
+                            isActive = false;
+
                         }
 
                         else if (text === 'details') {

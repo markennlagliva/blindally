@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b4f9e749f6ef29fa4a6a0ab19e252cfc090ee43fbf10f66012f33d95164b234d"
+            "sha256": "0e8c0ef961c3d65d239a8b403e5e469989af9d7b3d1fe6dcac7d8ab1df3e5bb1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -121,6 +121,15 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==23.2.0"
+        },
+        "beautifulsoup4": {
+            "hashes": [
+                "sha256:74e3d1928edc070d21748185c46e3fb33490f22f52a3addee9aee0f4f7781051",
+                "sha256:b80878c9f40111313e55da8ba20bdba06d8fa3969fc68304167741bbf9e082ed"
+            ],
+            "index": "pypi",
+            "markers": "python_full_version >= '3.6.0'",
+            "version": "==4.12.3"
         },
         "brotli": {
             "hashes": [
@@ -363,6 +372,15 @@
             "markers": "python_version >= '3.8' and python_version < '4.0'",
             "version": "==2.5.1"
         },
+        "django-cors-headers": {
+            "hashes": [
+                "sha256:0b1fd19297e37417fc9f835d39e45c8c642938ddba1acce0c1753d3edef04f36",
+                "sha256:0bf65ef45e606aff1994d35503e6b677c0b26cafff6506f8fd7187f3be840207"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==4.3.1"
+        },
         "django-livereload-server": {
             "hashes": [
                 "sha256:e03bd65d1679ef1b4a5e22e2a77d11d3cfb0e3d21ae25afba49e280924ba6f58",
@@ -456,11 +474,11 @@
         },
         "g4f": {
             "hashes": [
-                "sha256:a6dd2b7aa8ea5d40680cb28a385a7bf1a97dd09ea25eeeed753be0d152f4c25a",
-                "sha256:c6c7abe53f720741d6d5a7e80a0aa7cdbccfa313b13fc2654e5a96e8c0ec18de"
+                "sha256:1d655218b64525f99b8510b64e54f773622ecc429d561ecec8ae2a5f718aad14",
+                "sha256:2f190371c3a0fb8cc09bae99fcc64ffb505d6e701034aa42cf8a42b194167e97"
             ],
             "index": "pypi",
-            "version": "==0.3.1.8"
+            "version": "==0.3.1.9"
         },
         "geographiclib": {
             "hashes": [
@@ -781,6 +799,14 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==1.3.1"
+        },
+        "soupsieve": {
+            "hashes": [
+                "sha256:5663d5a7b3bfaeee0bc4372e7fc48f9cff4940b3eec54a6451cc5299f1097690",
+                "sha256:eaa337ff55a1579b6549dc679565eac1e3d000563bcb1c8ab0d0fefbc0c2cdc7"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==2.5"
         },
         "sqlparse": {
             "hashes": [

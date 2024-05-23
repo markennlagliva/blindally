@@ -16,6 +16,13 @@
         recognition.interimResults = true;
 
         recognition.lang = 'en-US';
+
+        document.addEventListener("DOMContentLoaded", function() {
+            isActive = false;
+            instruction = false;
+            isBot = false;
+        });        
+
         function speak(text) {
             const msg = new SpeechSynthesisUtterance(text);
 
@@ -227,7 +234,10 @@
                });
               
        }; 
-   
+       
+       let isActive;
+       let instruction;
+       let isBot;
        
        const texts = document.querySelector('#texts')
        let p = document.createElement('p')
@@ -246,6 +256,31 @@
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
+            // if (text === 'blind ally') {
+            //     console.log('Activated, what can I do for you?');
+            //         if (localStorage.getItem('mode') == 'English') {
+            //             var audio = new Audio("{% static 'audio/activation.mp3' %}");
+            //         } else {
+            //             var audio = new Audio("{% static 'audio/fil_activation.mp3' %}");
+            //         };
+            //     audio.play();
+            //     isActive = true;
+            // };
+
+            if (text === 'assistance') {
+                console.log('assistance activated.')
+                if (localStorage.getItem('mode') == 'English') {
+                        var audio = new Audio("{% static 'audio/botresponse.mp3' %}");
+                    } else {
+                        var audio = new Audio("{% static 'audio/fil_botresponse.mp3' %}");
+                    };
+                audio.play();
+                isActive = true;
+                isBot = true;
+            }
+
+            if (isActive) {
+                let availableCommands = ['assistance', 'request', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
                 // <--- Feature Request --->
                 if (text.startsWith('request')) {
 
@@ -345,27 +380,30 @@
                     .catch((error) => {
                         console.error('Error', error);
                     });
+                    isActive = false;
                 } // End of request Feature Block
 
-                if (text === 'refresh') {
+                else if (text === 'refresh') {
                     // Reload the current page
                     location.reload();
-                };
+                    isActive = false;
+                }
 
-                if (text === 'repeat') {
+                else if (text === 'repeat') {
                     details();
-                };
+                    isActive = false;
+                }
 
-                if (text === 'front') {
-                    const botDeterminedDiv = document.getElementById('bot-determined');
-                    botDeterminedDiv.style.display = 'block';
+                // else if (text === 'front') {
+                //     const botDeterminedDiv = document.getElementById('bot-determined');
+                //     botDeterminedDiv.style.display = 'block';
 
-                    document.querySelector('.request').style.display = 'none';
-                    document.querySelector('.reply').style.display = 'none';
+                //     document.querySelector('.request').style.display = 'none';
+                //     document.querySelector('.reply').style.display = 'none';
                     
-                };
+                // };
 
-                if (text.startsWith('set') && text.includes('english')){
+                else if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {
                         fetch("{% url 'set_language' %}", {
                         method: 'POST',
@@ -411,6 +449,7 @@
                         contentMode.textContent = localStorage.getItem('mode');
                         localStorage.setItem('status', true);    
                     }
+                    isActive = false;
                 } else if (text.startsWith('set') && text.includes('filipino')) {
                     if (localStorage.getItem('mode') == 'Filipino') {
                         // speak('language already set in Filipino mode.');
@@ -458,10 +497,11 @@
                         contentMode.textContent = localStorage.getItem('mode');
                         localStorage.setItem('status', false);
                     }
+                    isActive = false;
                 }
 
                 // Starts here Keyword Voice Navigation
-                if (text === 'home') {
+                else if (text === 'home') {
                     window.location.href = "{% url 'index' %}"
                     fetch("{% url 'index' %}", {
                         method: 'POST',
@@ -684,13 +724,34 @@
                     .catch((error) => {
                         console.error('Error', error);
                     });
+                } else if (!availableCommands.includes(text)) {
+                    console.log('command not recognized')
+                    if (localStorage.getItem('mode') == 'English') {
+                        var audio = new Audio("{% static 'audio/notrecognized.mp3' %}");
+                    } else {
+                        var audio = new Audio("{% static 'audio/fil_notrecognized.mp3' %}");
+                    };
+                    audio.play();
+                    isActive = false;
                 }
+            } // isActive
 
             };
         });
 
 
         recognition.addEventListener('end', (e) => {
+            // if (isBot) {
+            //     let delay;
+            //     if(localStorage.getItem('mode') == 'English') {
+            //         delay = 2000;
+            //     } else {
+            //         delay = 4000;
+            //     };  
+            //     setTimeout(function() {
+            //         recognition.start();
+            //     }, delay);  
+            // }
            recognition.start(); 
         });
 

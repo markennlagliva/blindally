@@ -13,6 +13,12 @@
     recognition.interimResults = true;
 
     recognition.lang = 'en-US';
+
+    document.addEventListener("DOMContentLoaded", function() {
+        isActive = false;
+        instruction = false;
+    });
+
     function speak(text) {
         const msg = new SpeechSynthesisUtterance(text);
 
@@ -199,6 +205,8 @@
    
     }
     
+    let isActive;
+    let instruction;
 
     // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
     window.addEventListener('load', () => {
@@ -214,16 +222,53 @@
         // Navigation -> Thru Voice 
         if(e.results[0].isFinal) {
 
+            if (text === 'blind ally') {
+                console.log('Activated, what can I do for you?');
+                if (localStorage.getItem('mode') == 'English') {
+                    var audio = new Audio("{% static 'audio/activation.mp3' %}");
+                } else {
+                    var audio = new Audio("{% static 'audio/fil_activation.mp3' %}");
+                };
+                audio.play();
+                isActive = true;
+            };
+
+            if (instruction) {
+                if (text === 'skip') {
+                    theAudio.pause();
+                    theAudio.currentTime = 0;
+                    document.getElementById('trigger-close-button').click();
+                    instruction = false;
+
+                };
+            };
+
+            if (isActive) {
+                let availableCommands = ['blind ally', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
             if (text === 'refresh') {
                     // Reload the current page
                     location.reload();
+            } else if (text === 'instruction') {
+                instruction = true;
+                document.getElementById('trigger-button').click();
+
+                if (localStorage.getItem('mode') == 'English') {
+                    var audio = new Audio("{% static 'audio/instruction.mp3' %}");
+                } else {
+                    var audio = new Audio("{% static 'audio/fil_instruction.mp3' %}");
                 };
+                theAudio = audio;
+                audio.play();
+                isActive = false;
 
-            if (text === 'details') {
+            }
+
+            else if (text === 'details') {
                 details();
-            };
+                isActive = false;
+            }
 
-            if (text.startsWith('set') && text.includes('english')){
+            else if (text.startsWith('set') && text.includes('english')){
                 if (localStorage.getItem('mode') == 'English') {
                     fetch("{% url 'set_language' %}", {
                     method: 'POST',
@@ -269,6 +314,7 @@
                     contentMode.textContent = localStorage.getItem('mode');
                     localStorage.setItem('status', true);    
                 }
+                isActive = false;
             } else if (text.startsWith('set') && text.includes('filipino')) {
                 if (localStorage.getItem('mode') == 'Filipino') {
                     // speak('language already set in Filipino mode.');
@@ -316,11 +362,12 @@
                             contentMode.textContent = localStorage.getItem('mode');
                             localStorage.setItem('status', false);
                         }
+                        isActive = false;
                     }
                 
 
             // Starts here Keyword Voice Navigation
-            if (text === 'home') {
+            else if (text === 'home') {
                 window.location.href = "{% url 'index' %}"
                 fetch("{% url 'index' %}", {
                     method: 'POST',
@@ -543,8 +590,18 @@
                 .catch((error) => {
                     console.error('Error', error);
                 });
+            } else if (!availableCommands.includes(text)) {
+                console.log('command not recognized')
+                if (localStorage.getItem('mode') == 'English') {
+                    var audio = new Audio("{% static 'audio/notrecognized.mp3' %}");
+                } else {
+                    var audio = new Audio("{% static 'audio/fil_notrecognized.mp3' %}");
+                };
+                audio.play();
+                isActive = false;
             }
 
+        } // if isActive
            
         };
     });

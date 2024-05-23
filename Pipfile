@@ -18,6 +18,8 @@ keyboard = "*"
 requests = "*"
 geopy = "==2.4.1"
 g4f = "*"
+beautifulsoup4 = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
