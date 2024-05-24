@@ -183,12 +183,12 @@
             };
 
         function details() {
-            if (JSON.parse(localStorage.getItem('isPlayingNews'))) {
-                    console.log('News Cannot be interrupted when Playing.');
-                    pauseVideo()
-                    // localStorage.setItem('isPlayingNews', false)
-                    {};
-                } else {
+            // if (JSON.parse(localStorage.getItem('isPlayingNews'))) {
+            //         console.log('News Cannot be interrupted when Playing.');
+            //         pauseVideo()
+            //         // localStorage.setItem('isPlayingNews', false)
+            //         {};
+            //     } else {
                     const speakDetails = document.querySelectorAll('p');
             let theDetails = []
 
@@ -216,9 +216,10 @@
                .catch((error) => {
                    console.error('Error', error);
                });
-            }
+            // }
         };
 
+        /*
         // <--- Request Details by Clicking --->
             let mainElement = document.querySelector('main');
 
@@ -268,6 +269,8 @@
                         localStorage.setItem('isPlayingNews', true)
                 }
             }; // End of Main.click ()
+
+            */
    
         // START YOUTUBE API IFRAME
         
@@ -555,18 +558,17 @@
                             
                         }; // End of request Feature Block
                     } // end of False - Not using
-                
+           
             if (playingNews) {
                 if (text == 'exit'){
-                    if (isPlayingtheNews) {
-                        // delete audio
-                        theAudio.pause();
-                        exit_delete_audio();    
-                        document.getElementById('searchNews').style.display = 'none';
-                        document.getElementById('book-determined').style.display = 'block';
-                        playingNews = false;
-                        
-                    }
+                    // delete audio
+                    document.getElementById('searchNews').style.display = 'none';
+                    document.getElementById('book-determined').style.display = 'block';
+                    theAudio.pause();
+                    exit_delete_audio();   
+                    playingNews = false;
+                    location.reload();
+            
                 } else if (text == 'wait') {
                     if (isPlayingtheNews) {
                         theAudio.pause();
@@ -592,158 +594,175 @@
                             console.log('Requested Input:', output)
 
                                 
-                                let news_country;
-                                let news_lang;
-                                if (localStorage.getItem('mode') == 'English') {
-                                    news_country = 'US';
-                                    news_lang = 'en';
-                                } else {
-                                    news_country = 'PH';
-                                    news_lang = 'tl';
-                                };
+                                // let news_country;
+                                // let news_lang;
+                               
+                                // if (localStorage.getItem('mode') == 'English') {
+                                //     news_country = 'US';
+                                //     news_lang = 'en';
+                                // } else {
+                                //     news_country = 'PH';
+                                //     news_lang = 'tl';
+                                // };
+                                // const url = 'https://real-time-news-data.p.rapidapi.com/search?query=Elon%20Musk&country=US&lang=en';
+                                // const options = {
+                                //     method: 'GET',
+                                //     headers: {
+                                //         'X-RapidAPI-Key': '1cb3bdc85emsh88a3549de3600d6p1ffddcjsn92e56802c9d2',
+                                //         'X-RapidAPI-Host': 'real-time-news-data.p.rapidapi.com'
+                                //     }
+                                // };
+
+                                //   let news_content;
+                                // // try {
+                                //     // NEWS DATA FETCH
+                                //     fetch(url, options)
+                                //     .then(response => response.json())
+                                //     .then(data => {
+                                //         console.log('Success', data);
+
+                                //         const textss = document.querySelector('#texts');
+                                //         textss.style.overflowY = 'auto';
+                                //         document.getElementById('book-determined').style.display = 'none';
+
+                                //         // Fetch the HTML content of the news page
+                                //       try {
+                                //         fetch(data.data[0].link, {
+                                           
+                                //         })
+                                //         .then(response => response.text())
+                                //         .then(html => {
+                                //             // Create a new DOM parser
+                                //             const parser = new DOMParser();
+                                //             // Parse the fetched HTML content
+                                //             const doc = parser.parseFromString(html, 'text/html');
+                                //             // Get all <p> tags
+                                //             const pTags = doc.querySelectorAll('p');
+                                //             // Combine the text content of all <p> tags
+                                //             const combinedText = Array.from(pTags)
+                                //             .map(p => p.textContent)
+                                //             .join(' ');
+                                //             // Log the combined text
+                                //             console.log(combinedText);
+                                //             news_content = combinedText;
+                                //             console.log('check')
+                                //         })
+                                //         .catch(error => {
+                                //             console.error('Error fetching or parsing the page:', error);
+                                //         });
+                                //     } catch (error) {
+                                //     console.error('ERROR', error);
+                                // }
+
+                                //         // searchNews where Display HTML tags created and will be Appended
+                                //         let searchNews = `
+                                //             <div class="card-body mt-5" id="searchNews" data-aos="fade-right">
+                                //                 <img src="${data.data[0].photo_url}" class="img-fluid" width="200">
+                                //                 <br>
+                                //                 <p class="text-white-50 h3">Title - ${data.data[0].title}</p>
+                                //                 <br>
+                                //                 <hr>
+                                //                 <p class="text-white-50">${news_content}</p>
+                                //             </div>
+                                //         `;
+
+                                //         // Ensure data is sanitized or validated before inserting into the DOM to prevent XSS attacks.
+                                //         textss.innerHTML += searchNews;
+                                //     })
+                                //     .catch((error) => {
+                                //         console.error('Error', error);
+                                //     });
+                                // } catch (error) {
+                                //     console.error(error);
+                                // }
+
+                                // END OF REAL-TIME NEWS API
+
+                        fetch("{% url 'news' %}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrfToken,
                                 
-                                const url = `https://real-time-news-data.p.rapidapi.com/search?query=${output}&country=${news_country}&lang=${news_lang}`;
-                                    const options = {
-                                    method: 'GET',
-                                    headers: {
-                                        'X-RapidAPI-Key': '1cb3bdc85emsh88a3549de3600d6p1ffddcjsn92e56802c9d2',
-                                        'X-RapidAPI-Host': 'real-time-news-data.p.rapidapi.com'
-                                    }
-                                };
-                                  let news_content;
-                                try {
-                                    // NEWS DATA FETCH
-                                    fetch(url, options)
+                            },
+                            body: JSON.stringify({
+                                details: output,
+                                status: JSON.parse(localStorage.getItem('status')),
+                            }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success', data);
+
+                                console.log(data.hasNews, typeof(data.hasNews))
+                                console.log('Check equality', data.hasNews == true)
+                                if (data.hasNews == true) {
+                                    const textss = document.querySelector('#texts');
+                                    textss.style.overflowY = 'auto';
+                                    document.getElementById('book-determined').style.display = 'none';
+                                    
+                                    let searchNews = `
+                                        <div class="card-body mt-5" id="searchNews" data-aos="fade-right">
+                                            <img src="${data.urlToImage}" class="img-fluid" width="200">
+                                            <br>
+                                            <h3 class="text-white-50">${data.titleNews}</h3>
+                                            <br>
+                                            <hr>
+                                            <p class="text-white-50">${data.content_web}</p>
+                                        </div>
+                                    `;
+
+
+                                    // Ensure data is sanitized or validated before inserting into the DOM to prevent XSS attacks.
+                                    textss.innerHTML += searchNews;
+                                    var language = localStorage.getItem('mode');
+
+                                    //logic for that AUDIO
+                                    var audio = new Audio("{% static 'audio/newssound.mp3' %}");
+                            
+                                    theAudio = audio;
+                                        
+                                    audio.play();  
+                                    isPlayingtheNews = true;
+                                    playingNews = true;   
+                                
+                                } else {
+                                    fetch("{% url 'newsfeed' %}", {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRFToken': csrfToken,
+                                            
+                                        },
+                                        body: JSON.stringify({
+                                            details: 'Please try again, no news found.',
+                                            status: JSON.parse(localStorage.getItem('status')),
+                                        }),
+                                    })
                                     .then(response => response.json())
                                     .then(data => {
                                         console.log('Success', data);
-
-                                        const textss = document.querySelector('#texts');
-                                        textss.style.overflowY = 'auto';
-                                        document.getElementById('book-determined').style.display = 'none';
-
-                                        // Fetch the HTML content of the news page
-                                      
-                                        fetch(data.data[0].link, { mode: 'cors'})
-                                        .then(response => response.text())
-                                        .then(html => {
-                                            // Create a new DOM parser
-                                            const parser = new DOMParser();
-                                            // Parse the fetched HTML content
-                                            const doc = parser.parseFromString(html, 'text/html');
-                                            // Get all <p> tags
-                                            const pTags = doc.querySelectorAll('p');
-                                            // Combine the text content of all <p> tags
-                                            const combinedText = Array.from(pTags)
-                                            .map(p => p.textContent)
-                                            .join(' ');
-                                            // Log the combined text
-                                            console.log(combinedText);
-                                            news_content = combinedText;
-                                        })
-                                        .catch(error => {
-                                            console.error('Error fetching or parsing the page:', error);
-                                        });
-
-
-                                        // searchNews where Display HTML tags created and will be Appended
-                                        let searchNews = `
-                                            <div class="card-body mt-5" id="searchNews" data-aos="fade-right">
-                                                <img src="${data.data[0].photo_url}" class="img-fluid" width="200">
-                                                <br>
-                                                <p class="text-white-50 h3">Title - ${data.data[0].title}</p>
-                                                <br>
-                                                <hr>
-                                                <p class="text-white-50">${news_content}</p>
-                                            </div>
-                                        `;
-
-                                        // Ensure data is sanitized or validated before inserting into the DOM to prevent XSS attacks.
-                                        textss.innerHTML += searchNews;
                                     })
                                     .catch((error) => {
                                         console.error('Error', error);
                                     });
-                                } catch (error) {
-                                    console.error(error);
-                                }
+                                };
 
-
-                        // fetch("{% url 'news' %}", {
-                        //     method: 'POST',
-                        //     headers: {
-                        //         'Content-Type': 'application/json',
-                        //         'X-CSRFToken': csrfToken,
-                                
-                        //     },
-                        //     body: JSON.stringify({
-                        //         details: output,
-                        //         status: JSON.parse(localStorage.getItem('status')),
-                        //     }),
-                        // })
-                        // .then(response => response.json())
-                        // .then(data => {
-                        //     console.log('Success', data);
-
-                        //         console.log(data.hasNews, typeof(data.hasNews))
-                        //         console.log('Check equality', data.hasNews == true)
-                        //         if (data.hasNews == true) {
-                        //             const textss = document.querySelector('#texts');
-                        //             textss.style.overflowY = 'auto';
-                        //             document.getElementById('book-determined').style.display = 'none';
-
-                        //             let searchNews = `
-                        //                 <div class="card-body mt-5" id="searchNews" data-aos="fade-right">
-                        //                     <img src="${data.urlToImage}" class="img-fluid" width="200">
-                        //                     <br>
-                        //                     <h3 class="text-white-50">${data.titleNews}</h3>
-                        //                     <br>
-                        //                     <hr>
-                        //                     <p class="text-white-50">${data.content_web}</p>
-                        //                 </div>
-                        //             `;
-
-                        //             // Ensure data is sanitized or validated before inserting into the DOM to prevent XSS attacks.
-                        //             textss.innerHTML += searchNews;
-                        //             var language = localStorage.getItem('mode');
-
-                        //             //logic for that AUDIO
-                        //             var audio = new Audio("{% static 'audio/newssound.mp3' %}");
                             
-                        //             theAudio = audio;
-                                        
-                        //             audio.play();  
-                        //             isPlayingtheNews = true;
-                        //             playingNews = true;   
                                 
-                        //         } else {
-                        //             fetch("{% url 'newsfeed' %}", {
-                        //                 method: 'POST',
-                        //                 headers: {
-                        //                     'Content-Type': 'application/json',
-                        //                     'X-CSRFToken': csrfToken,
-                                            
-                        //                 },
-                        //                 body: JSON.stringify({
-                        //                     details: 'Please try again, no news found.',
-                        //                     status: JSON.parse(localStorage.getItem('status')),
-                        //                 }),
-                        //             })
-                        //             .then(response => response.json())
-                        //             .then(data => {
-                        //                 console.log('Success', data);
-                        //             })
-                        //             .catch((error) => {
-                        //                 console.error('Error', error);
-                        //             });
-                        //         };
+                            })
+                            .catch((error) => {
+                                console.error('Error', error);
+                            });
 
+                            //logic for that AUDIO
+                            if (localStorage.getItem('mode') == 'English') {
+                                var scrapeSound = new Audio("{% static 'audio/scrape.mp3' %}");
+                            } else {
+                                var scrapeSound = new Audio("{% static 'audio/fil_scrape.mp3' %}");
+                            };
+                            scrapeSound.play();
 
-                                
-                        //     })
-                        //     .catch((error) => {
-                        //         console.error('Error', error);
-                        //     });
                         isActive = false;
                     // NEWS TEXT - exit, wait, continue
                 }
@@ -1165,7 +1184,8 @@
                             <div class="col-lg-6 align-self-lg-center align-self-end py-5" data-aos="fade-right">
                                 <h3 class="fw-bolder text-center" style="color: #ADD8E6">"News in Focus: Accessible Insights for the Visually Impaired"</h3>
                                 <div class="rounded-5">
-                                    <p class="text-white-50">Find Your News: Navigate Channels with Ease Using Voice Commands like GMA, TV Patrol, TV5, Weather and ABC News</p>
+                                    <!-- <p class="text-white-50">Find Your News: Navigate Channels with Ease Using Voice Commands like GMA, TV Patrol, TV5, Weather and ABC News</p> -->
+                                    <p class="text-white-50">Find Your News: Say the search keyword followed by the news you wanted to seek.</p>
                                 </div>
                             </div>
                             <div class="col-lg-6 d-flex flex-column align-items-center py-md-0 py-5 embed-responsive embed-responsive-16by9" data-aos="fade-right" id="player">
@@ -1180,5 +1200,19 @@
 
         </div>
     </div>
+    <!-- Processing Modal -->
+        <div class="modal fade d-none" id="processingModal" tabindex="-1" role="dialog" aria-labelledby="processingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <span>Processing, please wait...</span>
+                </div>
+            </div>
+            </div>
+        </div>
+  
 </div>
 {% endblock content %}

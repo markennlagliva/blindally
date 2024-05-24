@@ -19,7 +19,9 @@ from playsound import playsound
 # Scraping
 import requests
 from bs4 import BeautifulSoup
-
+import random
+from gtts import gTTS
+from googletrans import Translator
 
 # Home Page
 @csrf_exempt
@@ -316,28 +318,21 @@ def news(request):
         try:
             response = json.loads(request.body)
             output, status = response.get('details'), response.get('status')
-            speak(f'Scraping the whole news for {output}, please wait for a moment ', status)
-            import requests
             response = requests.get(f'https://newsapi.org/v2/everything?q={output}&apiKey=e4ab186e11c44ce98d27149a279b3ef9')
             data = response.json()
             # print(data['totalResults'], type(data['totalResults']))
             content_web = []
             hasNews = data['totalResults'] > 0
             if hasNews:
-                import random
                 # Generate a random integer between 1 and 10 (inclusive)
-                random_integer = random.randint(1, 10)
-                title = data['articles'][random_integer]['title']
+                random_integer = random.randint(1, 5)
                 url = data['articles'][random_integer]['url']
-                urlToImage = data['articles'][random_integer]['urlToImage']
 
                 # print(title)
                 # print(url)
                 # print(content)
                 # if content is None:
                 # Get information on URL website
-                import requests
-                from bs4 import BeautifulSoup
 
                 # Step 2: Fetch the webpage content
                 response = requests.get(url)
@@ -347,7 +342,7 @@ def news(request):
                 soup = BeautifulSoup(webpage_content, 'html.parser')
 
                 # Step 4: Extract all <p> tags
-                p_tags = soup.find_all('p')
+                p_tags = soup.find_all('p', limit=5)
 
                 # Step 5: Process the extracted <p> tags
                 
@@ -355,8 +350,13 @@ def news(request):
                     content_web.append(p.get_text())
                 # else:
                 #     content_web.append(content)
-                from gtts import gTTS
-                audio = gTTS(' '.join(content_web), lang='en', slow=False)
+
+                # audio = gTTS(' '.join(content_web), lang='en', slow=False)
+                if status: #Fil
+                    audio = gTTS(' '.join(content_web), lang='en', slow=False)
+                else:
+                    result = Translator().translate(' '.join(content_web), dest='tl')
+                    audio = gTTS(result.text, lang='tl', slow=False)
                 audio.save('static/audio/newssound.mp3')
             else:
                 speak('Sorry no news found, Try finding another news!', status)
@@ -366,7 +366,7 @@ def news(request):
 
 
 
-            return JsonResponse({'result': 'success', 'status': data, 'titleNews': title, 'content_web': content_web, 'hasNews': hasNews, 'urlToImage': urlToImage})
+            return JsonResponse({'result': 'success', 'status': data, 'titleNews': data['articles'][random_integer]['title'], 'content_web': content_web, 'hasNews': hasNews, 'urlToImage': data['articles'][random_integer]['urlToImage']})
         except Exception as e:
             return JsonResponse({"error":str(e)})
 
@@ -381,12 +381,24 @@ def delete_audio(request):
 def webscrape_news(request):
     if request.method == 'POST':
         try:
+
             response = json.loads(request.body)
             output, status = response.get('details'), response.get('status')
+            url = "https://real-time-news-data.p.rapidapi.com/search"
+
+            querystring = {"query": response.get('deetails'),"country":"US","lang":"en"}
+
+            headers = {
+                "X-RapidAPI-Key": "1cb3bdc85emsh88a3549de3600d6p1ffddcjsn92e56802c9d2",
+                "X-RapidAPI-Host": "real-time-news-data.p.rapidapi.com"
+            }
+
+            data = requests.get(url, headers=headers, params=querystring)
             speak(f'Scraping the whole news, please wait for a moment ', status)
-            
+            print(data)
+
             # Step 2: Fetch the webpage content
-            response = requests.get(output) # Details as URL
+            response = requests.get(data['data'][0]['link']) # Details as URL
             webpage_content = response.text
 
             # Step 3: Parse the HTML content
@@ -397,7 +409,7 @@ def webscrape_news(request):
 
             # Step 5: Process the extracted <p> tags
             content_web = []
-            for p in p_tags:
+            for p in p_tags[:4]:
                 content_web.append(p.get_text())
             # else:
             #     content_web.append(content)
