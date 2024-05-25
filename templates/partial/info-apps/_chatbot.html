@@ -390,9 +390,19 @@
                     location.reload();
                     isActive = false;
                 }
+                else if (text == 'details') {
+                    let elementbot = document.getElementById('bot-determined');
+                    if(elementbot && window.getComputedStyle(elementbot).display === "block") {
+                        details();
+                    };
+                    isActive = false;
+                }
 
                 else if (text === 'repeat') {
-                    details();
+                    let elementbot = document.getElementById('bot-determined');
+                    if(window.getComputedStyle(elementbot).display === "none") {
+                        details();
+                    };
                     isActive = false;
                 }
 
