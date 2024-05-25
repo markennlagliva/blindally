@@ -188,52 +188,54 @@
             
         };
 
+        
+    //     // <--- Request Details by Clicking --->
+    //         let mainElement = document.querySelector('main');
 
-        // <--- Request Details by Clicking --->
-            let mainElement = document.querySelector('main');
-
-            mainElement.onclick = function () {
+    //         mainElement.onclick = function () {
                     
 
-           const Pdetails = document.querySelectorAll('p');
-           let allPdetails = [];
+    //        const Pdetails = document.querySelectorAll('p');
+    //        let allPdetails = [];
           
-           // console.log(Pdetails.length)
+    //        // console.log(Pdetails.length)
 
                 
-           if (localStorage.getItem('mode') == 'Filipino' && document.getElementById('bot-determined').style.display === 'block') {
-                allPdetails.push('Upang simulan ang isang kahilingan at makuha ang nais na impormasyon, magsimula sa pamamagitan ng paggamit ng "request" na keyword. Ipo-prompt ng pagkilos na ito ang system na iproseso ang iyong kahilingan at kunin ang partikular na data na iyong hinahanap.')
-            } else if (localStorage.getItem('mode') == 'English' && document.getElementById('bot-determined').style.display === 'block') {
-                allPdetails.push('To initiate a request and obtain the desired information, begin by utilizing the "request" keyword. This action prompts the system to process your request and retrieve the specific data you are seeking.')
+    //        if (localStorage.getItem('mode') == 'Filipino' && document.getElementById('bot-determined').style.display === 'block') {
+    //             allPdetails.push('Upang simulan ang isang kahilingan at makuha ang nais na impormasyon, magsimula sa pamamagitan ng paggamit ng "request" na keyword. Ipo-prompt ng pagkilos na ito ang system na iproseso ang iyong kahilingan at kunin ang partikular na data na iyong hinahanap.')
+    //         } else if (localStorage.getItem('mode') == 'English' && document.getElementById('bot-determined').style.display === 'block') {
+    //             allPdetails.push('To initiate a request and obtain the desired information, begin by utilizing the "request" keyword. This action prompts the system to process your request and retrieve the specific data you are seeking.')
 
-            } else {
-                Pdetails.forEach(function(paragraph, index) {
-                    var paragraphContent = paragraph.textContent;
-                    allPdetails.push(paragraphContent);  
-                });
-            };
+    //         } else {
+    //             Pdetails.forEach(function(paragraph, index) {
+    //                 var paragraphContent = paragraph.textContent;
+    //                 allPdetails.push(paragraphContent);  
+    //             });
+    //         };
             
               
-               fetch("{% url 'assistantbot' %}", {
-                   method: 'POST',
-                   headers: {
-                       'Content-Type': 'application/json',
-                       'X-CSRFToken': csrfToken,
-                   },
-                   body: JSON.stringify({
-                       details: allPdetails.slice(-2),
-                       status: JSON.parse(localStorage.getItem('status')),
-                   }),
-               })
-               .then(response => response.json())
-               .then(data => {         
-                   console.log('Success', data);
-               })
-               .catch((error) => {
-                   console.error('Error', error);
-               });
+    //            fetch("{% url 'assistantbot' %}", {
+    //                method: 'POST',
+    //                headers: {
+    //                    'Content-Type': 'application/json',
+    //                    'X-CSRFToken': csrfToken,
+    //                },
+    //                body: JSON.stringify({
+    //                    details: allPdetails.slice(-2),
+    //                    status: JSON.parse(localStorage.getItem('status')),
+    //                }),
+    //            })
+    //            .then(response => response.json())
+    //            .then(data => {         
+    //                console.log('Success', data);
+    //            })
+    //            .catch((error) => {
+    //                console.error('Error', error);
+    //            });
               
-       }; 
+    //    }; 
+
+    
        
        let isActive;
        let instruction;

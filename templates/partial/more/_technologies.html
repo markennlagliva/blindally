@@ -12,6 +12,11 @@
     const recognition = new SpeechRecognition();
     recognition.interimResults = true;
 
+    document.addEventListener("DOMContentLoaded", function() {
+        isActive = false;
+        instruction = false;
+    });
+
     recognition.lang = 'en-US';
     function speak(text) {
         const msg = new SpeechSynthesisUtterance(text);
@@ -115,6 +120,7 @@
         };
 
     // Request Details by Clicking
+    /*
     if ("{{request.path}}" == '/technologies') {
         let mainElement = document.querySelector('main');
         mainElement.onclick = function () {
@@ -195,7 +201,10 @@
         };
    
     }
-    
+    */
+   
+    let isActive;
+    let instruction;
 
     // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
     window.addEventListener('load', () => {
@@ -210,12 +219,29 @@
         
         // Navigation -> Thru Voice 
         if(e.results[0].isFinal) {
-
-            if (text === 'details') {
-                details();
+            if (text === 'blind ally') {
+                    console.log('Activated, what can I do for you?');
+                    if (localStorage.getItem('mode') == 'English') {
+                        var audio = new Audio("{% static 'audio/activation.mp3' %}");
+                    } else {
+                        var audio = new Audio("{% static 'audio/fil_activation.mp3' %}");
+                    };
+                    audio.play();
+                    isActive = true;
             };
 
-            if (text.startsWith('set') && text.includes('english')){
+            if (isActive) {
+                let availableCommands = ['blind ally', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
+            if (text === 'details') {
+                details();
+                isActive = false;
+
+            } else if (text === 'refresh'){
+                location.reload();        
+                isActive = false;   
+            }
+
+            else if (text.startsWith('set') && text.includes('english')){
                 if (localStorage.getItem('mode') == 'English') {
                     fetch("{% url 'set_language' %}", {
                     method: 'POST',
@@ -261,6 +287,7 @@
                     contentMode.textContent = localStorage.getItem('mode');
                     localStorage.setItem('status', true);    
                 }
+                isActive = false;
             } else if (text.startsWith('set') && text.includes('filipino')) {
                 if (localStorage.getItem('mode') == 'Filipino') {
                     // speak('language already set in Filipino mode.');
@@ -308,11 +335,12 @@
                             contentMode.textContent = localStorage.getItem('mode');
                             localStorage.setItem('status', false);
                         }
+                        isActive = false;
                     }
                 
 
             // Starts here Keyword Voice Navigation
-            if (text === 'home') {
+            else if (text === 'home') {
                 window.location.href = "{% url 'index' %}"
                 fetch("{% url 'index' %}", {
                     method: 'POST',
@@ -535,9 +563,18 @@
                 .catch((error) => {
                     console.error('Error', error);
                 });
+            } else if (!availableCommands.includes(text)) {
+                    console.log('command not recognized')
+                    if (localStorage.getItem('mode') == 'English') {
+                        var audio = new Audio("{% static 'audio/notrecognized.mp3' %}");
+                    } else {
+                        var audio = new Audio("{% static 'audio/fil_notrecognized.mp3' %}");
+                    };
+                    audio.play();
+                    isActive = false;
             }
 
-           
+            } // if isActive
         };
     });
 

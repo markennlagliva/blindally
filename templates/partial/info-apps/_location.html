@@ -44,7 +44,7 @@ if ("geolocation" in navigator) {
         const location = document.querySelector('.location');
         location.innerHTML = `${data.address}`;
     
-        locationData = `Here's your location ${data.address}`
+        locationData = `Here's your location, ${data.address}`
             console.log('Success', data);
         })
         .catch((error) => {
@@ -88,6 +88,11 @@ if ("geolocation" in navigator) {
         // eligible speech
         const recognition = new SpeechRecognition();
         recognition.interimResults = true;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            isActive = false;
+            instruction = false;
+        });
 
         recognition.lang = 'en-US';
         function speak(text) {
@@ -190,6 +195,7 @@ if ("geolocation" in navigator) {
                    console.error('Error', error);
                });
         }; 
+        /*
 
         // Request Details by Clicking
         if ("{{request.path}}" == '/location') {
@@ -230,13 +236,13 @@ if ("geolocation" in navigator) {
        
             };
        
-        }
-        
+        } */
+        let isActive;
+        let instruction;
 
         // THIS IS FOR NAVIGATION AND SPEAKING LOCATION PAGE
         window.addEventListener('load', () => {
-
-                      
+             
             recognition.addEventListener('result', (e) => {
             const text = Array.from(e.results)
             .map(result => result[0])
@@ -248,16 +254,33 @@ if ("geolocation" in navigator) {
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
+                if (text === 'blind ally') {
+                    console.log('Activated, what can I do for you?');
+                    if (localStorage.getItem('mode') == 'English') {
+                        var audio = new Audio("{% static 'audio/activation.mp3' %}");
+                    } else {
+                        var audio = new Audio("{% static 'audio/fil_activation.mp3' %}");
+                    };
+                    audio.play();
+                    isActive = true;
+                };
+                    
+                if (isActive) {
+
+                    let availableCommands = ['blind ally', 'status', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
+         
                 if (text === 'refresh') {
                     // Reload the current page
                     location.reload();
-                };
+                    isActive = false;
+                }
 
-                if (text === 'status') {
+                else if (text === 'status') {
                     status();
-                };
+                    isActive = false;
+                }
 
-                if (text.startsWith('set') && text.includes('english')){
+                else if (text.startsWith('set') && text.includes('english')){
                     if (localStorage.getItem('mode') == 'English') {
                         fetch("{% url 'set_language' %}", {
                         method: 'POST',
@@ -303,6 +326,7 @@ if ("geolocation" in navigator) {
                         contentMode.textContent = localStorage.getItem('mode');
                         localStorage.setItem('status', true);    
                     }
+                    isActive = false;
                 } else if (text.startsWith('set') && text.includes('filipino')) {
                     if (localStorage.getItem('mode') == 'Filipino') {
                         // speak('language already set in Filipino mode.');
@@ -350,12 +374,13 @@ if ("geolocation" in navigator) {
                                 contentMode.textContent = localStorage.getItem('mode');
                                 localStorage.setItem('status', false);
                             }
+                            isActive = false;
                         }
 
                     
 
                 // Starts here Keyword Voice Navigation
-                if (text === 'home') {
+                else if (text === 'home') {
                     window.location.href = "{% url 'index' %}"
                     fetch("{% url 'index' %}", {
                         method: 'POST',
@@ -579,7 +604,17 @@ if ("geolocation" in navigator) {
                         console.error('Error', error);
                     });
                 }
-
+                else if (!availableCommands.includes(text)) {
+                    console.log('command not recognized')
+                    if (localStorage.getItem('mode') == 'English') {
+                        var audio = new Audio("{% static 'audio/notrecognized.mp3' %}");
+                    } else {
+                        var audio = new Audio("{% static 'audio/fil_notrecognized.mp3' %}");
+                    };
+                    audio.play();
+                    isActive = false;
+                }
+            } // if isActive
                
             };
         });
