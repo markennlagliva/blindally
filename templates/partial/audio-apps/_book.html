@@ -377,7 +377,7 @@
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
-                if (text === 'blind ally') {
+                if (text === 'ally') {
                     if (isPlayingtheVideo) {
                         pauseVideo();
                         isPlayingtheVideo = false;
@@ -408,7 +408,7 @@
                 };
 
                 if (isActive) {
-                    let availableCommands = ['blind ally', 'stop', 'play', 'search', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
+                    let availableCommands = ['ally', 'stop', 'play', 'search', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
                 // <--- Feature search --->
                 if (text.startsWith('search')) {
                     let output = text.replace(/^search\s*/, "")

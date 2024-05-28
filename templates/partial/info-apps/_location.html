@@ -254,7 +254,7 @@ if ("geolocation" in navigator) {
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
-                if (text === 'blind ally') {
+                if (text === 'ally') {
                     console.log('Activated, what can I do for you?');
                     if (localStorage.getItem('mode') == 'English') {
                         var audio = new Audio("{% static 'audio/activation.mp3' %}");
@@ -267,7 +267,7 @@ if ("geolocation" in navigator) {
                     
                 if (isActive) {
 
-                    let availableCommands = ['blind ally', 'status', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
+                    let availableCommands = ['ally', 'status', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
          
                 if (text === 'refresh') {
                     // Reload the current page

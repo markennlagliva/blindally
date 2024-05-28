@@ -401,7 +401,7 @@
             // Navigation -> Thru Voice 
             if(e.results[0].isFinal) {
 
-                  if (text === 'blind ally') {
+                  if (text === 'ally') {
                     if (isPlayingtheNews) {
                         theAudio.pause();
                         isPlayingtheNews = false;
@@ -588,7 +588,7 @@
             } // End playingNews not isPlayingtheNews
 
                     if (isActive) {
-                        let availableCommands = ['blind ally', 'continue', 'wait', 'exit', 'search', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
+                        let availableCommands = ['ally', 'continue', 'wait', 'exit', 'search', 'refresh', 'details', 'home', 'guidelines', 'audiobook', 'music', 'assistant', 'time', 'location', 'news', 'motivation', 'technology']
                         if (text === 'details') {
                             details();
                             isActive = false;
